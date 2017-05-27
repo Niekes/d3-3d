@@ -4,9 +4,9 @@ import {lines} 		from './primitiveTypes/lines.js';
 
 export default function() {
 
-	var ortho 			= projections.ortho,
-		persp 			= projections.persp,
-		projection 		= ortho,
+	var ortho           = projections.ortho,
+        persp           = projections.persp,
+        projection 		= ortho,
 		origin 			= [0, 0],
 		scale 			= 1,
 		distance 		= 1,
