@@ -1,6 +1,11 @@
-import projections 	from './projections.js';
-import {points} 	from './primitiveTypes/points.js';
-import {lines} 		from './primitiveTypes/lines.js';
+import projections      from './projections.js';
+import {points}         from './primitiveTypes/points.js';
+import {lines}          from './primitiveTypes/lines.js';
+import {linesLoop}      from './primitiveTypes/linesLoop.js';
+import {linesStrip}     from './primitiveTypes/linesStrip.js';
+import {triangles}      from './primitiveTypes/triangles.js';
+import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
+import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
 
 export default function() {
 
@@ -15,14 +20,14 @@ export default function() {
         gamma           = 0,
         primitiveType   = 'POINTS',
         pts = {
-            POINTS : points,
-            LINES  : lines,
-        // LINES_LOOP : linesLoop,
-        // LINES_STRIP: linesStrip,
-        // TRIANGLES : triangles,
-        // TRIANGLES_STRIP : trianglesStrip,
-        // TRIANGLES_FAN : trianglesFan
-		};
+            POINTS          : points,
+            LINES           : lines,
+            LINES_LOOP      : linesLoop,
+            LINES_STRIP     : linesStrip,
+            TRIANGLES       : triangles,
+            TRIANGLES_STRIP : trianglesStrip,
+            TRIANGLES_FAN   : trianglesFan
+        };
 
     function _3d(data){
         return pts[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);

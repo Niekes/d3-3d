@@ -1,4 +1,4 @@
 export default {
-	ortho: 'ortho',
-	persp: 'persp'
+    ortho: 'ortho',
+    persp: 'persp'
 };
