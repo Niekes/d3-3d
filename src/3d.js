@@ -24,13 +24,13 @@ export default function() {
         // TRIANGLES_FAN : trianglesFan
 		};
 
-	function _3d(data){
+    function _3d(data){
         return primitiveTypes[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
-	}
+    }
 
-	_3d.projection = function(_){
+    _3d.projection = function(_){
         return arguments.length ? (projection = _, _3d) : projection;
-	};
+    };
 
 	_3d.origin = function(_){
         return arguments.length ? (origin = _, _3d) : origin;
