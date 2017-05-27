@@ -1,0 +1,29 @@
+{
+
+	"extends": "eslint:recommended",
+
+    "parserOptions": {
+    	"sourceType": "module"
+  	},
+
+    "ecmaFeatures": {
+        "modules": true
+    },
+
+    "globals": {
+    	"document": false,
+    	"window": false
+ 	},
+
+	"env": {
+		"browser": true,
+    	"es6": true,
+		"node": true
+	},
+
+	"rules": {
+		"eqeqeq": "error",
+		"semi": ["error", "always"],
+		"quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": true }]
+	}
+}
