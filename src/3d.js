@@ -4,15 +4,15 @@ import {lines} 		from './primitiveTypes/lines.js';
 
 export default function() {
 
-	var ortho 			= projections.ortho, // Orthographic projection
-		persp 			= projections.persp, // Weak perspective projection
+	var ortho 			= projections.ortho,
+		persp 			= projections.persp,
 		projection 		= ortho,
 		origin 			= [0, 0],
 		scale 			= 1,
 		distance 		= 1,
-		alpha 			= 0, // Z
-		beta  			= 0, // Y
-		gamma 			= 0, // X
+		alpha 			= 0,
+		beta  			= 0,
+		gamma 			= 0,
 		primitiveType	= 'POINTS',
 		primitiveTypes 	= {
 			POINTS 			: points,
