@@ -15,8 +15,8 @@ export default function() {
         gamma           = 0,
         primitiveType   = 'POINTS',
         primitiveTypes  = {
-        POINTS 			: points,
-        LINES 			: lines,
+        POINTS  : points,
+        LINES   : lines,
         // LINES_LOOP : linesLoop,
         // LINES_STRIP: linesStrip,
         // TRIANGLES : triangles,
