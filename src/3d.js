@@ -1,6 +1,6 @@
-import projections 		from './projections.js';
-import {rotateRxRyRz} 	from './rotation.js';
-import {POINTS}		 	from './primitiveTypes.js';
+import projections 	from './projections.js';
+import {points} 	from './primitiveTypes/points.js';
+import {lines} 		from './primitiveTypes/lines.js';
 
 export default function() {
 
@@ -15,40 +15,17 @@ export default function() {
 		gamma 			= 0, // X
 		primitiveType	= 'POINTS',
 		primitiveTypes 	= {
-			POINTS: function(data){
-				for (var i = data.length - 1; i >= 0; i--) {
-					var p  		= data[i];
-					p.rotated 	= rotateRxRyRz({x : p.x, y : p.y, z : p.z}, alpha, beta, gamma);
-					p.projected = project(p.rotated);
-				}
-				return data;
-			},
-			LINES: function(){},
-			LINES_LOOP: function(){},
-			LINES_STRIP: function(){},
-			TRIANGLES: function(){},
-			TRIANGLES_STRIP: function(){},
-			TRIANGLES_FAN: function(){}
+			POINTS 			: points,
+			LINES 			: lines,
+			// LINES_LOOP 		: linesLoop,
+			// LINES_STRIP 	: linesStrip,
+			// TRIANGLES 		: triangles,
+			// TRIANGLES_STRIP : trianglesStrip,
+			// TRIANGLES_FAN	: trianglesFan
 		};
 
 	function _3d(data){
-		return primitiveTypes[primitiveType](data);
-	}
-
-	function project(d){
-		if(projection === projections.ortho){
-			return {
-				x: origin[0] + scale * d.x,
-				y: origin[1] + scale * d.y
-			};
-		}
-
-		if(projection === projections.persp){
-			return {
-				x: origin[0] + scale * d.x / (d.z + distance),
-				y: origin[1] + scale * d.y / (d.z + distance)
-			};
-		}
+		return primitiveTypes[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
 	}
 
 	_3d.projection = function(_){
