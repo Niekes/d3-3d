@@ -14,9 +14,9 @@ export default function() {
         beta            = 0,
         gamma           = 0,
         primitiveType   = 'POINTS',
-        primitiveTypes  = {
-        POINTS  : points,
-        LINES   : lines,
+        pts = {
+            POINTS : points,
+            LINES  : lines,
         // LINES_LOOP : linesLoop,
         // LINES_STRIP: linesStrip,
         // TRIANGLES : triangles,
@@ -25,7 +25,7 @@ export default function() {
 		};
 
     function _3d(data){
-        return primitiveTypes[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
+        return pts[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
     }
 
     _3d.projection = function(_){
