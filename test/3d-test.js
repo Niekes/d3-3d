@@ -91,6 +91,23 @@ tape('length calculation for lines', function(test){
 	test.end();
 });
 
+tape('line draw function', function(test){
+	var _3d = d3._3d().primitiveType('LINES');
+	var data = [
+		[{x:  0, y:   0, z:   0}, {x:   -1, y:    0, z:    0}],
+		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    1}],
+		[{x:  0, y:   0, z:   0}, {x:    0, y:    1, z:    0}],
+	];
+	var projectedData = _3d(data);
+	var a = _3d.draw(projectedData[0]);
+	var b = _3d.draw(projectedData[1]);
+	var c = _3d.draw(projectedData[2]);
+	test.equal(a, 'M0,0L-1,0');
+	test.equal(b, 'M0,0L0,0');
+	test.equal(c, 'M0,0L0,-1');
+	test.end();
+});
+
 // tape('rotate zero point along x axis by 180°', function(test){
 // 	var data = [{x: 0, y: 0, z: 0}];
 // 	var _3d = d3._3d().rotateX(Math.PI);

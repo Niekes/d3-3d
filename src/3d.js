@@ -6,6 +6,7 @@ import {linesStrip}     from './primitiveTypes/linesStrip.js';
 import {triangles}      from './primitiveTypes/triangles.js';
 import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
 import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
+import {drawLines}      from './draw.js';
 
 export default function() {
 
@@ -27,7 +28,13 @@ export default function() {
             TRIANGLES       : triangles,
             TRIANGLES_STRIP : trianglesStrip,
             TRIANGLES_FAN   : trianglesFan
+        },
+        draw = {
+            POINTS : undefined,
+            LINES  : drawLines,
         };
+
+
 
     function _3d(data){
         return processData[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
@@ -63,6 +70,10 @@ export default function() {
 
     _3d.primitiveType = function(_){
         return arguments.length ? (primitiveType = _, _3d) : primitiveType;
+    };
+
+    _3d.draw = function(d){
+        return primitiveType === 'POINTS' ? undefined : draw[primitiveType](d);
     };
 
     return _3d;

@@ -19,12 +19,13 @@
     "url": "git+https://github.com/niekes/d3-3d.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
+    "pretest": "rm -rf build && mkdir build && rollup -f umd -g d3-shape:d3 -n d3 -o build/d3-3d.js -- index.js",
     "test": "tape 'test/**/*-test.js' | tap-spec",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
   "devDependencies": {
+    "d3-shape": "^1.2.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.3.0",
