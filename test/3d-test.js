@@ -108,6 +108,17 @@ tape('line draw function', function(test){
 	test.end();
 });
 
+tape('point draw function', function(test){
+	var _3d = d3._3d();
+	var data = [
+		{x:  100, y:  100, z: 0, radius: 75},
+	];
+	var projectedData = _3d(data);
+	var a = _3d.draw(projectedData[0]);
+	test.equal(a, 'M100,-100m-75,0a75,75,0,1,1,150,0a75,75,0,1,1,-150');
+	test.end();
+});
+
 // tape('rotate zero point along x axis by 180°', function(test){
 // 	var data = [{x: 0, y: 0, z: 0}];
 // 	var _3d = d3._3d().rotateX(Math.PI);
