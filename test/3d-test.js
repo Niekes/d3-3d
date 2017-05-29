@@ -10,6 +10,7 @@ tape('_3d has expected defaults', function(test) {
 	test.equal(_3d.rotateX(), 0);
 	test.equal(_3d.rotateY(), 0);
 	test.equal(_3d.rotateZ(), 0);
+	test.equal(_3d.primitiveType(), 'POINTS');
 	test.end();
 });
 
