@@ -1,5 +1,5 @@
-import {rotateRxRyRz}   from '../rotation.js';
-import {project}        from '../projection.js';
+import {rotateRxRyRz}	from '../rotation.js';
+import {project} 	from '../projection.js';
 
 export function points(data, projection, alpha, beta, gamma, origin, scale, distance){
     for (var i = data.length - 1; i >= 0; i--) {

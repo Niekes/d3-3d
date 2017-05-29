@@ -19,7 +19,7 @@ export default function() {
         beta            = 0,
         gamma           = 0,
         primitiveType   = 'POINTS',
-        pts = {
+        processData = {
             POINTS          : points,
             LINES           : lines,
             LINES_LOOP      : linesLoop,
@@ -30,7 +30,7 @@ export default function() {
         };
 
     function _3d(data){
-        return pts[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
+        return processData[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
     }
 
     _3d.projection = function(_){

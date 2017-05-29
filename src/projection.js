@@ -1,6 +1,7 @@
 import projections from './projections.js';
 
 export function project(d, projection, origin, scale, distance){
+    // @todo already pass corret projection fn
     if(projection === projections.ortho){
         return {
             x: origin[0] + scale * d.x,

@@ -59,26 +59,42 @@ tape('set angles', function(test){
 	test.end();
 });
 
-tape('rotate zero point along x axis by 180°', function(test){
-	var data = [{x: 0, y: 0, z: 0}];
-	var _3d = d3._3d().rotateX(Math.PI);
-	test.deepEqual(_3d(data)[0].rotated, {x: 0, y: 0, z: 0});
+tape('mid point calculation for lines', function(test){
+	var _3d = d3._3d().primitiveType('LINES');
+	var data = [
+		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    0}],
+		[{x:  1, y:   2, z:   3}, {x:    3, y:    2, z:    1}],
+		[{x: 10, y: 9.5, z: 8.6}, {x: 34.3, y: 11.2, z: 27.4}]
+	];
+	var line0 = _3d(data)[0];
+	var line1 = _3d(data)[1];
+	var line2 = _3d(data)[2];
+	test.deepEqual(line0.midPoint, {x:     0, y:     0, z:   0});
+	test.deepEqual(line1.midPoint, {x:     2, y:     2, z:   2});
+	test.deepEqual(line2.midPoint, {x: 22.15, y: 10.35, z: 18});
 	test.end();
 });
 
-tape('rotate 1|1|1 along x axis by 180°', function(test){
-	var data = [{x: 1, y: 1, z: 1}];
-	var _3d = d3._3d().rotateX(Math.PI);
-	test.deepEqual(_3d(data)[0].rotated, {x: 1, y: 0.9999999999999999, z: -1.0000000000000002});
-	test.end();
-});
+// tape('rotate zero point along x axis by 180°', function(test){
+// 	var data = [{x: 0, y: 0, z: 0}];
+// 	var _3d = d3._3d().rotateX(Math.PI);
+// 	test.deepEqual(_3d(data)[0].rotated, {x: 0, y: 0, z: 0});
+// 	test.end();
+// });
 
-tape('project 1|1|1 on to screen', function(test){
-	var data = [{x: 1, y: 1, z: 1}];
-	var _3d = d3._3d().rotateX(Math.PI).scale(100);
-	test.deepEqual(_3d(data)[0].projected, {x: 100, y: 99.99999999999999});
-	test.end();
-});
+// tape('rotate 1|1|1 along x axis by 180°', function(test){
+// 	var data = [{x: 1, y: 1, z: 1}];
+// 	var _3d = d3._3d().rotateX(Math.PI);
+// 	test.deepEqual(_3d(data)[0].rotated, {x: 1, y: 0.9999999999999999, z: -1.0000000000000002});
+// 	test.end();
+// });
+
+// tape('project 1|1|1 on to screen', function(test){
+// 	var data = [{x: 1, y: 1, z: 1}];
+// 	var _3d = d3._3d().rotateX(Math.PI).scale(100);
+// 	test.deepEqual(_3d(data)[0].projected, {x: 100, y: 99.99999999999999});
+// 	test.end();
+// });
 
 // var data3d = d3._3d()
 // 	.projection('persp')

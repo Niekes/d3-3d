@@ -13,3 +13,11 @@ export function rotateRxRyRz(d, a, b, g){
         z: c1 * d.x + c2 * -d.y + c3 * d.z
     };
 }
+
+// export function rotateY(d, a, b, g){
+// 	return {
+// 		x: d.x,
+// 		y: d.y * Math.cos(a) - d.z * Math.sin(a),
+// 		z: d.z * Math.sin(a) + d.z * Math.cos(a)
+// 	};
+// }
