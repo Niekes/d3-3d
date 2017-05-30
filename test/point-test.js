@@ -8,6 +8,6 @@ tape('point draw function', function(test){
 	];
 	var projectedData = _3d(data);
 	var a = _3d.draw(projectedData[0]);
-	test.equal(a, 'M100,-100m-75,0a75,75,0,1,1,150,0a75,75,0,1,1,-150');
+	test.equal(a, 'M100,-100m-75,0a75,75,0,1,1,150,0a75,75,0,1,1,-150,0');
 	test.end();
 });

@@ -83,8 +83,8 @@ tape('set angles', function(test){
 
 // var data3d = d3._3d()
 // 	.projection('persp')
-//	.scale(100)
-//	.distance(1000)
+// 	.scale(100)
+// 	.distance(1000)
 // 	.origin([width/2, height/2])
 // 	.rotateX(alpha) 	// z
 // 	.rotateY(beta) 		// y
