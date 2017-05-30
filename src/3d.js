@@ -8,6 +8,7 @@ import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
 import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
 import {drawPoints}     from './draw/drawPoints.js';
 import {drawLines}      from './draw/drawLines.js';
+import {drawTriangles}  from './draw/drawTriangles.js';
 
 export default function() {
 
@@ -31,8 +32,9 @@ export default function() {
             TRIANGLES_FAN   : trianglesFan
         },
         draw = {
-            POINTS : drawPoints,
-            LINES  : drawLines,
+            POINTS      : drawPoints,
+            LINES       : drawLines,
+            TRIANGLES   : drawTriangles
         };
 
 
