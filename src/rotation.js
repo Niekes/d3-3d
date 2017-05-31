@@ -8,9 +8,9 @@ export function rotateRxRyRz(d, a, b, g){
     var c1 = -sinb, c2 = cosb * sinc, c3 = cosb * cosc;
 
     return {
-        x: a1 * d.x + a2 * -d.y + a3 * d.z,
-        y: b1 * d.x + b2 * -d.y + b3 * d.z,
-        z: c1 * d.x + c2 * -d.y + c3 * d.z
+        x: a1 * d.x + a2 * d.y + a3 * d.z,
+        y: b1 * d.x + b2 * d.y + b3 * d.z,
+        z: c1 * d.x + c2 * d.y + c3 * d.z
     };
 }
 

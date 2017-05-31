@@ -4,8 +4,8 @@ export function project(d, projection, origin, scale, distance){
     // @todo already pass corret projection fn
     if(projection === projections.ortho){
         return {
-            x: origin[0] + scale * d.x,
-            y: origin[1] + scale * d.y
+            x: origin[0] + scale *  d.x,
+            y: origin[1] + scale * -d.y
         };
     }
 
