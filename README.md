@@ -1,4 +1,6 @@
 # d3-3d
+I will write the API in the couple of month...
+<!--
 
 3d projection with d3.js
 
@@ -9,3 +11,4 @@ If you use NPM, `npm install d3-3d`. Otherwise, download the [latest release](ht
 ## API Reference
 
 ...
+ -->
