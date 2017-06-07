@@ -1,4 +1,3 @@
-import projections      from './projections.js';
 import {points}         from './primitiveTypes/points.js';
 import {lines}          from './primitiveTypes/lines.js';
 import {linesLoop}      from './primitiveTypes/linesLoop.js';
@@ -10,15 +9,12 @@ import {drawTriangles}  from './draw/drawTriangles.js';
 
 export default function() {
 
-    var ortho           = projections.ortho,
-        persp           = projections.persp,
-        projection      = ortho,
-        origin          = [0, 0],
+    var origin          = [0, 0],
         scale           = 1,
         distance        = 1,
-        alpha           = 0,
-        beta            = 0,
-        gamma           = 0,
+        angleX          = 0,
+        angleY          = 0,
+        angleZ          = 0,
         primitiveType   = 'POINTS',
         processData = {
             POINTS          : points,
@@ -34,14 +30,9 @@ export default function() {
         };
 
 
-
     function _3d(data){
-        return processData[primitiveType](data, projection, alpha, beta, gamma, origin, scale, distance);
+        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance);
     }
-
-    _3d.projection = function(_){
-        return arguments.length ? (projection = _, _3d) : projection;
-    };
 
     _3d.origin = function(_){
         return arguments.length ? (origin = _, _3d) : origin;
@@ -55,16 +46,16 @@ export default function() {
         return arguments.length ? (distance = _, _3d) : distance;
     };
 
-    _3d.rotateZ = function(_){
-        return arguments.length ? (alpha = _, _3d) : alpha;
+    _3d.rotateX = function(_){
+        return arguments.length ? (angleX = _, _3d) : angleX;
     };
 
     _3d.rotateY = function(_){
-        return arguments.length ? (beta = _, _3d) : beta;
+        return arguments.length ? (angleY = _, _3d) : angleY;
     };
 
-    _3d.rotateX = function(_){
-        return arguments.length ? (gamma = _, _3d) : gamma;
+    _3d.rotateZ = function(_){
+        return arguments.length ? (angleZ = _, _3d) : angleZ;
     };
 
     _3d.primitiveType = function(_){
