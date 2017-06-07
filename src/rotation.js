@@ -4,7 +4,7 @@ export function rotateRxRyRz(d, a, b, g){
     d.y = -d.y;
 
     var ry = rotateY(d,  b);
-    var rx = rotateX(ry, g);
+    var rx = rotateX(ry, a);
 
     return rx;
 }

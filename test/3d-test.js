@@ -3,7 +3,6 @@ var d3   = require('../');
 
 tape('_3d has expected defaults', function(test) {
 	var _3d = d3._3d();
-	test.equal(_3d.projection(), 'ortho');
 	test.deepEqual(_3d.origin(), [0, 0]);
 	test.equal(_3d.scale(), 1);
 	test.equal(_3d.distance(), 1);
@@ -11,18 +10,6 @@ tape('_3d has expected defaults', function(test) {
 	test.equal(_3d.rotateY(), 0);
 	test.equal(_3d.rotateZ(), 0);
 	test.equal(_3d.primitiveType(), 'POINTS');
-	test.end();
-});
-
-tape('set projection to perspective "ortho"', function(test) {
-	var _3d = d3._3d().projection('ortho');
-	test.equal(_3d.projection(), 'ortho');
-	test.end();
-});
-
-tape('set projection to perspective "persp"', function(test) {
-	var _3d = d3._3d().projection('persp');
-	test.equal(_3d.projection(), 'persp');
 	test.end();
 });
 
@@ -46,8 +33,7 @@ tape('set scale', function(test) {
 
 
 tape('allow method chaining', function(test) {
-	var _3d = d3._3d().projection('persp').origin([200, 200]);
-	test.deepEqual(_3d.projection(), 'persp');
+	var _3d = d3._3d().origin([200, 200]);
 	test.deepEqual(_3d.origin(), [200, 200]);
 	test.end();
 });
