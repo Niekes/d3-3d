@@ -60,37 +60,23 @@ tape('set angles', function(test){
 	test.end();
 });
 
-// tape('rotate zero point along x axis by 180°', function(test){
-// 	var data = [{x: 0, y: 0, z: 0}];
-// 	var _3d = d3._3d().rotateX(Math.PI);
-// 	test.deepEqual(_3d(data)[0].rotated, {x: 0, y: 0, z: 0});
-// 	test.end();
-// });
+tape('rotate zero point along x axis by 180°', function(test){
+	var data = [{x: 0, y: 0, z: 0}];
+	var _3d = d3._3d().rotateX(Math.PI);
+	test.deepEqual(_3d(data)[0].rotated, {x: 0, y: 0, z: 0});
+	test.end();
+});
 
-// tape('rotate 1|1|1 along x axis by 180°', function(test){
-// 	var data = [{x: 1, y: 1, z: 1}];
-// 	var _3d = d3._3d().rotateX(Math.PI);
-// 	test.deepEqual(_3d(data)[0].rotated, {x: 1, y: 0.9999999999999999, z: -1.0000000000000002});
-// 	test.end();
-// });
+tape('rotate 1|1|1 along x axis by 180°', function(test){
+	var data = [{x: 1, y: 1, z: 1}];
+	var _3d = d3._3d().rotateX(Math.PI);
+	test.deepEqual(_3d(data)[0].rotated, {x: 1, y: 1.0000000000000002, z: 0.9999999999999999});
+	test.end();
+});
 
-// tape('project 1|1|1 on to screen', function(test){
-// 	var data = [{x: 1, y: 1, z: 1}];
-// 	var _3d = d3._3d().rotateX(Math.PI).scale(100);
-// 	test.deepEqual(_3d(data)[0].projected, {x: 100, y: 99.99999999999999});
-// 	test.end();
-// });
-
-// var data3d = d3._3d()
-// 	.projection('persp')
-// 	.scale(100)
-// 	.distance(1000)
-// 	.origin([width/2, height/2])
-// 	.rotateX(alpha) 	// z
-// 	.rotateY(beta) 		// y
-// 	.rotateZ(gamma) 	// x
-//  .primitiveType('TRIANGLES');
-
-// var points = svg.selectAll('circle').data(_3d(data));
-
-
+tape('project 1|1|1 on to screen', function(test){
+	var data = [{x: 1, y: 1, z: 1}];
+	var _3d = d3._3d().rotateX(Math.PI).scale(100);
+	test.deepEqual(_3d(data)[0].projected, {x: 100, y: 100.00000000000003});
+	test.end();
+});
