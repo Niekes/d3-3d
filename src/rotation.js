@@ -1,23 +1,40 @@
 export function rotateRxRyRz(d, a, b, g){
-    var cosa = Math.cos(a), sina = Math.sin(a);
-    var cosb = Math.cos(b), sinb = Math.sin(b);
-    var cosc = Math.cos(g), sinc = Math.sin(g);
+    // b = y, g = x, z = a
+    d.z = -d.z;
+    d.y = -d.y;
 
-    var a1 = cosa * cosb, a2 = cosa * sinb * sinc - sina * cosc, a3 = cosa * sinb * cosc + sina * sinc;
-    var b1 = sina * cosb, b2 = sina * sinb * sinc + cosa * cosc, b3 = sina * sinb * cosc - cosa * sinc;
-    var c1 = -sinb, c2 = cosb * sinc, c3 = cosb * cosc;
+    var ry = rotateY(d,  b);
+    var rx = rotateX(ry, g);
 
+    return rx;
+}
+
+function rotateX(d, a){
+    var sa = Math.sin(a);
+    var ca = Math.cos(a);
     return {
-        x: a1 * d.x + a2 * d.y + a3 * d.z,
-        y: b1 * d.x + b2 * d.y + b3 * d.z,
-        z: c1 * d.x + c2 * d.y + c3 * d.z
+        x: d.x,
+        y: d.y * ca - d.z * sa,
+        z: d.y * sa + d.z * ca
     };
 }
 
-// export function rotateY(d, a, b, g){
-// 	return {
-// 		x: d.x,
-// 		y: d.y * Math.cos(a) - d.z * Math.sin(a),
-// 		z: d.z * Math.sin(a) + d.z * Math.cos(a)
-// 	};
-// }
+function rotateY(d, a){
+    var sa = Math.sin(a);
+    var ca = Math.cos(a);
+    return {
+        x: d.z * sa + d.x * ca,
+        y: d.y,
+        z: d.z * ca - d.x * sa
+    };
+}
+
+function rotateZ(d, a){
+    var sa = Math.sin(a);
+    var ca = Math.cos(a);
+    return {
+        x: d.x * ca - d.y * sa,
+        y: d.y * sa + d.y * ca,
+        z: d.z
+    };
+}
