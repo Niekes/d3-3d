@@ -28,8 +28,8 @@ tape('triangles getting drawn counter-clockwise', function(test){
         [{x: 2, y: 1, z: 0},{x: 2, y: 2, z: 0},{x: 1, y: 1, z: 0}],
         [{x: 1, y: 0, z: 0},{x: 1, y: 2, z: 0},{x: 2, y: 1, z: 0}],
     ];
-    test.equal(_3d(data)[0].ccw, true);
-    test.equal(_3d(data)[1].ccw, true);
-    test.equal(_3d(data)[2].ccw, false);
+    test.equal(_3d(data)[0].ccw, false);
+    test.equal(_3d(data)[1].ccw, false);
+    test.equal(_3d(data)[2].ccw, true);
     test.end();
 });
