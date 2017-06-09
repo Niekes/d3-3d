@@ -1,15 +1,12 @@
-import {points}         from './primitiveTypes/points.js';
-import {lines}          from './primitiveTypes/lines.js';
-import {linesLoop}      from './primitiveTypes/linesLoop.js';
-import {linesStrip}     from './primitiveTypes/linesStrip.js';
-import {triangles}      from './primitiveTypes/triangles.js';
-import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
-import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
-import {drawTriangles}  from './draw/drawTriangles.js';
-import {x as pointX,
-        y as pointY,
-        z as pointZ,
-        }               from './point';
+import {points}         from './primitiveTypes/points';
+import {lines}          from './primitiveTypes/lines';
+import {linesLoop}      from './primitiveTypes/linesLoop';
+import {linesStrip}     from './primitiveTypes/linesStrip';
+import {triangles}      from './primitiveTypes/triangles';
+import {trianglesStrip} from './primitiveTypes/trianglesStrip';
+import {trianglesFan}   from './primitiveTypes/trianglesFan';
+import {drawTriangles}  from './draw/drawTriangles';
+import {x as pointX, y as pointY, z as pointZ } from './point';
 
 /**
  * @author Stefan Nieke / http://niekes.com/
@@ -25,7 +22,7 @@ export default function() {
         angleZ          = 0,
         x               = pointX,
         y               = pointY,
-        z               = pointY,
+        z               = pointZ,
         primitiveType   = 'POINTS',
         processData = {
             POINTS          : points,
