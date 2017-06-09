@@ -1,7 +1,7 @@
 export function rotateRxRyRz(d, angleX, angleY, angleZ){
 
     /*
-        for right hand coordinate system negate
+        for right hand coordinate system negate y and z
     */
 
     d.z = -d.z;
