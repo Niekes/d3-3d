@@ -37,9 +37,8 @@ export default function() {
             TRIANGLES   : drawTriangles
         };
 
-
     function _3d(data){
-        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance);
+        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance, x, y, z);
     }
 
     _3d.origin = function(_){

@@ -45,24 +45,3 @@ tape('set angles', function(test){
 	test.equal(_3d.rotateZ(), 3/2*Math.PI);
 	test.end();
 });
-
-tape('rotate zero point along x axis by 180°', function(test){
-	var data = [{x: 0, y: 0, z: 0}];
-	var _3d = d3._3d().rotateX(Math.PI);
-	test.deepEqual(_3d(data)[0].rotated, {x: 0, y: 0, z: 0});
-	test.end();
-});
-
-tape('rotate 1|1|1 along x axis by 180°', function(test){
-	var data = [{x: 1, y: 1, z: 1}];
-	var _3d = d3._3d().rotateX(Math.PI);
-	test.deepEqual(_3d(data)[0].rotated, {x: 1, y: 1.0000000000000002, z: 0.9999999999999999});
-	test.end();
-});
-
-tape('project 1|1|1 on to screen', function(test){
-	var data = [{x: 1, y: 1, z: 1}];
-	var _3d = d3._3d().rotateX(Math.PI).scale(100);
-	test.deepEqual(_3d(data)[0].projected, {x: 100, y: 100.00000000000003});
-	test.end();
-});
