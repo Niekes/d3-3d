@@ -6,9 +6,13 @@ import {triangles}      from './primitiveTypes/triangles.js';
 import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
 import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
 import {drawTriangles}  from './draw/drawTriangles.js';
+import {x as pointX,
+        y as pointY,
+        z as pointZ,
+        }               from './point';
 
 /**
- * @author niekes / http://niekes.com/
+ * @author Stefan Nieke / http://niekes.com/
  */
 
 export default function() {
@@ -19,6 +23,9 @@ export default function() {
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
+        x               = pointX,
+        y               = pointY,
+        z               = pointY,
         primitiveType   = 'POINTS',
         processData = {
             POINTS          : points,
@@ -66,8 +73,20 @@ export default function() {
         return arguments.length ? (primitiveType = _, _3d) : primitiveType;
     };
 
+    _3d.x = function(_){
+        return arguments.length ? (x = typeof _ === 'function' ? _ : +_, _3d) : x;
+    };
+
+    _3d.y = function(_){
+        return arguments.length ? (y = typeof _ === 'function' ? _ : +_, _3d) : y;
+    };
+
+    _3d.z = function(_){
+        return arguments.length ? (z = typeof _ === 'function' ? _ : +_, _3d) : z;
+    };
+
     _3d.draw = function(d){
-        if(primitiveType !== 'POINTS' || primitiveType !== 'LINES'){
+        if(!((primitiveType === 'POINTS') || (primitiveType === 'LINES'))){
             return draw[primitiveType](d);
         }
     };
