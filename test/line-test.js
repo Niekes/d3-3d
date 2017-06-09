@@ -1,7 +1,13 @@
 var tape = require('tape');
 var d3   = require('../');
 
-tape('mid point calculation for lines', function(test){
+tape('lines don\'t have draw function', function(test){
+    var _3d = d3._3d().primitiveType('LINES');
+    test.equal(_3d.draw(), undefined);
+    test.end();
+});
+
+tape('centroid calculation for lines', function(test){
 	var _3d = d3._3d().primitiveType('LINES');
 	var data = [
 		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    0}],
@@ -11,9 +17,9 @@ tape('mid point calculation for lines', function(test){
 	var line0 = _3d(data)[0];
 	var line1 = _3d(data)[1];
 	var line2 = _3d(data)[2];
-	test.deepEqual(line0.midPoint, {x:     0, y:     0, z:   0});
-	test.deepEqual(line1.midPoint, {x:     2, y:     2, z:   2});
-	test.deepEqual(line2.midPoint, {x: 22.15, y: 10.35, z: 18});
+	test.deepEqual(line0.centroid, {x:     0, y:     0, z:   0});
+	test.deepEqual(line1.centroid, {x:     2, y:     2, z:   2});
+	test.deepEqual(line2.centroid, {x: 22.15, y: 10.35, z: 18});
 	test.end();
 });
 
