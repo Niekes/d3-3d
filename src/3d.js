@@ -7,6 +7,10 @@ import {trianglesStrip} from './primitiveTypes/trianglesStrip.js';
 import {trianglesFan}   from './primitiveTypes/trianglesFan.js';
 import {drawTriangles}  from './draw/drawTriangles.js';
 
+/**
+ * @author niekes / http://niekes.com/
+ */
+
 export default function() {
 
     var origin          = [0, 0],
