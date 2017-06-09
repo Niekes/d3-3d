@@ -1,12 +1,17 @@
-export function rotateRxRyRz(d, a, b, g){
-    // b = y, g = x, z = a
+export function rotateRxRyRz(d, angleX, angleY, angleZ){
+
+    /*
+        for right hand coordinate system negate
+    */
+
     d.z = -d.z;
     d.y = -d.y;
 
-    var ry = rotateY(d,  b);
-    var rx = rotateX(ry, a);
+    var ry = rotateY(d,  angleY);
+    var rx = rotateX(ry, angleX);
+    var rz = rotateZ(rx, angleZ);
 
-    return rx;
+    return rz;
 }
 
 function rotateX(d, a){
