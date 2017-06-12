@@ -31,10 +31,10 @@ tape('set scale', function(test) {
 	test.end();
 });
 
-
 tape('allow method chaining', function(test) {
-	var _3d = d3._3d().origin([200, 200]);
+	var _3d = d3._3d().origin([200, 200]).scale(100);
 	test.deepEqual(_3d.origin(), [200, 200]);
+	test.equal(_3d.scale(), 100);
 	test.end();
 });
 
