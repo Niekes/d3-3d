@@ -8,7 +8,7 @@ tape('lines don\'t have draw function', function(test){
 });
 
 tape('centroid calculation for lines', function(test){
-	var _3d = d3._3d().primitiveType('LINES');
+	var _3d = d3._3d().primitiveType('LINES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
 	var data = [
 		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    0}],
 		[{x:  1, y:   2, z:   3}, {x:    3, y:    2, z:    1}],
@@ -24,7 +24,7 @@ tape('centroid calculation for lines', function(test){
 });
 
 tape('length calculation for lines', function(test){
-	var _3d = d3._3d().primitiveType('LINES');
+	var _3d = d3._3d().primitiveType('LINES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
 	var data = [
 		[{x:  0, y:   0, z:   0}, {x:   -1, y:    0, z:    0}],
 		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    1}],

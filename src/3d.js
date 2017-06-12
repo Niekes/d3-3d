@@ -38,7 +38,7 @@ export default function() {
         };
 
     function _3d(data){
-        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance, {x: x, y: y, z: z});
+        return processData[primitiveType](data, origin, scale, distance, {x: x, y: y, z: z}, {x: angleX, y: angleY, z: angleZ });
     }
 
     _3d.origin = function(_){

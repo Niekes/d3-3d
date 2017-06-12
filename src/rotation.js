@@ -1,4 +1,4 @@
-export function rotateRxRyRz(d, angleX, angleY, angleZ){
+export function rotateRxRyRz(d, angles){
 
     /*
         for right hand coordinate system negate y and z
@@ -7,9 +7,10 @@ export function rotateRxRyRz(d, angleX, angleY, angleZ){
     d.z = -d.z;
     d.y = -d.y;
 
-    var ry = rotateY(d,  angleY);
-    var rx = rotateX(ry, angleX);
-    var rz = rotateZ(rx, angleZ);
+
+    var ry = rotateY(d,  angles.y);
+    var rx = rotateX(ry, angles.x);
+    var rz = rotateZ(rx, angles.z);
 
     return rz;
 }
