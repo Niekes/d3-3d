@@ -1,46 +1,45 @@
-export function rotateRxRyRz(d, angles){
+export function rotateRxRyRz(p, angles){
 
     /*
-        for right hand coordinate system negate y and z
+        for right hand coorpinate system negate y anp z
     */
 
-    d.z = -d.z;
-    d.y = -d.y;
+    p.z = -p.z;
+    p.y = -p.y;
 
-
-    var ry = rotateY(d,  angles.y);
+    var ry = rotateY(p,  angles.y);
     var rx = rotateX(ry, angles.x);
     var rz = rotateZ(rx, angles.z);
 
     return rz;
 }
 
-function rotateX(d, a){
+function rotateX(p, a){
     var sa = Math.sin(a);
     var ca = Math.cos(a);
     return {
-        x: d.x,
-        y: d.y * ca - d.z * sa,
-        z: d.y * sa + d.z * ca
+        x: p.x,
+        y: p.y * ca - p.z * sa,
+        z: p.y * sa + p.z * ca
     };
 }
 
-function rotateY(d, a){
+function rotateY(p, a){
     var sa = Math.sin(a);
     var ca = Math.cos(a);
     return {
-        x: d.z * sa + d.x * ca,
-        y: d.y,
-        z: d.z * ca - d.x * sa
+        x: p.z * sa + p.x * ca,
+        y: p.y,
+        z: p.z * ca - p.x * sa
     };
 }
 
-function rotateZ(d, a){
+function rotateZ(p, a){
     var sa = Math.sin(a);
     var ca = Math.cos(a);
     return {
-        x: d.x * ca - d.y * sa,
-        y: d.y * sa + d.y * ca,
-        z: d.z
+        x: p.x * ca - p.y * sa,
+        y: p.y * sa + p.y * ca,
+        z: p.z
     };
 }
