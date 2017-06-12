@@ -6,7 +6,7 @@ import {triangles}      from './primitiveTypes/triangles';
 import {trianglesStrip} from './primitiveTypes/trianglesStrip';
 import {trianglesFan}   from './primitiveTypes/trianglesFan';
 import {drawTriangles}  from './draw/drawTriangles';
-import {x as pointX, y as pointY, z as pointZ } from './point';
+import {x as px, y as py, z as pz } from './point';
 
 /**
  * @author Stefan Nieke / http://niekes.com/
@@ -20,9 +20,9 @@ export default function() {
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
-        x               = pointX,
-        y               = pointY,
-        z               = pointZ,
+        x               = px,
+        y               = py,
+        z               = pz,
         primitiveType   = 'POINTS',
         processData = {
             POINTS          : points,
@@ -38,7 +38,7 @@ export default function() {
         };
 
     function _3d(data){
-        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance, x, y, z);
+        return processData[primitiveType](data, angleX, angleY, angleZ, origin, scale, distance, {x: x, y: y, z: z});
     }
 
     _3d.origin = function(_){

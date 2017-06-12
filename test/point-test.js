@@ -7,7 +7,7 @@ tape('points don\'t have draw function', function(test){
     test.end();
 });
 
-tape('access points via array', function(test){
+tape('access point coords via array', function(test){
     var _3d = d3._3d();
     var data = [[1,2,3],[4,5,6]];
     test.deepEqual(_3d(data)[0].rotated, { x: 1, y: -2, z: -3 });
@@ -15,7 +15,7 @@ tape('access points via array', function(test){
     test.end();
 });
 
-tape('access points via function', function(test){
+tape('access point coords via function', function(test){
     var data = [{x: 1, y: 2, z: 3}, {x: 4, y: 5, z: 6}];
     var _3d = d3._3d().x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
     test.deepEqual(_3d(data)[0].rotated, { x: 1, y: -2, z: -3 });

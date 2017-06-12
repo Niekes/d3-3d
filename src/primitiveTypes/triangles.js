@@ -1,7 +1,7 @@
 import {rotateRxRyRz}   from '../rotation.js';
 import {project}        from '../projection.js';
 
-export function triangles(data, alpha, beta, gamma, origin, scale, distance){
+export function triangles(data, alpha, beta, gamma, origin, scale, distance, point){
     for (var i = data.length - 1; i >= 0; i--) {
 		var triangle = data[i];
 
@@ -9,9 +9,9 @@ export function triangles(data, alpha, beta, gamma, origin, scale, distance){
         var p2       	= triangle[1];
         var p3       	= triangle[2];
 
-        p1.rotated   	= rotateRxRyRz({x : p1.x, y : p1.y, z : p1.z}, alpha, beta, gamma);
-        p2.rotated   	= rotateRxRyRz({x : p2.x, y : p2.y, z : p2.z}, alpha, beta, gamma);
-        p3.rotated   	= rotateRxRyRz({x : p3.x, y : p3.y, z : p3.z}, alpha, beta, gamma);
+        p1.rotated   	= rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, alpha, beta, gamma);
+        p2.rotated   	= rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, alpha, beta, gamma);
+        p3.rotated   	= rotateRxRyRz({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, alpha, beta, gamma);
 
         p1.projected 	= project(p1.rotated, origin, scale, distance);
         p2.projected 	= project(p2.rotated, origin, scale, distance);
