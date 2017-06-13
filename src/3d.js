@@ -22,10 +22,10 @@ export default function() {
         z               = pz,
         primitiveType   = 'POINTS',
         processData = {
-            POINTS          : points,
-            LINES           : lines,
-            LINES_STRIP     : linesStrip,
-            TRIANGLES       : triangles,
+            'POINTS'     : points,
+            'LINES'      : lines,
+            'LINE_STRIP' : linesStrip,
+            'TRIANGLES'  : triangles,
         },
         draw = {
             TRIANGLES   : drawTriangles,
