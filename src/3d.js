@@ -3,6 +3,7 @@ import {lines}          from './primitiveTypes/lines';
 import {linesStrip}     from './primitiveTypes/linesStrip';
 import {triangles}      from './primitiveTypes/triangles';
 import {drawTriangles}  from './draw/drawTriangles';
+import {drawLinesStrip} from './draw/drawLinesStrip';
 import {x as px, y as py, z as pz } from './point';
 
 /**
@@ -27,7 +28,8 @@ export default function() {
             TRIANGLES       : triangles,
         },
         draw = {
-            TRIANGLES   : drawTriangles
+            TRIANGLES   : drawTriangles,
+            LINES_STRIP : drawLinesStrip
         };
 
     function _3d(data){

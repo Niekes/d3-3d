@@ -1,7 +1,7 @@
 var tape = require('tape');
 var d3   = require('../');
 
-tape('lines don\'t have draw function', function(test){
+tape('lines don\'t have a draw function', function(test){
     var _3d = d3._3d().primitiveType('LINES');
     test.equal(_3d.draw(), undefined);
     test.end();
