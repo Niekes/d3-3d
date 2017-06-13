@@ -1,8 +1,11 @@
-import {rotateRxRyRz}   from '../rotation.js';
-import {project}        from '../projection.js';
+import {rotateRxRyRz}   from '../rotation';
+import {project}        from '../projection';
+import {clockwise}      from '../clockwise';
 
 export function triangles(data, options, point, angles){
+
     for (var i = data.length - 1; i >= 0; i--) {
+
 		var triangle = data[i];
 
         var p1       	= triangle[0];
@@ -17,11 +20,7 @@ export function triangles(data, options, point, angles){
         p2.projected 	= project(p2.rotated, options);
         p3.projected 	= project(p3.rotated, options);
 
-        var v0 = (p2.rotated.x - p1.rotated.x) * (p2.rotated.y + p1.rotated.y);
-        var v1 = (p3.rotated.x - p2.rotated.x) * (p3.rotated.y + p2.rotated.y);
-        var v2 = (p1.rotated.x - p3.rotated.x) * (p1.rotated.y + p3.rotated.y);
-
-        triangle.cw       = v0 + v1 + v2 > 0 ? true : false;
+        triangle.cw       = clockwise(triangle);
         triangle.centroid = { x: (p1.rotated.x + p2.rotated.x + p3.rotated.x)/3, y: (p1.rotated.y + p2.rotated.y + p3.rotated.y)/3, z: (p1.rotated.z + p2.rotated.z + p3.rotated.z)/3};
     }
     return data;
