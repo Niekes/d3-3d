@@ -37,7 +37,7 @@ tape('triangles are a closed path', function(test){
     test.end();
 });
 
-tape.only('triangles getting drawn clockwise', function(test){
+tape('triangles are getting drawn clockwise', function(test){
     var _3d = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
     var data = [
         [{x: 5, y: 0, z: 0},{x: 6, y: 4, z: 0},{x: 4, y: 5, z: 0}],
