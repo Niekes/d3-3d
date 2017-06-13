@@ -1,6 +1,6 @@
-export function project(d, origin, scale){
+export function project(d, options){
     return {
-        x: origin[0] + scale * d.x,
-        y: origin[1] + scale * d.y
+        x: options.origin[0] + options.scale * d.x,
+        y: options.origin[1] + options.scale * d.y
     };
 }
