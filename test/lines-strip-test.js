@@ -8,6 +8,6 @@ tape('line strip test', function(test){
 		[3,4,5],
 		[6,7,8],
 	];
-	test.deepEqual(_3d.draw(_3d(data)), 1);
+	test.deepEqual(_3d.draw(_3d(data)), 'M6,-7L3,-4L0,-1');
 	test.end();
 });
