@@ -1,9 +1,10 @@
-import {points}         from './primitiveTypes/points';
-import {lines}          from './primitiveTypes/lines';
-import {linesStrip}     from './primitiveTypes/linesStrip';
-import {triangles}      from './primitiveTypes/triangles';
-import {drawTriangles}  from './draw/drawTriangles';
-import {drawLinesStrip} from './draw/drawLinesStrip';
+import {points}                     from './primitiveTypes/points';
+import {lines}                      from './primitiveTypes/lines';
+import {lineStrip}                  from './primitiveTypes/lineStrip';
+// import {polygon}                    from './primitiveTypes/polygon';
+import {triangles}                  from './primitiveTypes/triangles';
+import {drawTriangles}              from './draw/drawTriangles';
+import {drawLinesStrip}             from './draw/drawLinesStrip';
 import {x as px, y as py, z as pz } from './point';
 
 /**
@@ -24,7 +25,8 @@ export default function() {
         processData = {
             'POINTS'     : points,
             'LINES'      : lines,
-            'LINE_STRIP' : linesStrip,
+            'LINE_STRIP' : lineStrip,
+            // 'POLYGON'    : polygon,
             'TRIANGLES'  : triangles,
         },
         draw = {
