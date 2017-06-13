@@ -1,10 +1,13 @@
-import {points}                     from './primitiveTypes/points';
-import {lines}                      from './primitiveTypes/lines';
 import {lineStrip}                  from './primitiveTypes/lineStrip';
-// import {polygon}                    from './primitiveTypes/polygon';
+import {lines}                      from './primitiveTypes/lines';
+import {points}                     from './primitiveTypes/points';
+import {polygons}                    from './primitiveTypes/polygons';
 import {triangles}                  from './primitiveTypes/triangles';
+
+import {drawLineStrip}              from './draw/drawLineStrip';
+import {drawPolygons}               from './draw/drawPolygons';
 import {drawTriangles}              from './draw/drawTriangles';
-import {drawLineStrip}             from './draw/drawLineStrip';
+
 import {x as px, y as py, z as pz } from './point';
 
 /**
@@ -23,15 +26,16 @@ export default function() {
         z               = pz,
         primitiveType   = 'POINTS',
         processData = {
-            'POINTS'     : points,
-            'LINES'      : lines,
             'LINE_STRIP' : lineStrip,
-            // 'POLYGON'    : polygon,
+            'LINES'      : lines,
+            'POINTS'     : points,
+            'POLYGONS'   : polygons,
             'TRIANGLES'  : triangles,
         },
         draw = {
+            'LINE_STRIP' : drawLineStrip,
+            'POLYGONS'   : drawPolygons,
             'TRIANGLES'  : drawTriangles,
-            'LINE_STRIP' : drawLineStrip
         };
 
     function _3d(data){
