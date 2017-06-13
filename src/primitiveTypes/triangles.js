@@ -21,7 +21,7 @@ export function triangles(data, options, point, angles){
         var v1 = (p3.rotated.x - p2.rotated.x) * (p3.rotated.y + p2.rotated.y);
         var v2 = (p1.rotated.x - p3.rotated.x) * (p1.rotated.y + p3.rotated.y);
 
-        triangle.ccw      = v0 + v1 + v2 < 0 ? true : false;
+        triangle.cw       = v0 + v1 + v2 > 0 ? true : false;
         triangle.centroid = { x: (p1.rotated.x + p2.rotated.x + p3.rotated.x)/3, y: (p1.rotated.y + p2.rotated.y + p3.rotated.y)/3, z: (p1.rotated.z + p2.rotated.z + p3.rotated.z)/3};
     }
     return data;
