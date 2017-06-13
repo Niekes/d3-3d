@@ -22,19 +22,3 @@ tape('centroid calculation for lines', function(test){
 	test.deepEqual(line2.centroid, {x: 22.15, y: 10.35, z: 18});
 	test.end();
 });
-
-tape('length calculation for lines', function(test){
-	var _3d = d3._3d().primitiveType('LINES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
-	var data = [
-		[{x:  0, y:   0, z:   0}, {x:   -1, y:    0, z:    0}],
-		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    1}],
-		[{x:  0, y:   0, z:   0}, {x:    0, y:    1, z:    0}],
-	];
-	var line0 = _3d(data)[0];
-	var line1 = _3d(data)[1];
-	var line2 = _3d(data)[2];
-	test.deepEqual(line0.lng, 1);
-	test.deepEqual(line1.lng, 1);
-	test.deepEqual(line2.lng, 1);
-	test.end();
-});

@@ -4,7 +4,7 @@ import {lineStrip}                  from './primitiveTypes/lineStrip';
 // import {polygon}                    from './primitiveTypes/polygon';
 import {triangles}                  from './primitiveTypes/triangles';
 import {drawTriangles}              from './draw/drawTriangles';
-import {drawLinesStrip}             from './draw/drawLinesStrip';
+import {drawLineStrip}             from './draw/drawLineStrip';
 import {x as px, y as py, z as pz } from './point';
 
 /**
@@ -30,8 +30,8 @@ export default function() {
             'TRIANGLES'  : triangles,
         },
         draw = {
-            TRIANGLES   : drawTriangles,
-            LINES_STRIP : drawLinesStrip
+            'TRIANGLES'  : drawTriangles,
+            'LINE_STRIP' : drawLineStrip
         };
 
     function _3d(data){

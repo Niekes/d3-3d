@@ -1,4 +1,4 @@
-export function drawLinesStrip(lineStrip){
+export function drawLineStrip(lineStrip){
     var lastPoint = lineStrip[lineStrip.length - 1];
     var line = 'M' + lastPoint.projected.x + ',' + lastPoint.projected.y;
     for (var i = lineStrip.length - 2; i >= 0; i--) {
