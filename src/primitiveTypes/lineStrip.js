@@ -1,5 +1,5 @@
-import {rotateRxRyRz}   from '../rotation.js';
-import {project}        from '../projection.js';
+import {rotateRxRyRz}   from '../rotation';
+import {project}        from '../projection';
 
 export function lineStrip(data, options, point, angles){
 

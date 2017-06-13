@@ -1,8 +1,10 @@
-import {rotateRxRyRz}   from '../rotation.js';
-import {project}        from '../projection.js';
+import {rotateRxRyRz}   from '../rotation';
+import {project}        from '../projection';
 
 export function lines(data, options, point, angles){
+
     for (var i = data.length - 1; i >= 0; i--) {
+
         var line      = data[i];
 
         var p1        = line[0];
