@@ -16,7 +16,6 @@ export default function() {
 
     var origin          = [0, 0],
         scale           = 1,
-        distance        = 1,
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
@@ -38,7 +37,7 @@ export default function() {
         };
 
     function _3d(data){
-        return processData[primitiveType](data, origin, scale, distance, {x: x, y: y, z: z}, {x: angleX, y: angleY, z: angleZ });
+        return processData[primitiveType](data, origin, scale, {x: x, y: y, z: z}, {x: angleX, y: angleY, z: angleZ });
     }
 
     _3d.origin = function(_){
@@ -47,10 +46,6 @@ export default function() {
 
     _3d.scale = function(_){
         return arguments.length ? (scale = _, _3d) : scale;
-    };
-
-    _3d.distance = function(_){
-        return arguments.length ? (distance = _, _3d) : distance;
     };
 
     _3d.rotateX = function(_){

@@ -5,7 +5,6 @@ tape('_3d has expected defaults', function(test) {
 	var _3d = d3._3d();
 	test.deepEqual(_3d.origin(), [0, 0]);
 	test.equal(_3d.scale(), 1);
-	test.equal(_3d.distance(), 1);
 	test.equal(_3d.rotateX(), 0);
 	test.equal(_3d.rotateY(), 0);
 	test.equal(_3d.rotateZ(), 0);
@@ -16,12 +15,6 @@ tape('_3d has expected defaults', function(test) {
 tape('set origin', function(test) {
 	var _3d = d3._3d().origin([100, 100]);
 	test.deepEqual(_3d.origin(), [100, 100]);
-	test.end();
-});
-
-tape('set distance', function(test) {
-	var _3d = d3._3d().distance(1000);
-	test.equal(_3d.distance(), 1000);
 	test.end();
 });
 
