@@ -2,6 +2,7 @@ import {lineStrip}                  from './primitiveTypes/lineStrip';
 import {lines}                      from './primitiveTypes/lines';
 import {points}                     from './primitiveTypes/points';
 import {polygons}                   from './primitiveTypes/polygons';
+import {quads}                      from './primitiveTypes/quads';
 import {triangles}                  from './primitiveTypes/triangles';
 
 import {drawLineStrip}              from './draw/drawLineStrip';
@@ -30,6 +31,7 @@ export default function() {
             'LINES'      : lines,
             'POINTS'     : points,
             'POLYGONS'   : polygons,
+            'QUADS'      : quads,
             'TRIANGLES'  : triangles,
         },
         draw = {
