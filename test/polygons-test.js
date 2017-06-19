@@ -10,7 +10,7 @@ tape('draw function of \'polygons\' draws correctly', function(test){
 	test.end();
 });
 
-tape.only('polygons are getting drawn clockwise', function(test){
+tape('polygons are getting drawn clockwise', function(test){
     var _3d = d3._3d().primitiveType('POLYGONS');
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9],[1,0,1]],
