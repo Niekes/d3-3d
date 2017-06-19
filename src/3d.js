@@ -1,7 +1,7 @@
 import {lineStrip}                  from './primitiveTypes/lineStrip';
 import {lines}                      from './primitiveTypes/lines';
 import {points}                     from './primitiveTypes/points';
-import {polygons}                    from './primitiveTypes/polygons';
+import {polygons}                   from './primitiveTypes/polygons';
 import {triangles}                  from './primitiveTypes/triangles';
 
 import {drawLineStrip}              from './draw/drawLineStrip';
