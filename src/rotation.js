@@ -1,13 +1,6 @@
-export function rotateRxRyRz(p, angles){
+export function rotateRxRyRz(po, angles){
 
-    /*
-        for right hand coorpinate system negate y anp z
-    */
-
-    p.z = -p.z;
-    p.y = -p.y;
-
-    var ry = rotateY(p,  angles.y);
+    var ry = rotateY(po, angles.y);
     var rx = rotateX(ry, angles.x);
     var rz = rotateZ(rx, angles.z);
 
