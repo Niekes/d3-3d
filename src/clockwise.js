@@ -12,5 +12,5 @@ export function clockwise(polygon) {
         sum += (p2.x - p1.x) * (p2.y + p1.y);
     }
 
-    return sum > 0 ? true : false;
+    return sum < 0 ? true : false;
 }
