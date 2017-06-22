@@ -1,6 +1,7 @@
-import {rotateRxRyRz}   from '../rotation';
-import {project}        from '../projection';
+import {centroid}       from '../centroid';
 import {clockwise}      from '../clockwise';
+import {project}        from '../projection';
+import {rotateRxRyRz}   from '../rotation';
 
 export function polygons(data, options, point, angles){
 
@@ -14,7 +15,8 @@ export function polygons(data, options, point, angles){
             p.projected = project(p.rotated, options);
         }
 
-        pol.cw = clockwise(pol);
+        pol.ccw      = clockwise(pol);
+        pol.centroid = centroid(pol);
     }
     return data;
 }
