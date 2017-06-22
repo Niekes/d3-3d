@@ -1,5 +1,6 @@
-import {rotateRxRyRz}   from '../rotation';
+import {centroid}       from '../centroid';
 import {project}        from '../projection';
+import {rotateRxRyRz}   from '../rotation';
 
 export function lines(data, options, point, angles){
 

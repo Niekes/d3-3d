@@ -1,6 +1,7 @@
-import {rotateRxRyRz}   from '../rotation';
-import {project}        from '../projection';
+import {centroid}       from '../centroid';
 import {clockwise}      from '../clockwise';
+import {project}        from '../projection';
+import {rotateRxRyRz}   from '../rotation';
 
 export function triangles(data, options, point, angles){
 
@@ -11,7 +12,6 @@ export function triangles(data, options, point, angles){
         var p1       = tri[0];
         var p2       = tri[1];
         var p3       = tri[2];
-        var n        = tri.length;
 
         p1.rotated   = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
         p2.rotated   = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
@@ -22,7 +22,7 @@ export function triangles(data, options, point, angles){
         p3.projected = project(p3.rotated, options);
 
         tri.cw       = clockwise(tri);
-        tri.centroid = { x: (p1.rotated.x + p2.rotated.x + p3.rotated.x)/n, y: (p1.rotated.y + p2.rotated.y + p3.rotated.y)/n, z: (p1.rotated.z + p2.rotated.z + p3.rotated.z)/n};
+        tri.centroid = centroid([p1, p2, p3]);
     }
     return data;
 }
