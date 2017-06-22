@@ -15,8 +15,8 @@ export function triangleStrip(data, options, point, angles){
             p.projected = project(p.rotated, options);
         }
 
-        tri.ccw      = clockwise(tri);
-        tri.centroid = centroid(tri);
+        // tri.ccw      = clockwise(tri);
+        // tri.centroid = centroid(tri);
     }
     return data;
 }
