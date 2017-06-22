@@ -17,8 +17,8 @@ tape('polygons are getting drawn clockwise', function(test){
         [[1,0,1],[5,0,2],[6,4,1],[4,5,8],[1,5,9]],
         [[1,5,9],[4,5,8],[6,4,1],[5,0,2],[1,0,1]],
     ];
-    test.deepEqual(_3d(data)[0].cw, true);
-    test.deepEqual(_3d(data)[1].cw, true);
-    test.deepEqual(_3d(data)[2].cw, false);
+    test.deepEqual(_3d(data)[0].cw, false);
+    test.deepEqual(_3d(data)[1].cw, false);
+    test.deepEqual(_3d(data)[2].cw, true);
     test.end();
 });
