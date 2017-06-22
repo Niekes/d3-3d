@@ -7,6 +7,7 @@ import {triangles}                  from './primitiveTypes/triangles';
 
 import {drawLineStrip}              from './draw/drawLineStrip';
 import {drawPolygons}               from './draw/drawPolygons';
+import {drawQuads}                  from './draw/drawQuads';
 import {drawTriangles}              from './draw/drawTriangles';
 
 import {x as px, y as py, z as pz } from './point';
@@ -37,6 +38,7 @@ export default function() {
         draw = {
             'LINE_STRIP' : drawLineStrip,
             'POLYGONS'   : drawPolygons,
+            'QUADS'      : drawQuads,
             'TRIANGLES'  : drawTriangles,
         };
 
