@@ -16,7 +16,7 @@ export function lineStrip(data, options, point, angles){
 
         var mid = l.length/2;
         var int = parseInt(mid);
-        l.centroid = mid % 2 === 0 ? centroid([ l[mid - 1],l[mid] ]) : {x: point.x(l[int]), y: point.y(l[int]), z: point.z(l[int])};
+        l.centroid = mid === int ? centroid([ l[mid - 1], l[mid] ]) : {x: point.x(l[int]), y: point.y(l[int]), z: point.z(l[int])};
     }
 
 
