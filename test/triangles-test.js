@@ -37,9 +37,9 @@ tape('triangles are a closed path', function(test){
     test.end();
 });
 
-tape('triangles are getting drawn clockwise', function(test){
+tape('triangles are getting drawn counter-clockwise', function(test){
     var _3d = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
-    var data = [
+    var data1 = [
         [{x:  1, y:  0, z:  0}, {x: -1, y:  0, z:  0}, {x:  0, y:  1, z:  0}],
         [{x:  0, y:  1, z:  0}, {x:  1, y:  0, z:  0}, {x: -1, y:  0, z:  0}],
         [{x: -1, y:  0, z:  0}, {x:  0, y:  1, z:  0}, {x:  1, y:  0, z:  0}],
@@ -47,12 +47,13 @@ tape('triangles are getting drawn clockwise', function(test){
         [{x: -1, y:  0, z:  0}, {x:  1, y:  0, z:  0}, {x:  0, y:  1, z:  0}],
         [{x:  0, y:  1, z:  0}, {x: -1, y:  0, z:  0}, {x:  1, y:  0, z:  0}],
     ];
-    test.equal(_3d(data)[0].cw, true);
-    test.equal(_3d(data)[1].cw, true);
-    test.equal(_3d(data)[2].cw, true);
-    test.equal(_3d(data)[3].cw, false);
-    test.equal(_3d(data)[4].cw, false);
-    test.equal(_3d(data)[5].cw, false);
+
+    test.equal(_3d(data1)[0].ccw, false);
+    test.equal(_3d(data1)[1].ccw, false);
+    test.equal(_3d(data1)[2].ccw, false);
+    test.equal(_3d(data1)[3].ccw, true);
+    test.equal(_3d(data1)[4].ccw, true);
+    test.equal(_3d(data1)[5].ccw, true);
     test.end();
 });
 
