@@ -21,7 +21,7 @@ export function triangles(data, options, point, angles){
         p2.projected = project(p2.rotated, options);
         p3.projected = project(p3.rotated, options);
 
-        tri.ccw       = clockwise(tri);
+        tri.ccw      = clockwise(tri);
         tri.centroid = centroid(tri);
     }
     return data;

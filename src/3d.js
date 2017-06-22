@@ -3,11 +3,13 @@ import {lines}                      from './primitiveTypes/lines';
 import {points}                     from './primitiveTypes/points';
 import {polygons}                   from './primitiveTypes/polygons';
 import {quads}                      from './primitiveTypes/quads';
+import {triangleStrip}              from './primitiveTypes/triangleStrip';
 import {triangles}                  from './primitiveTypes/triangles';
 
 import {drawLineStrip}              from './draw/drawLineStrip';
 import {drawPolygons}               from './draw/drawPolygons';
 import {drawQuads}                  from './draw/drawQuads';
+import {drawTriangleStrip}          from './draw/drawTriangleStrip';
 import {drawTriangles}              from './draw/drawTriangles';
 
 import {x as px, y as py, z as pz } from './point';
@@ -28,18 +30,20 @@ export default function() {
         z               = pz,
         primitiveType   = 'POINTS',
         processData = {
-            'LINE_STRIP' : lineStrip,
-            'LINES'      : lines,
-            'POINTS'     : points,
-            'POLYGONS'   : polygons,
-            'QUADS'      : quads,
-            'TRIANGLES'  : triangles,
+            'LINE_STRIP'    : lineStrip,
+            'LINES'         : lines,
+            'POINTS'        : points,
+            'POLYGONS'      : polygons,
+            'QUADS'         : quads,
+            'TRIANGLE_STRIP': triangleStrip,
+            'TRIANGLES'     : triangles,
         },
         draw = {
-            'LINE_STRIP' : drawLineStrip,
-            'POLYGONS'   : drawPolygons,
-            'QUADS'      : drawQuads,
-            'TRIANGLES'  : drawTriangles,
+            'LINE_STRIP'       : drawLineStrip,
+            'POLYGONS'         : drawPolygons,
+            'QUADS'            : drawQuads,
+            'TRIANGLE_STRIP'   : drawTriangleStrip,
+            'TRIANGLES'        : drawTriangles,
         };
 
     function _3d(data){
