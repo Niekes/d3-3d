@@ -12,5 +12,14 @@ tape('draw function of \'triangle_strip\' draws correctly', function(test){
     test.end();
 });
 
-// @todo draws always n-2 triangles
-
+tape.only('\'triangle_strip\' creates n-2 triangles', function(test){
+    var regex = /(?=[M])/;
+    var _3d = d3._3d().primitiveType('TRIANGLE_STRIP');
+    var data = [
+        [[0,1,0],[0,0,0],[1,1,0],[1.5,0,0]],
+        [[0,10,0],[0,0,0],[10,10,0],[15,0,0],[20,0,0]],
+    ];
+    test.deepEqual(_3d.draw(_3d(data)[0]).split(regex).length, data[0].length - 2);
+    test.deepEqual(_3d.draw(_3d(data)[1]).split(regex).length, data[1].length - 2);
+    test.end();
+});
