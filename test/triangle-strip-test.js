@@ -12,3 +12,5 @@ tape('draw function of \'triangle_strip\' draws correctly', function(test){
     test.end();
 });
 
+// @todo draws always n-2 triangles
+
