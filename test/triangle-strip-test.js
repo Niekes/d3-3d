@@ -12,7 +12,7 @@ tape('draw function of \'triangle_strip\' draws correctly', function(test){
     test.end();
 });
 
-tape.only('\'triangle_strip\' creates n-2 triangles', function(test){
+tape('\'triangle_strip\' creates n-2 triangles', function(test){
     var regex = /(?=[M])/;
     var _3d = d3._3d().primitiveType('TRIANGLE_STRIP');
     var data = [
