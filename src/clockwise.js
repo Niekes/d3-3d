@@ -4,7 +4,8 @@ export function clockwise(polygon) {
 
     _polygon.push(_polygon[0]);
 
-    for (var i = polygon.length - 1; i >= 0; i--) {
+    for (var i = 0; i <= polygon.length - 1; i++) {
+
         var j  = i + 1;
         var p1 = _polygon[i].rotated;
         var p2 = _polygon[j].rotated;
