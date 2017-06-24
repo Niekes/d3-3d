@@ -1,6 +1,6 @@
 export function clockwise(polygon) {
 
-    var _polygon = polygon.slice(0), sum = 0;
+    var _polygon = polygon.slice(0), area = 0;
 
     _polygon.push(_polygon[0]);
 
@@ -10,8 +10,8 @@ export function clockwise(polygon) {
         var p1 = _polygon[i].rotated;
         var p2 = _polygon[j].rotated;
 
-        sum += (p2.x - p1.x) * (p2.y + p1.y);
+        area += (p2.x - p1.x) * (p2.y + p1.y);
     }
 
-    return sum < 0 ? true : false;
+    return area < 0 ? true : false;
 }
