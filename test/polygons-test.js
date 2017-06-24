@@ -10,7 +10,7 @@ tape('draw function of \'polygons\' draws correctly', function(test){
 	test.end();
 });
 
-tape.only('polygons are getting drawn counter-clockwise', function(test){
+tape('polygons are getting drawn counter-clockwise', function(test){
     var _3d = d3._3d().primitiveType('POLYGONS');
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9],[1,0,1]],
@@ -18,13 +18,14 @@ tape.only('polygons are getting drawn counter-clockwise', function(test){
         [[1,5,9],[4,5,8],[6,4,1],[5,0,2],[1,0,1]],
         [[1,0,0],[-1,0,0],[0,1,0]],
         [[3,4,0],[5,11,0],[12,8,0],[9,5,0],[5,6,0]],
+        [[-3,4,0],[-5,11,0],[-12,8,0],[-9,5,0],[-5,6,0]],
     ];
     test.deepEqual(_3d(data)[0].ccw, true);
     test.deepEqual(_3d(data)[1].ccw, true);
     test.deepEqual(_3d(data)[2].ccw, false);
     test.deepEqual(_3d(data)[3].ccw, false);
     test.deepEqual(_3d(data)[4].ccw, false);
-
+    test.deepEqual(_3d(data)[5].ccw, true);
     test.end();
 });
 

@@ -1,5 +1,5 @@
+import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
-import {clockwise}      from '../clockwise';
 import {project}        from '../projection';
 import {rotateRxRyRz}   from '../rotation';
 
@@ -15,7 +15,7 @@ export function triangleStrip(data, options, point, angles){
             p.projected = project(p.rotated, options);
         }
 
-        // tri.ccw      = clockwise(tri);
+        // tri.ccw     = ccw(tri);
         // tri.centroid = centroid(tri);
     }
     return data;

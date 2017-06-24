@@ -1,5 +1,5 @@
+import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
-import {clockwise}      from '../clockwise';
 import {project}        from '../projection';
 import {rotateRxRyRz}   from '../rotation';
 
@@ -15,7 +15,7 @@ export function polygons(data, options, point, angles){
             p.projected = project(p.rotated, options);
         }
 
-        pol.ccw      = clockwise(pol);
+        pol.ccw     = ccw(pol);
         pol.centroid = centroid(pol);
     }
     return data;

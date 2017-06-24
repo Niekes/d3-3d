@@ -22,7 +22,7 @@ tape('draw function of \'quads\' draws correctly', function(test){
 tape('quads are drawn counter-clockwise', function(test){
     var _3d = d3._3d().primitiveType('QUADS');
     var data = [
-        [[1,0,0],[-1,0,0],[-1,1,0],[1,1,0]]
+        [[-1,0,0],[1,0,0],[1,1,0],[-1,1,0]]
     ];
     test.deepEqual(_3d(data)[0].ccw, true);
     test.end();
