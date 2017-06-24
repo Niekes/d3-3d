@@ -24,7 +24,7 @@ export function quads(data, options, point, angles){
         p3.projected = project(p3.rotated, options);
         p4.projected = project(p4.rotated, options);
 
-        quad.ccw       = clockwise(quad);
+        quad.ccw      = clockwise(quad);
         quad.centroid = centroid(quad);
     }
     return data;
