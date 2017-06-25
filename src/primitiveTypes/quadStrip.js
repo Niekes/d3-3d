@@ -15,7 +15,6 @@ export function quadStrip(data, options, point, angles){
             p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
             p.projected = project(p.rotated, options);
         }
-
         // quad.ccw     = ccw(quad);
         // quad.centroid = centroid(quad);
     }
