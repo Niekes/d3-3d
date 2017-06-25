@@ -10,14 +10,10 @@ export function quadStrip(data, options, point, angles){
         var quad = data[i];
 
         for (var j = quad.length - 1; j >= 0; j--) {
-            var q = quad[j];
-            var p1 = q[0];
-            var p2 = q[1];
+            var p = quad[j];
 
-            p1.rotated   = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
-            p2.rotated   = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
-            p1.projected = project(p1.rotated, options);
-            p2.projected = project(p2.rotated, options);
+            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
+            p.projected = project(p.rotated, options);
         }
 
         // quad.ccw     = ccw(quad);
