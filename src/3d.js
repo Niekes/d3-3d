@@ -17,8 +17,8 @@ import {drawTriangles}              from './draw/drawTriangles';
 import {x as px, y as py, z as pz } from './point';
 
 /**
- * @author Stefan Nieke / http://niekes.com/
- */
+* @author Stefan Nieke / http://niekes.com/
+*/
 
 export default function() {
 
@@ -53,10 +53,10 @@ export default function() {
     function _3d(data){
         return processData[primitiveType](
             data,
-            {scale: scale, origin: origin},
-            {x: x, y: y, z: z},
-            {x: angleX, y: angleY, z: angleZ
-        });
+            { scale: scale, origin: origin },
+            { x: x, y: y, z: z },
+            { x: angleX, y: angleY, z: angleZ }
+        );
     }
 
     _3d.origin = function(_){
