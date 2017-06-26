@@ -11,8 +11,10 @@ export function drawTriangleStrip(triangleStrip){
         var v1 = triangleStrip[j].projected;
         var v2 = triangleStrip[k].projected;
 
-        path += 'M' + v0.x + ',' + v0.y + 'L' + v1.x + ',' + v1.y + 'L' + v2.x + ',' + v2.y + 'Z';
+        path += 'M' + v1.x + ',' + v1.y + ' ' + v0.x + ',' + v0.y + ' ' + v2.x + ',' + v2.y;
     }
+
+    path += 'Z';
 
 	return path;
 }
