@@ -1,6 +1,6 @@
 export function rotateRxRyRz(po, angles){
 
-    po.y   = -po.y;
+    // po.y   = -po.y;
 
     var ry = rotateY(po, angles.y);
     var rx = rotateX(ry, angles.x);
