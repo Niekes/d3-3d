@@ -15,7 +15,7 @@ tape('draw function of \'quads\' draws correctly', function(test){
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9]]
     ];
-    test.deepEqual(_3d.draw(_3d(data)[0]), 'M5,0L6,-4L4,-5L1,-5Z');
+    test.deepEqual(_3d.draw(_3d(data)[0]), 'M5,0L6,4L4,5L1,5Z');
     test.end();
 });
 

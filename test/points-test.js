@@ -40,6 +40,6 @@ tape('rotate point 1|1|1 along x axis by 180°', function(test){
 tape('project point 1|1|1 on to screen', function(test){
     var data = [[1,1,1]];
     var _3d = d3._3d().scale(100);
-    test.deepEqual(_3d(data)[0].projected, {x: 100, y: -100});
+    test.deepEqual(_3d(data)[0].projected, {x: 100, y: 100});
     test.end();
 });
