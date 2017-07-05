@@ -101,5 +101,13 @@ export default function() {
         }
     };
 
+    _3d.radiansToDegrees = function(radians){
+        return radians / 180 * Math.PI;
+    };
+
+    _3d.degreesToRadians = function(degrees){
+        return degrees * Math.PI / 180;
+    };
+
     return _3d;
 }
