@@ -6,7 +6,7 @@ export function lineStrip(data, options, point, angles){
 
     for (var i = data.length - 1; i >= 0; i--) {
 
-        var l = data[i];
+        var l = data[i], m = l.length/2, t = parseInt(m);
 
         for (var j = l.length - 1; j >= 0; j--) {
             var p = l[j];
@@ -14,9 +14,7 @@ export function lineStrip(data, options, point, angles){
             p.projected = project(p.rotated, options);
         }
 
-        var mid = l.length/2;
-        var int = parseInt(mid);
-        l.centroid = mid === int ? centroid([ l[mid - 1], l[mid] ]) : {x: l[int].rotated.x, y: l[int].rotated.y, z: l[int].rotated.y};
+        l.centroid = t === m ? centroid([ l[m - 1], l[m] ]) : { x: l[t].rotated.x, y: l[t].rotated.y, z: l[t].rotated.z };
     }
 
 
