@@ -27,6 +27,7 @@ export default function() {
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
+        pivot           = [0,0,0],
         x               = px,
         y               = py,
         z               = pz,
@@ -53,7 +54,7 @@ export default function() {
     function _3d(data){
         return processData[primitiveType](
             data,
-            { scale: scale, origin: origin },
+            { scale: scale, origin: origin, pivot: pivot },
             { x: x, y: y, z: z },
             { x: angleX, y: angleY, z: angleZ }
         );
@@ -83,6 +84,10 @@ export default function() {
         return arguments.length ? (primitiveType = _, _3d) : primitiveType;
     };
 
+    _3d.pivot = function(_){
+        return arguments.length ? (pivot = _, _3d) : pivot;
+    };
+
     _3d.x = function(_){
         return arguments.length ? (x = typeof _ === 'function' ? _ : +_, _3d) : x;
     };
@@ -102,7 +107,7 @@ export default function() {
     };
 
     _3d.radiansToDegrees = function(radians){
-        return radians / 180 * Math.PI;
+        return radians * 180 / Math.PI;
     };
 
     _3d.degreesToRadians = function(degrees){
