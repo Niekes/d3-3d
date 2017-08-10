@@ -27,7 +27,7 @@ export default function() {
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
-        pivot           = [0,0,0],
+        rotateCenter    = [0,0,0],
         x               = px,
         y               = py,
         z               = pz,
@@ -54,9 +54,9 @@ export default function() {
     function _3d(data){
         return processData[primitiveType](
             data,
-            { scale: scale, origin: origin, pivot: pivot },
+            { scale: scale, origin: origin },
             { x: x, y: y, z: z },
-            { x: angleX, y: angleY, z: angleZ }
+            { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter }
         );
     }
 
@@ -84,8 +84,8 @@ export default function() {
         return arguments.length ? (primitiveType = _, _3d) : primitiveType;
     };
 
-    _3d.pivot = function(_){
-        return arguments.length ? (pivot = _, _3d) : pivot;
+    _3d.rotateCenter = function(_){
+        return arguments.length ? (rotateCenter = _, _3d) : rotateCenter;
     };
 
     _3d.x = function(_){

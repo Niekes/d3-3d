@@ -71,12 +71,3 @@ tape('triangles\' centroid calculation is correct', function(test){
     test.deepEqual(_3d(data)[2].centroid, { x: 1.3333333333333333, y: 1, z: 0 });
     test.end();
 });
-
-tape.only('triangles\' angle to lightSource calculation is correct', function(test){
-    var _3d = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
-    var data = [
-        [{x:-1,y:1,z:4},{x:0,y:-1,z:4},{x:1,y:1,z:4}],      
-    ];
-    test.deepEqual(_3d(data)[0].lightAngle, -0.9965457582448797);
-    test.end();
-});

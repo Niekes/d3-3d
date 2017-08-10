@@ -11,7 +11,7 @@ export function triangleStrip(data, options, point, angles){
 
         for (var j = tri.length - 1; j >= 0; j--) {
             var p = tri[j];
-            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles, options.pivot);
+            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
             p.projected = project(p.rotated, options);
         }
 
