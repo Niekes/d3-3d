@@ -63,9 +63,20 @@ tape('triangles\' centroid calculation is correct', function(test){
         [{x: 5, y: 0, z: 0},{x: 6, y: 4, z: 0},{x: 4, y: 5, z: 0}],
         [{x: 2, y: 1, z: 0},{x: 2, y: 2, z: 0},{x: 1, y: 1, z: 0}],
         [{x: 1, y: 0, z: 0},{x: 1, y: 2, z: 0},{x: 2, y: 1, z: 0}],
+        [{x: 1, y: 0, z: 1},{x: 1, y: 2, z: 1},{x: 2, y: 1, z: 1}],
+        [{x: 1, y: 0, z: 2},{x: 1, y: 2, z: 2},{x: 2, y: 1, z: 2}],
     ];
     test.deepEqual(_3d(data)[0].centroid, { x: 5, y: 3, z: 0 });
     test.deepEqual(_3d(data)[1].centroid, { x: 1.6666666666666667, y: 1.3333333333333333, z: 0 });
     test.deepEqual(_3d(data)[2].centroid, { x: 1.3333333333333333, y: 1, z: 0 });
+    test.end();
+});
+
+tape.only('triangles\' angle to lightSource calculation is correct', function(test){
+    var _3d = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+    var data = [
+        [{x:-1,y:1,z:4},{x:0,y:-1,z:4},{x:1,y:1,z:4}],      
+    ];
+    test.deepEqual(_3d(data)[0].lightAngle, -0.9965457582448797);
     test.end();
 });

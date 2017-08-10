@@ -1,10 +1,16 @@
-export function rotateRxRyRz(po, angles){
+export function rotateRxRyRz(po, angles, pivot){
 
-    // po.y   = -po.y;
+    po.x -= pivot[0];
+    po.y -= pivot[1];
+    po.z -= pivot[2];
 
     var ry = rotateY(po, angles.y);
     var rx = rotateX(ry, angles.x);
     var rz = rotateZ(rx, angles.z);
+
+    rz.x += pivot[0];
+    rz.y += pivot[1];
+    rz.z += pivot[2];
 
     return rz;
 }

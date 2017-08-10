@@ -10,7 +10,7 @@ tape('draw function of \'line_strip\' draws correctly', function(test){
 	test.end();
 });
 
-tape.only('centroid calculation of \'line_strip\' is correct', function(test){
+tape('centroid calculation of \'line_strip\' is correct', function(test){
     // line_strip should have at least three points
     var _3d = d3._3d().primitiveType('LINE_STRIP');
     var data = [
