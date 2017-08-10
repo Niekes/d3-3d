@@ -14,10 +14,10 @@ export function quads(data, options, point, angles){
         var p3       = quad[2];
         var p4       = quad[3];
 
-        p1.rotated   = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
-        p2.rotated   = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
-        p3.rotated   = rotateRxRyRz({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, angles);
-        p4.rotated   = rotateRxRyRz({x : point.x(p4), y : point.y(p4), z : point.z(p4)}, angles);
+        p1.rotated   = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles, options.pivot);
+        p2.rotated   = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles, options.pivot);
+        p3.rotated   = rotateRxRyRz({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, angles, options.pivot);
+        p4.rotated   = rotateRxRyRz({x : point.x(p4), y : point.y(p4), z : point.z(p4)}, angles, options.pivot);
 
         p1.projected = project(p1.rotated, options);
         p2.projected = project(p2.rotated, options);

@@ -10,7 +10,7 @@ export function lineStrip(data, options, point, angles){
 
         for (var j = l.length - 1; j >= 0; j--) {
             var p = l[j];
-            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
+            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles, options.pivot);
             p.projected = project(p.rotated, options);
         }
 

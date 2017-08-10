@@ -7,7 +7,7 @@ export function points(data, options, point, angles){
 
         var p       = data[i];
 
-        p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
+        p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles, options.pivot);
         p.centroid  = p.rotated;
         p.projected = project(p.rotated, options);
     }
