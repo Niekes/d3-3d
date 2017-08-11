@@ -10,7 +10,7 @@ export function ccw(polygon) {
         var p1 = _p[i].rotated;
         var p2 = _p[j].rotated;
 
-        sum = sum + (p2.x - p1.x) * (p2.y + p1.y);
+        sum += (p2.x - p1.x) * (p2.y + p1.y);
     }
 
     return sum < 0 ? true : false;
