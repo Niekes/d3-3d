@@ -2,7 +2,7 @@ var tape = require('tape');
 var d3   = require('../');
 
 tape('draw function of \'polygons\' draws correctly', function(test){
-	var _3d = d3._3d().primitiveType('POLYGONS');
+	var _3d = d3._3d().shape('POLYGON');
 	var data = [
 		[[5,0,2],[6,4,1],[4,5,8],[1,5,9],[1,0,1]]
 	];
@@ -11,7 +11,7 @@ tape('draw function of \'polygons\' draws correctly', function(test){
 });
 
 tape('polygons are getting drawn counter-clockwise', function(test){
-    var _3d = d3._3d().primitiveType('POLYGONS');
+    var _3d = d3._3d().shape('POLYGON');
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9],[1,0,1]],
         [[1,0,1],[5,0,2],[6,4,1],[4,5,8],[1,5,9]],
@@ -30,7 +30,7 @@ tape('polygons are getting drawn counter-clockwise', function(test){
 });
 
 tape('polygon\'s  centroid function is correct', function(test){
-    var _3d = d3._3d().primitiveType('POLYGONS');
+    var _3d = d3._3d().shape('POLYGON');
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9],[1,0,1]],
         [[1,0,1],[5,0,2],[6,4,1],[4,5,8],[1,5,9]],

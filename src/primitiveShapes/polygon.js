@@ -2,11 +2,11 @@ import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
 import {rotateRxRyRz}   from '../rotation';
 
-export function polygons(data, options, point, angles){
+export function polygon(polygons, options, point, angles){
 
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = polygons.length - 1; i >= 0; i--) {
 
-        var pol = data[i];
+        var pol = polygons[i];
 
         for (var j = pol.length - 1; j >= 0; j--) {
             var p = pol[j];
@@ -17,5 +17,5 @@ export function polygons(data, options, point, angles){
         pol.ccw      = ccw(pol);
         pol.centroid = centroid(pol);
     }
-    return data;
+    return polygons;
 }

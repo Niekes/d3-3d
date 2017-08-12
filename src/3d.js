@@ -1,17 +1,19 @@
-import {lineStrip}                  from './primitiveTypes/lineStrip';
-import {lines}                      from './primitiveTypes/lines';
-import {planes}                     from './primitiveTypes/planes';
-import {points}                     from './primitiveTypes/points';
-import {polygons}                   from './primitiveTypes/polygons';
-import {triangles}                  from './primitiveTypes/triangles';
+import {cube}          from './primitiveShapes/cube';
+import {lineStrip}     from './primitiveShapes/lineStrip';
+import {line}          from './primitiveShapes/line';
+import {plane}         from './primitiveShapes/plane';
+import {point}         from './primitiveShapes/point';
+import {polygon}       from './primitiveShapes/polygon';
+import {triangle}      from './primitiveShapes/triangle';
 
-import {drawLineStrip}              from './draw/drawLineStrip';
-import {drawPlanes}                 from './draw/drawPlanes';
-import {drawPolygons}               from './draw/drawPolygons';
-import {drawTriangles}              from './draw/drawTriangles';
+import {drawCube}      from './draw/drawCube';
+import {drawLineStrip} from './draw/drawLineStrip';
+import {drawPlane}     from './draw/drawPlane';
+import {drawPolygon}   from './draw/drawPolygon';
+import {drawTriangle}  from './draw/drawTriangle';
 
-import {orthographic}               from './projection-orthographic';
-import {perspective}                from './projection-perspective';
+import {orthographic}  from './projection-orthographic';
+import {perspective}   from './projection-perspective';
 
 import {x as px, y as py, z as pz } from './point';
 
@@ -32,24 +34,26 @@ export default function() {
         x               = px,
         y               = py,
         z               = pz,
-        primitiveType   = 'POINTS',
+        shape           = 'POINT',
         processData = {
-            'LINE_STRIP'    : lineStrip,
-            'LINES'         : lines,
-            'PLANES'        : planes,
-            'POINTS'        : points,
-            'POLYGONS'      : polygons,
-            'TRIANGLES'     : triangles,
+            'CUBE'       : cube,
+            'LINE_STRIP' : lineStrip,
+            'LINE'       : line,
+            'PLANE'      : plane,
+            'POINT'      : point,
+            'POLYGON'    : polygon,
+            'TRIANGLE'   : triangle,
         },
         draw = {
-            'LINE_STRIP'       : drawLineStrip,
-            'PLANES'           : drawPlanes,
-            'POLYGONS'         : drawPolygons,
-            'TRIANGLES'        : drawTriangles,
+            'CUBE'       : drawCube,
+            'LINE_STRIP' : drawLineStrip,
+            'PLANE'      : drawPlane,
+            'POLYGON'    : drawPolygon,
+            'TRIANGLE'   : drawTriangle,
         };
 
     function _3d(data){
-        return processData[primitiveType](
+        return processData[shape](
             data,
             { scale: scale, origin: origin, project: projection, perspective: persp },
             { x: x, y: y, z: z },
@@ -88,8 +92,8 @@ export default function() {
         return arguments.length ? (angleZ = _, _3d) : angleZ;
     };
 
-    _3d.primitiveType = function(_){
-        return arguments.length ? (primitiveType = _, _3d) : primitiveType;
+    _3d.shape = function(_){
+        return arguments.length ? (shape = _, _3d) : shape;
     };
 
     _3d.rotateCenter = function(_){
@@ -109,8 +113,8 @@ export default function() {
     };
 
     _3d.draw = function(d){
-        if(!((primitiveType === 'POINTS') || (primitiveType === 'LINES'))){
-            return draw[primitiveType](d);
+        if(!((shape === 'POINT') || (shape === 'LINE'))){
+            return draw[shape](d);
         }
     };
 

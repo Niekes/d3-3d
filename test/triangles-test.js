@@ -2,7 +2,7 @@ var tape = require('tape');
 var d3   = require('../');
 
 tape('triangle draw', function(test){
-	var triangles = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+	var triangles = d3._3d().shape('TRIANGLE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
 	var data = [
 		[{x: 0, y: 0, z: 0},{x: 0, y: 1, z: 0},{x: 1, y: 0, z: 0}]
 	];
@@ -29,7 +29,7 @@ tape('access triangle coords via function', function(test){
 });
 
 tape('triangles are a closed path', function(test){
-    var triangles = d3._3d().primitiveType('TRIANGLES');
+    var triangles = d3._3d().shape('TRIANGLE');
     var data = [[[0,0,0],[0,1,0],[1,0,0]]];
     var path = triangles.draw(triangles(data)[0]);
     var lastChar = path[path.length - 1];
@@ -38,7 +38,7 @@ tape('triangles are a closed path', function(test){
 });
 
 tape('triangles are getting drawn counter-clockwise', function(test){
-    var triangles = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+    var triangles = d3._3d().shape('TRIANGLE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
     var data1 = [
         [{x:  1, y:  0, z:  0}, {x: -1, y:  0, z:  0}, {x:  0, y:  1, z:  0}],
         [{x:  0, y:  1, z:  0}, {x:  1, y:  0, z:  0}, {x: -1, y:  0, z:  0}],
@@ -58,7 +58,7 @@ tape('triangles are getting drawn counter-clockwise', function(test){
 });
 
 tape('triangles\' centroid calculation is correct', function(test){
-    var triangles = d3._3d().primitiveType('TRIANGLES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+    var triangles = d3._3d().shape('TRIANGLE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
     var data = [
         [{x: 5, y: 0, z: 0},{x: 6, y: 4, z: 0},{x: 4, y: 5, z: 0}],
         [{x: 2, y: 1, z: 0},{x: 2, y: 2, z: 0},{x: 1, y: 1, z: 0}],
@@ -71,3 +71,7 @@ tape('triangles\' centroid calculation is correct', function(test){
     test.deepEqual(triangles(data)[2].centroid, { x: 1.3333333333333333, y: 1, z: 0 });
     test.end();
 });
+
+
+
+

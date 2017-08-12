@@ -2,13 +2,13 @@ var tape = require('tape');
 var d3   = require('../');
 
 tape('lines don\'t have a draw function', function(test){
-    var _3d = d3._3d().primitiveType('LINES');
+    var _3d = d3._3d().shape('LINE');
     test.equal(_3d.draw(), undefined);
     test.end();
 });
 
 tape('centroid calculation for lines', function(test){
-	var _3d = d3._3d().primitiveType('LINES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+	var _3d = d3._3d().shape('LINE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
 	var data = [
 		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    0}],
 		[{x:  1, y:   2, z:   3}, {x:    3, y:    2, z:    1}],

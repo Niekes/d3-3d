@@ -1,11 +1,11 @@
 import {centroid}       from '../centroid';
 import {rotateRxRyRz}   from '../rotation';
 
-export function lines(data, options, point, angles){
+export function line(lines, options, point, angles){
 
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = lines.length - 1; i >= 0; i--) {
 
-        var line      = data[i];
+        var line      = lines[i];
 
         var p1        = line[0];
         var p2        = line[1];
@@ -18,5 +18,5 @@ export function lines(data, options, point, angles){
 
         line.centroid = centroid(line);
     }
-    return data;
+    return lines;
 }

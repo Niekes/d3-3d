@@ -1,11 +1,11 @@
 import {centroid}       from '../centroid';
 import {rotateRxRyRz}   from '../rotation';
 
-export function lineStrip(data, options, point, angles){
+export function lineStrip(lineStrip, options, point, angles){
 
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = lineStrip.length - 1; i >= 0; i--) {
 
-        var l = data[i], m = l.length/2, t = parseInt(m);
+        var l = lineStrip[i], m = l.length/2, t = parseInt(m);
 
         for (var j = l.length - 1; j >= 0; j--) {
             var p = l[j];
@@ -17,5 +17,5 @@ export function lineStrip(data, options, point, angles){
     }
 
 
-    return data;
+    return lineStrip;
 }

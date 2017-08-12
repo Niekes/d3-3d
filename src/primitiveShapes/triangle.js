@@ -2,11 +2,11 @@ import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
 import {rotateRxRyRz}   from '../rotation';
 
-export function triangles(data, options, point, angles){
+export function triangle(triangles, options, point, angles){
 
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = triangles.length - 1; i >= 0; i--) {
 
-        var tri      = data[i];
+        var tri      = triangles[i];
 
         var p1       = tri[0];
         var p2       = tri[1];
@@ -23,5 +23,5 @@ export function triangles(data, options, point, angles){
         tri.ccw      = ccw(tri);
         tri.centroid = centroid(tri);
     }
-    return data;
+    return triangles;
 }

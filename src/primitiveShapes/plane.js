@@ -2,11 +2,11 @@ import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
 import {rotateRxRyRz}   from '../rotation';
 
-export function planes(data, options, point, angles){
+export function plane(planes, options, point, angles){
 
-    for (var i = data.length - 1; i >= 0; i--) {
+    for (var i = planes.length - 1; i >= 0; i--) {
 
-        var plane    = data[i];
+        var plane    = planes[i];
 
         var p1       = plane[0];
         var p2       = plane[1];
@@ -26,5 +26,5 @@ export function planes(data, options, point, angles){
         plane.ccw      = ccw(plane);
         plane.centroid = centroid(plane);
     }
-    return data;
+    return planes;
 }
