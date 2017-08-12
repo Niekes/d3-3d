@@ -50,10 +50,10 @@ export default function() {
 
     function _3d(data){
         return processData[primitiveType](
-            data,                                                           // data
-            { scale: scale, origin: origin, project: projection, perspective: persp },       // options
-            { x: x, y: y, z: z },                                           // point function
-            { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter } // angles + rotate center
+            data,
+            { scale: scale, origin: origin, project: projection, perspective: persp },
+            { x: x, y: y, z: z },
+            { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter }
         );
     }
 
@@ -112,14 +112,6 @@ export default function() {
         if(!((primitiveType === 'POINTS') || (primitiveType === 'LINES'))){
             return draw[primitiveType](d);
         }
-    };
-
-    _3d.radiansToDegrees = function(radians){
-        return radians * 180 / Math.PI;
-    };
-
-    _3d.degreesToRadians = function(degrees){
-        return degrees * Math.PI / 180;
     };
 
     return _3d;
