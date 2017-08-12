@@ -1,8 +1,10 @@
 var tape = require('tape');
 var d3   = require('../');
 
-tape('quads\' centroid calculation is correct', function(test){
-    var _3d = d3._3d().primitiveType('QUADS').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+tape('planes\' centroid calculation is correct', function(test){
+
+
+    var _3d = d3._3d().primitiveType('PLANES').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
     var data = [
         [ {x: 1, y: 1, z: 0}, {x: -1, y: 1, z: 0}, {x: 1, y:-1, z: 1}, {x: -1, y: -1, z: 1}],
     ];
@@ -10,8 +12,8 @@ tape('quads\' centroid calculation is correct', function(test){
     test.end();
 });
 
-tape('draw function of \'quads\' draws correctly', function(test){
-    var _3d = d3._3d().primitiveType('QUADS');
+tape('draw function of \'planes\' draws correctly', function(test){
+    var _3d = d3._3d().primitiveType('PLANES');
     var data = [
         [[5,0,2],[6,4,1],[4,5,8],[1,5,9]]
     ];
@@ -19,8 +21,8 @@ tape('draw function of \'quads\' draws correctly', function(test){
     test.end();
 });
 
-tape('quads are drawn counter-clockwise', function(test){
-    var _3d = d3._3d().primitiveType('QUADS');
+tape('planes are drawn counter-clockwise', function(test){
+    var _3d = d3._3d().primitiveType('PLANES');
     var data = [
         [[-1,0,0],[1,0,0],[1,1,0],[-1,1,0]]
     ];

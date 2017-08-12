@@ -1,13 +1,13 @@
 import {lineStrip}                  from './primitiveTypes/lineStrip';
 import {lines}                      from './primitiveTypes/lines';
+import {planes}                     from './primitiveTypes/planes';
 import {points}                     from './primitiveTypes/points';
 import {polygons}                   from './primitiveTypes/polygons';
-import {quads}                      from './primitiveTypes/quads';
 import {triangles}                  from './primitiveTypes/triangles';
 
 import {drawLineStrip}              from './draw/drawLineStrip';
+import {drawPlanes}                 from './draw/drawPlanes';
 import {drawPolygons}               from './draw/drawPolygons';
-import {drawQuads}                  from './draw/drawQuads';
 import {drawTriangles}              from './draw/drawTriangles';
 
 import {orthographic}               from './projection-orthographic';
@@ -36,20 +36,19 @@ export default function() {
         processData = {
             'LINE_STRIP'    : lineStrip,
             'LINES'         : lines,
+            'PLANES'        : planes,
             'POINTS'        : points,
             'POLYGONS'      : polygons,
-            'QUADS'         : quads,
             'TRIANGLES'     : triangles,
         },
         draw = {
             'LINE_STRIP'       : drawLineStrip,
+            'PLANES'           : drawPlanes,
             'POLYGONS'         : drawPolygons,
-            'QUADS'            : drawQuads,
             'TRIANGLES'        : drawTriangles,
         };
 
     function _3d(data){
-
         return processData[primitiveType](
             data,                                                           // data
             { scale: scale, origin: origin, project: projection, perspective: persp },       // options
