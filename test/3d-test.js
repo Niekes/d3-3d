@@ -25,7 +25,6 @@ tape('set scale', function(test) {
 	var _3d2 = d3._3d().scale(2);
 	var _3d3 = d3._3d().scale(3);
 	var _3d4 = d3._3d().scale(4);
-	var _3d4 = d3._3d().scale(4);
 	test.equal(_3d1.scale(), 1);
 	test.equal(_3d2.scale(), 2);
 	test.equal(_3d3.scale(), 3);
@@ -40,12 +39,6 @@ tape('set perspective', function(test) {
 	test.equal(_3d1.perspective(), 1000);
 	test.equal(_3d2.perspective(), 999);
 	test.equal(_3d3.perspective(), undefined);
-	test.end();
-});
-
-tape('set perspective 2', function(test) {
-	var _3d = d3._3d().perspective(9304);
-	test.equal(_3d.perspective(), 9304);
 	test.end();
 });
 
