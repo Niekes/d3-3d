@@ -5,10 +5,12 @@ tape('_3d has expected defaults', function(test) {
 	var _3d = d3._3d();
 	test.deepEqual(_3d.origin(), [0, 0]);
 	test.equal(_3d.scale(), 1);
+	test.equal(_3d.perspective(), undefined);
 	test.equal(_3d.rotateX(), 0);
 	test.equal(_3d.rotateY(), 0);
 	test.equal(_3d.rotateZ(), 0);
 	test.equal(_3d.primitiveType(), 'POINTS');
+	test.deepEqual(_3d.rotateCenter(), [0,0,0]);
 	test.end();
 });
 
@@ -19,8 +21,31 @@ tape('set origin', function(test) {
 });
 
 tape('set scale', function(test) {
-	var _3d = d3._3d().scale(100);
-	test.equal(_3d.scale(), 100);
+	var _3d1 = d3._3d();
+	var _3d2 = d3._3d().scale(2);
+	var _3d3 = d3._3d().scale(3);
+	var _3d4 = d3._3d().scale(4);
+	var _3d4 = d3._3d().scale(4);
+	test.equal(_3d1.scale(), 1);
+	test.equal(_3d2.scale(), 2);
+	test.equal(_3d3.scale(), 3);
+	test.equal(_3d4.scale(), 4);
+	test.end();
+});
+
+tape('set perspective', function(test) {
+	var _3d1 = d3._3d().perspective(1000);
+	var _3d2 = d3._3d().perspective(999);
+	var _3d3 = d3._3d();
+	test.equal(_3d1.perspective(), 1000);
+	test.equal(_3d2.perspective(), 999);
+	test.equal(_3d3.perspective(), undefined);
+	test.end();
+});
+
+tape('set perspective 2', function(test) {
+	var _3d = d3._3d().perspective(9304);
+	test.equal(_3d.perspective(), 9304);
 	test.end();
 });
 

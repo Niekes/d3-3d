@@ -14,6 +14,9 @@ import {drawQuads}                  from './draw/drawQuads';
 import {drawTriangleStrip}          from './draw/drawTriangleStrip';
 import {drawTriangles}              from './draw/drawTriangles';
 
+import {orthographic}               from './projection-orthographic';
+import {perspective}                from './projection-perspective';
+
 import {x as px, y as py, z as pz } from './point';
 
 /**
@@ -24,6 +27,8 @@ export default function() {
 
     var origin          = [0, 0],
         scale           = 1,
+        projection      = orthographic,
+        persp           = undefined,
         angleX          = 0,
         angleY          = 0,
         angleZ          = 0,
@@ -52,11 +57,12 @@ export default function() {
         };
 
     function _3d(data){
+
         return processData[primitiveType](
-            data,
-            { scale: scale, origin: origin },
-            { x: x, y: y, z: z },
-            { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter }
+            data,                                                           // data
+            { scale: scale, origin: origin, project: projection, perspective: persp },       // options
+            { x: x, y: y, z: z },                                           // point function
+            { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter } // angles + rotate center
         );
     }
 
@@ -66,6 +72,17 @@ export default function() {
 
     _3d.scale = function(_){
         return arguments.length ? (scale = _, _3d) : scale;
+    };
+
+    _3d.perspective = function(_){
+        if(arguments.length){
+            persp = _;
+            projection = perspective;
+            return _3d;
+        }else{
+            projection = orthographic;
+            return persp;
+        }
     };
 
     _3d.rotateX = function(_){

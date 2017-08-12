@@ -1,6 +1,5 @@
 import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
-import {project}        from '../projection';
 import {rotateRxRyRz}   from '../rotation';
 
 export function quads(data, options, point, angles){
@@ -19,10 +18,10 @@ export function quads(data, options, point, angles){
         p3.rotated   = rotateRxRyRz({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, angles);
         p4.rotated   = rotateRxRyRz({x : point.x(p4), y : point.y(p4), z : point.z(p4)}, angles);
 
-        p1.projected = project(p1.rotated, options);
-        p2.projected = project(p2.rotated, options);
-        p3.projected = project(p3.rotated, options);
-        p4.projected = project(p4.rotated, options);
+        p1.projected = options.project(p1.rotated, options);
+        p2.projected = options.project(p2.rotated, options);
+        p3.projected = options.project(p3.rotated, options);
+        p4.projected = options.project(p4.rotated, options);
 
         quad.ccw      = ccw(quad);
         quad.centroid = centroid(quad);
