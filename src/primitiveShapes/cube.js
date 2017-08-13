@@ -1,22 +1,66 @@
-import {centroid}       from '../centroid';
-import {rotateRxRyRz}   from '../rotation';
+import {ccw}         from '../counter-clockwise';
+import {centroid}    from '../centroid';
+import {point as pt} from './point';
 
 export function cube(cubes, options, point, angles){
-
+    var _cubes = [];
     for (var i = cubes.length - 1; i >= 0; i--) {
 
-        var cube      = cubes[i];
+        var cube = cubes[i];
 
-        var p1        = cube[0];
-        var p2        = cube[1];
+        var vertices = pt([
+            cube[0],
+            cube[1],
+            cube[2],
+            cube[3],
+            cube[4],
+            cube[5],
+            cube[6],
+            cube[7]
+        ], options, point, angles);
 
-        p1.rotated    = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
-        p2.rotated    = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
+        var v1 = vertices[0];
+        var v2 = vertices[1];
+        var v3 = vertices[2];
+        var v4 = vertices[3];
+        var v5 = vertices[4];
+        var v6 = vertices[5];
+        var v7 = vertices[6];
+        var v8 = vertices[7];
 
-        p1.projected  = options.project(p1.rotated, options);
-        p2.projected  = options.project(p2.rotated, options);
+        var front  = [v1, v2, v3, v4];
+        var back   = [v8, v7, v6, v5];
+        var left   = [v5, v6, v2, v1];
+        var right  = [v4, v3, v7, v8];
+        var top    = [v5, v1, v4, v8];
+        var bottom = [v2, v6, v7, v3];
 
-        cube.centroid = centroid(cube);
+        front.centroid  = centroid(front);
+        back.centroid   = centroid(back);
+        left.centroid   = centroid(left);
+        right.centroid  = centroid(right);
+        top.centroid    = centroid(top);
+        bottom.centroid = centroid(bottom);
+
+        front.ccw  = ccw(front);
+        back.ccw   = ccw(back);
+        left.ccw   = ccw(left);
+        right.ccw  = ccw(right);
+        top.ccw    = ccw(top);
+        bottom.ccw = ccw(bottom);
+
+        front.face  = 'front';
+        back.face   = 'back';
+        left.face   = 'left';
+        right.face  = 'right';
+        top.face    = 'top';
+        bottom.face = 'bottom';
+
+        var _cube = [front, back, left, right, top, bottom];
+
+        // TODO: centroid
+        _cube.centroid = 'TODO';
+        _cubes.push(_cube);
     }
-    return cubes;
+    return _cubes;
 }
