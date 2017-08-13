@@ -58,7 +58,7 @@ export function cube(cubes, options, point, angles){
 
         var _cube = [front, back, left, right, top, bottom];
 
-        // TODO:
+        // TODO
         // _cube.centroid = cube.centroid || centroid(cube);
         _cubes.push(_cube);
     }

@@ -24,6 +24,5 @@ tape('cube naming is correct', function(test){
     test.equal(cubes(data)[0][3].face, 'right');
     test.equal(cubes(data)[0][4].face, 'top');
     test.equal(cubes(data)[0][5].face, 'bottom');
-    test.equal(cubes(data)[0].centroid, 'TODO');
     test.end();
 });
