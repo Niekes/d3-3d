@@ -6,7 +6,6 @@ import {point}         from './primitiveShapes/point';
 import {polygon}       from './primitiveShapes/polygon';
 import {triangle}      from './primitiveShapes/triangle';
 
-import {drawCube}      from './draw/drawCube';
 import {drawLineStrip} from './draw/drawLineStrip';
 import {drawPlane}     from './draw/drawPlane';
 import {drawPolygon}   from './draw/drawPolygon';
@@ -45,7 +44,7 @@ export default function() {
             'TRIANGLE'   : triangle,
         },
         draw = {
-            'CUBE'       : drawCube,
+            'CUBE'       : drawPlane,
             'LINE_STRIP' : drawLineStrip,
             'PLANE'      : drawPlane,
             'POLYGON'    : drawPolygon,
