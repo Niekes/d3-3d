@@ -6,16 +6,16 @@ export function polygon(polygons, options, point, angles){
 
     for (var i = polygons.length - 1; i >= 0; i--) {
 
-        var pol = polygons[i];
+        var ploygon = polygons[i];
 
-        for (var j = pol.length - 1; j >= 0; j--) {
-            var p = pol[j];
+        for (var j = ploygon.length - 1; j >= 0; j--) {
+            var p = ploygon[j];
             p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
             p.projected = options.project(p.rotated, options);
         }
 
-        pol.ccw      = ccw(pol);
-        pol.centroid = centroid(pol);
+        ploygon.ccw      = ccw(ploygon);
+        ploygon.centroid = centroid(ploygon);
     }
     return polygons;
 }
