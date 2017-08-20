@@ -98,6 +98,11 @@ export default function() {
         return arguments.length ? (z = typeof _ === 'function' ? _ : +_, _3d) : z;
     };
 
+    _3d.sort = function(a, b){
+        var _a = a.centroid.z, _b = b.centroid.z;
+        return _a < _b ? -1 : _a > _b ? 1 : _a >= _b ? 0 : NaN;
+    };
+
     _3d.draw = function(d){
         if(!((shape === 'POINT') || (shape === 'LINE'))){
             return draw[shape](d);
