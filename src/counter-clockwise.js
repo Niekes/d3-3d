@@ -12,6 +12,8 @@ export function ccw(polygon) {
 
         sum += (p2.x - p1.x) * (p2.y + p1.y);
     }
-
-    return sum < 0 ? true : false;
+    // if the area is positive
+    // the curve is counter-clockwise
+    // because of the flipped y-Axis in the browser
+    return sum > 0 ? true : false;
 }
