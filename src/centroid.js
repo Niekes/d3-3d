@@ -1,5 +1,5 @@
 export function centroid(polygon){
-
+    // TODO: CALCULATE NORMAL HERE
     var _x = 0, _y = 0, _z = 0;
     var _n = polygon.length;
 
