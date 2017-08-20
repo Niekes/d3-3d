@@ -48,12 +48,12 @@ tape('triangles are getting drawn counter-clockwise', function(test){
         [{x:  0, y:  1, z:  0}, {x: -1, y:  0, z:  0}, {x:  1, y:  0, z:  0}],
     ];
 
-    test.equal(triangles(data1)[0].ccw, false);
-    test.equal(triangles(data1)[1].ccw, false);
-    test.equal(triangles(data1)[2].ccw, false);
-    test.equal(triangles(data1)[3].ccw, true);
-    test.equal(triangles(data1)[4].ccw, true);
-    test.equal(triangles(data1)[5].ccw, true);
+    test.equal(triangles(data1)[0].ccw, true);
+    test.equal(triangles(data1)[1].ccw, true);
+    test.equal(triangles(data1)[2].ccw, true);
+    test.equal(triangles(data1)[3].ccw, false);
+    test.equal(triangles(data1)[4].ccw, false);
+    test.equal(triangles(data1)[5].ccw, false);
     test.end();
 });
 

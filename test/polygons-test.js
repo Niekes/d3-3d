@@ -20,12 +20,12 @@ tape('polygons are getting drawn counter-clockwise', function(test){
         [[3,4,0],[5,11,0],[12,8,0],[9,5,0],[5,6,0]],
         [[-3,4,0],[-5,11,0],[-12,8,0],[-9,5,0],[-5,6,0]],
     ];
-    test.deepEqual(_3d(data)[0].ccw, true);
-    test.deepEqual(_3d(data)[1].ccw, true);
-    test.deepEqual(_3d(data)[2].ccw, false);
-    test.deepEqual(_3d(data)[3].ccw, false);
-    test.deepEqual(_3d(data)[4].ccw, false);
-    test.deepEqual(_3d(data)[5].ccw, true);
+    test.deepEqual(_3d(data)[0].ccw, false);
+    test.deepEqual(_3d(data)[1].ccw, false);
+    test.deepEqual(_3d(data)[2].ccw, true);
+    test.deepEqual(_3d(data)[3].ccw, true);
+    test.deepEqual(_3d(data)[4].ccw, true);
+    test.deepEqual(_3d(data)[5].ccw, false);
     test.end();
 });
 

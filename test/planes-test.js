@@ -26,6 +26,6 @@ tape('planes are drawn counter-clockwise', function(test){
     var data = [
         [[-1,0,0],[1,0,0],[1,1,0],[-1,1,0]]
     ];
-    test.deepEqual(_3d(data)[0].ccw, true);
+    test.deepEqual(_3d(data)[0].ccw, false);
     test.end();
 });
