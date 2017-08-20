@@ -6,6 +6,7 @@
     "d3",
     "d3-module",
     "3D",
+    "d3-3d",
     "projection",
     "visualization"
   ],
