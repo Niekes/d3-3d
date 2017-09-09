@@ -28,7 +28,6 @@ export function cube(cubes, options, point, angles){
         var v7 = vertices[6];
         var v8 = vertices[7];
 
-        // TODO
         var front  = [v1, v2, v3, v4];
         var back   = [v8, v7, v6, v5];
         var left   = [v5, v6, v2, v1];
