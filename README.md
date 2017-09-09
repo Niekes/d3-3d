@@ -1,6 +1,8 @@
 # d3-3d
 
-I will write the API in the couple of month...
+*d3-3d* allows the projection of 3d data onto the screen in the webbrowser. It is designed to work with [d3.js](https://d3js.org/). *d3-3d* adds 3d transformations to SVG elements and
+
+<a target="_blank" href="https://bl.ocks.org/Niekes/e920c03edd7950578b8a6cded8b5a1a5" rel="some text">![3D Surfaceplot created with d3-3d](assets/surfaceplot.gif)</a>
 
 ## Installing
 
@@ -20,3 +22,17 @@ For the minified version:
 ```html
 <script src="https://unpkg.com/d3-3d@version/build/d3-3d.min.js"></script>
 ```
+
+## API Reference
+
+* [d3._3d]() - create a new 3d function object.
+* [*_3d*.shape]() - set the shape.
+* [*_3d*.x]() - set the x accessor.
+* [*_3d*.y]() - set the y accessor.
+* [*_3d*.z]() - set the z accessor.
+* [*_3d*.scale]() - set the z accessor.
+* [*_3d*.rotateX]() - set the angle for the x rotation.
+* [*_3d*.rotateY]() - set the angle for the y rotation.
+* [*_3d*.rotateZ]() - set the angle for the z rotation.
+* [*_3d*.sort]() - sort the 3d elements by the centroid.
+* [*_3d*.draw]() - draw the 3d elements.
