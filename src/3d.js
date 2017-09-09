@@ -51,6 +51,7 @@ export default function() {
             'LINE_STRIP' : drawLineStrip,
             'PLANE'      : drawPlane,
             'POLYGON'    : drawPolygon,
+            'SURFACE'    : drawPlane,
             'TRIANGLE'   : drawTriangle,
         };
 
