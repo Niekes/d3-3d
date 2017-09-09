@@ -1,5 +1,5 @@
 import {centroid}       from '../centroid';
-import {rotateRxRyRz}   from '../rotation';
+import {rotateRzRyRx}   from '../rotation';
 
 export function lineStrip(lineStrip, options, point, angles){
 
@@ -9,7 +9,7 @@ export function lineStrip(lineStrip, options, point, angles){
 
         for (var j = l.length - 1; j >= 0; j--) {
             var p = l[j];
-            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
+            p.rotated   = rotateRzRyRx({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
             p.projected = options.project(p.rotated, options);
         }
 

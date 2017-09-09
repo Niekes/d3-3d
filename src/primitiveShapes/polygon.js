@@ -1,6 +1,6 @@
 import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
-import {rotateRxRyRz}   from '../rotation';
+import {rotateRzRyRx}   from '../rotation';
 
 export function polygon(polygons, options, point, angles){
 
@@ -10,7 +10,7 @@ export function polygon(polygons, options, point, angles){
 
         for (var j = ploygon.length - 1; j >= 0; j--) {
             var p = ploygon[j];
-            p.rotated   = rotateRxRyRz({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
+            p.rotated   = rotateRzRyRx({x : point.x(p), y : point.y(p), z : point.z(p)}, angles);
             p.projected = options.project(p.rotated, options);
         }
 

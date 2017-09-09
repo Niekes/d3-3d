@@ -1,4 +1,4 @@
-export function rotateRxRyRz(po, angles){
+export function rotateRzRyRx(po, angles){
 
     var rc = angles.rotateCenter;
 

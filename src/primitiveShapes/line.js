@@ -1,5 +1,5 @@
 import {centroid}       from '../centroid';
-import {rotateRxRyRz}   from '../rotation';
+import {rotateRzRyRx}   from '../rotation';
 
 export function line(lines, options, point, angles){
 
@@ -10,8 +10,8 @@ export function line(lines, options, point, angles){
         var p1        = line[0];
         var p2        = line[1];
 
-        p1.rotated    = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
-        p2.rotated    = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
+        p1.rotated    = rotateRzRyRx({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
+        p2.rotated    = rotateRzRyRx({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
 
         p1.projected  = options.project(p1.rotated, options);
         p2.projected  = options.project(p2.rotated, options);

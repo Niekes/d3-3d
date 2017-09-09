@@ -1,6 +1,6 @@
 import {ccw}            from '../counter-clockwise';
 import {centroid}       from '../centroid';
-import {rotateRxRyRz}   from '../rotation';
+import {rotateRzRyRx}   from '../rotation';
 
 export function plane(planes, options, point, angles){
 
@@ -13,10 +13,10 @@ export function plane(planes, options, point, angles){
         var p3       = plane[2];
         var p4       = plane[3];
 
-        p1.rotated   = rotateRxRyRz({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
-        p2.rotated   = rotateRxRyRz({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
-        p3.rotated   = rotateRxRyRz({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, angles);
-        p4.rotated   = rotateRxRyRz({x : point.x(p4), y : point.y(p4), z : point.z(p4)}, angles);
+        p1.rotated   = rotateRzRyRx({x : point.x(p1), y : point.y(p1), z : point.z(p1)}, angles);
+        p2.rotated   = rotateRzRyRx({x : point.x(p2), y : point.y(p2), z : point.z(p2)}, angles);
+        p3.rotated   = rotateRzRyRx({x : point.x(p3), y : point.y(p3), z : point.z(p3)}, angles);
+        p4.rotated   = rotateRzRyRx({x : point.x(p4), y : point.y(p4), z : point.z(p4)}, angles);
 
         p1.projected = options.project(p1.rotated, options);
         p2.projected = options.project(p2.rotated, options);
