@@ -1,4 +1,5 @@
 import {cube}          from './primitiveShapes/cube';
+import {gridPlane}     from './primitiveShapes/gridPlane';
 import {lineStrip}     from './primitiveShapes/lineStrip';
 import {line}          from './primitiveShapes/line';
 import {plane}         from './primitiveShapes/plane';
@@ -31,18 +32,22 @@ export default function() {
         x               = px,
         y               = py,
         z               = pz,
+        row             = undefined,
         shape           = 'POINT',
         processData = {
             'CUBE'       : cube,
-            'LINE_STRIP' : lineStrip,
+            'GRID'       : gridPlane,
             'LINE'       : line,
+            'LINE_STRIP' : lineStrip,
             'PLANE'      : plane,
             'POINT'      : point,
             'POLYGON'    : polygon,
+            'SURFACE'    : gridPlane,
             'TRIANGLE'   : triangle,
         },
         draw = {
             'CUBE'       : drawPlane,
+            'GRID'       : drawPlane,
             'LINE_STRIP' : drawLineStrip,
             'PLANE'      : drawPlane,
             'POLYGON'    : drawPolygon,
@@ -52,7 +57,7 @@ export default function() {
     function _3d(data){
         return processData[shape](
             data,
-            { scale: scale, origin: origin, project: projection },
+            { scale: scale, origin: origin, project: projection, row: row },
             { x: x, y: y, z: z },
             { x: angleX, y: angleY, z: angleZ, rotateCenter: rotateCenter }
         );
@@ -78,8 +83,8 @@ export default function() {
         return arguments.length ? (angleZ = _, _3d) : angleZ;
     };
 
-    _3d.shape = function(_){
-        return arguments.length ? (shape = _, _3d) : shape;
+    _3d.shape = function(_, r){
+        return arguments.length ? (shape = _, row = r, _3d) : shape;
     };
 
     _3d.rotateCenter = function(_){
