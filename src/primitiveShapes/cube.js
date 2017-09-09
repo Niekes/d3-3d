@@ -28,12 +28,13 @@ export function cube(cubes, options, point, angles){
         var v7 = vertices[6];
         var v8 = vertices[7];
 
+        // TODO
         var front  = [v1, v2, v3, v4];
         var back   = [v8, v7, v6, v5];
         var left   = [v5, v6, v2, v1];
         var right  = [v4, v3, v7, v8];
-        var top    = [v5, v1, v4, v8];
-        var bottom = [v2, v6, v7, v3];
+        var bottom = [v5, v1, v4, v8];
+        var top    = [v2, v6, v7, v3];
 
         front.centroid  = centroid(front);
         back.centroid   = centroid(back);
