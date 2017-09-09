@@ -1,5 +1,5 @@
 # d3-3d
-**d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**. **d3-3d** adds 3d transformations to SVG.
+**d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**. It adds 3d transformations to SVG.
 
 <a target="_blank" href="https://bl.ocks.org/Niekes/e920c03edd7950578b8a6cded8b5a1a5" rel="some text">![3D Surfaceplot created with d3-3d](assets/surfaceplot.gif)</a>
 
@@ -37,16 +37,21 @@ For the minified version:
 * [*_3d*.sort]() - sort the 3d elements by the centroid.
 * [*_3d*.draw]() - draw the 3d elements.
 
-### d3-3d
-**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering).
+### Overview
+**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering). It will calculate the centroid and the orientation of your polygons for you. Due to the fact that SVG isn't very 3d compatible **d3-3d** has also a special draw method.
 
 ### Shapes
-* point
-* line
-* line_strip
-* plane
-* triangle
-* cube
-* pyramid
+* POINT
+* LINE
+* LINE_STRIP
+* PLANE
+* TRIANGLE
+* CUBE
+* PYRAMID
 
-<a name="shape" href="#shape">#</a> _3d.<b>shape</b>() [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L81 "Source")
+<a name="shape" href="#shape">#</a> _3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L81 "Source")
+
+Sets the shape to *shape*. If *shape* is not specified the current shape will be returned.
+```js
+var triangles3D = d3._3d().shape('TRIANGLE');
+```
