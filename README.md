@@ -55,7 +55,6 @@ For the minified version:
 * GRID
 * SURFACE
 * CUBE
-* PYRAMID
 
 <a name="shape" href="#shape">#</a> _3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L81 "Source")
 
