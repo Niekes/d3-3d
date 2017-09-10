@@ -3,7 +3,6 @@ import {centroid}    from '../centroid';
 import {point as pt} from './point';
 
 export function cube(cubes, options, point, angles){
-    var _cubes = [];
     for (var i = cubes.length - 1; i >= 0; i--) {
 
         var cube = cubes[i];
@@ -32,8 +31,8 @@ export function cube(cubes, options, point, angles){
         var back   = [v8, v7, v6, v5];
         var left   = [v5, v6, v2, v1];
         var right  = [v4, v3, v7, v8];
-        var bottom = [v5, v1, v4, v8];
-        var top    = [v2, v6, v7, v3];
+        var top    = [v5, v1, v4, v8];
+        var bottom = [v2, v6, v7, v3];
 
         front.centroid  = centroid(front);
         back.centroid   = centroid(back);
@@ -49,17 +48,17 @@ export function cube(cubes, options, point, angles){
         top.ccw    = ccw(top);
         bottom.ccw = ccw(bottom);
 
-        front.key  = 'front';
-        back.key   = 'back';
-        left.key   = 'left';
-        right.key  = 'right';
-        top.key    = 'top';
-        bottom.key = 'bottom';
+        front.face  = 'front';
+        back.face   = 'back';
+        left.face   = 'left';
+        right.face  = 'right';
+        top.face    = 'top';
+        bottom.face = 'bottom';
 
-        var _cube = [front, back, left, right, top, bottom];
+        var faces = [front, back, left, right, top, bottom];
 
-        _cube.centroid = {x: (left.centroid.x + right.centroid.x)/2, y: (top.centroid.y + bottom.centroid.y/2), z: (front.centroid.z + back.centroid.z/2)};
-        _cubes.push(_cube);
+        cube.faces = faces;
+        cube.centroid = {x: (left.centroid.x + right.centroid.x)/2, y: (top.centroid.y + bottom.centroid.y)/2, z: (front.centroid.z + back.centroid.z/2)};
     }
-    return _cubes;
+    return cubes;
 }
