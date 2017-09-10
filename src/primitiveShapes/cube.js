@@ -49,17 +49,16 @@ export function cube(cubes, options, point, angles){
         top.ccw    = ccw(top);
         bottom.ccw = ccw(bottom);
 
-        front.face  = 'front';
-        back.face   = 'back';
-        left.face   = 'left';
-        right.face  = 'right';
-        top.face    = 'top';
-        bottom.face = 'bottom';
+        front.key  = 'front';
+        back.key   = 'back';
+        left.key   = 'left';
+        right.key  = 'right';
+        top.key    = 'top';
+        bottom.key = 'bottom';
 
         var _cube = [front, back, left, right, top, bottom];
 
-        // TODO
-        // _cube.centroid = cube.centroid || centroid(cube);
+        _cube.centroid = {x: (left.centroid.x + right.centroid.x)/2, y: (top.centroid.y + bottom.centroid.y/2), z: (front.centroid.z + back.centroid.z/2)};
         _cubes.push(_cube);
     }
     return _cubes;
