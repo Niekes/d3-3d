@@ -17,7 +17,7 @@ tape('test if the number of planes per row are calculated correct when it\'s a q
     test.end();
 });
 
-tape.only('test if the number of planes per row are calculated correct when it\'s not a quadratic grid', function(test){
+tape('test if the number of planes per row are calculated correct when it\'s not a quadratic grid', function(test){
 
     var points = [], pointsPerRow = 5;
 
