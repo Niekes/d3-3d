@@ -44,7 +44,7 @@ For the minified version:
 * [*_3d*.draw]() - draw the 3d elements.
 
 ### Overview
-**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering). It will calculate the centroid and the orientation of your polygons for you. Due to the fact that SVG isn't very 3d compatible **d3-3d** has also a special draw method.
+**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering). It will calculate the centroid and the orientation of your polygons for you. Due to the fact that SVG isn't very 3d compatible **d3-3d** has also a special draw method for each shape.
 
 ### Shapes
 * POINT
