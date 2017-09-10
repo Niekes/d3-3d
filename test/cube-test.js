@@ -18,11 +18,13 @@ tape('cube naming is correct', function(test){
         ]
     ];
 
-    test.equal(cubes(data)[0][0].face, 'front');
-    test.equal(cubes(data)[0][1].face, 'back');
-    test.equal(cubes(data)[0][2].face, 'left');
-    test.equal(cubes(data)[0][3].face, 'right');
-    test.equal(cubes(data)[0][4].face, 'top');
-    test.equal(cubes(data)[0][5].face, 'bottom');
+    console.log(cubes(data)[0].faces);
+
+    test.equal(cubes(data)[0].faces[0].face, 'front');
+    test.equal(cubes(data)[0].faces[1].face, 'back');
+    test.equal(cubes(data)[0].faces[2].face, 'left');
+    test.equal(cubes(data)[0].faces[3].face, 'right');
+    test.equal(cubes(data)[0].faces[4].face, 'top');
+    test.equal(cubes(data)[0].faces[5].face, 'bottom');
     test.end();
 });
