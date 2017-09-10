@@ -1,8 +1,13 @@
 # d3-3d
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**. It adds 3d transformations to SVG.
 
-<a target="_blank" href="https://bl.ocks.org/niekes/e920c03edd7950578b8a6cded8b5a1a5" rel="some text">![3D Surfaceplot created with d3-3d](assets/surfaceplot.gif)</a>
-<a target="_blank" href="https://bl.ocks.org/niekes/1c15016ae5b5f11508f92852057136b5" rel="some text">![3D Surfaceplot created with d3-3d](assets/3d-scatterplot.gif)</a>
+<table>
+    <tr>
+        <td> <a target="_blank" href="https://bl.ocks.org/niekes/e920c03edd7950578b8a6cded8b5a1a5"> <img src="assets/surfaceplot.gif"> </a> </td>
+        <td> <a target="_blank" href="https://bl.ocks.org/niekes/1c15016ae5b5f11508f92852057136b5"> <img src="assets/3d-scatterplot.gif"> </a> </td>
+        <!-- <td> <a target="_blank" href="https://bl.ocks.org/niekes/1c15016ae5b5f11508f92852057136b5"> <img src="assets/3d-scatterplot.gif"> </a> </td> -->
+    </tr>
+</table>
 
 See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>
 ## Installing
