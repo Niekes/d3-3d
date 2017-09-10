@@ -45,8 +45,10 @@ For the minified version:
 * POINT
 * LINE
 * LINE_STRIP
-* PLANE
 * TRIANGLE
+* PLANE
+* GRID
+* SURFACE
 * CUBE
 * PYRAMID
 
