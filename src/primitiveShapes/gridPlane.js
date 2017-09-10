@@ -15,7 +15,7 @@ export function gridPlane(grid, options, point, angles){
             var p1 = j + i * numRow, p4 = p1 - 1, p2 = p4 - numRow + 1, p3 = p2 - 1;
             var pl = [points[p1], points[p2], points[p3], points[p4]];
 
-            pl.key      = 'plane_' + cnt++;
+            pl.plane      = 'plane_' + cnt++;
             pl.ccw      = ccw(pl);
             pl.centroid = centroid(pl);
             planes.push(pl);
