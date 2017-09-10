@@ -1,7 +1,7 @@
 {
   "name": "d3-3d",
   "version": "0.0.5",
-  "description": "3D projection ",
+  "description": "D3.js plugin for 3d visualization",
   "keywords": [
     "d3",
     "d3-module",
