@@ -36,7 +36,7 @@ For the minified version:
 * [*_3d*.x](#x) - set the x accessor.
 * [*_3d*.y](#y) - set the y accessor.
 * [*_3d*.z](#z) - set the z accessor.
-* [*_3d*.scale](#scale) - set the z accessor.
+* [*_3d*.scale](#scale) - sets the scale for the projected points.
 * [*_3d*.rotateX](#rotateX) - set the angle for the x rotation.
 * [*_3d*.rotateY](#rotateY) - set the angle for the y rotation.
 * [*_3d*.rotateZ](#rotateZ) - set the angle for the z rotation.
@@ -76,27 +76,30 @@ Constructs a new function object with the default settings.
 
 ### Shapes
 Depending on the shape you choose, the function object you get back will be constructed differently.
-* POINT no draw method
-* LINE no draw method
-* LINE_STRIP
-* TRIANGLE
-* PLANE
-* GRID Special because you have
-* SURFACE
-* CUBE
+* **POINT** represented by the `<circle>`. no draw method
+* **LINE** represented by the `<line>`. no draw method
+* **LINE_STRIP** represented by the `<path>`
+* **TRIANGLE** represented by the `<path>`
+* **PLANE** represented by the `<path>`
+* **GRID** represented by x planes. Special because you have to pass in row
+* **SURFACE** equivalent to `GRID`
+* **CUBE** represented by 4 planes
 
-<a name="shape" href="#shape">#</a> _3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L81 "Source")
+<a name="shape" href="#shape">#</a> _3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L87 "Source")
 
 _Default:_ `'POINT'`
 
 Sets the shape to *shape*. If *shape* is not specified the current shape will be returned.
+
+If *shape* is specified, sets the shape to the specified shape and returns the **d3-3d** function object. If *shape* is not specified, returns the current shape.
+
 ```js
 var triangles3D = d3._3d().shape('TRIANGLE');
 ```
 
 <a name="x" href="#x">#</a> _3d.<b>x</b>([x]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L1 "Source")
 
-If *x* is specified, sets the x accessor to the specified function or number and returns the **d3-3d** function object. If x is not specified, returns the current x accessor, which defaults to:
+If *x* is specified, sets the x accessor to the specified function or number and returns the **d3-3d** function object. If *x* is not specified, returns the current x accessor, which defaults to:
 
 ```js
 function x(p) {
@@ -107,7 +110,7 @@ This function will be invoked for each point in the input data array.
 
 <a name="y" href="#y">#</a> _3d.<b>y</b>([y]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L5 "Source")
 
-If *y* is specified, sets the y accessor to the specified function or number and returns the **d3-3d** function object. If y is not specified, returns the current y accessor, which defaults to:
+If *y* is specified, sets the y accessor to the specified function or number and returns the **d3-3d** function object. If *y* is not specified, returns the current y accessor, which defaults to:
 
 ```js
 function y(p) {
@@ -118,7 +121,7 @@ This function will be invoked for each point in the input data array.
 
 <a name="z" href="#z">#</a> _3d.<b>z</b>([z]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L9 "Source")
 
-If *z* is specified, sets the z accessor to the specified function or number and returns the **d3-3d** function object. If z is not specified, returns the current z accessor, which defaults to:
+If *z* is specified, sets the z accessor to the specified function or number and returns the **d3-3d** function object. If *z* is not specified, returns the current z accessor, which defaults to:
 
 ```js
 function z(p) {
@@ -127,3 +130,8 @@ function z(p) {
 ```
 This function will be invoked for each point in the input data array.
 
+<a name="scale" href="#scale">#</a> _3d.<b>scale</b>(scale) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L71 "Source")
+
+_Default:_ `1`
+
+If *scale* is specified, sets the scale to the specified number and returns the **d3-3d** function object. If *scale* is not specified, returns the current scale.
