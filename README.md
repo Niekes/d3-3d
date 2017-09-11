@@ -44,7 +44,7 @@ For the minified version:
 * [*_3d*.draw](#draw) - draw the 3d elements.
 
 ### Overview
-**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering). It will calculate the centroid for all elements and the orientation for your polygons. Due to the fact that SVG isn't very 3d compatible **d3-3d** adds 3d transformations to SVG.
+**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering) and [orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection) to display your data on the screen. It will calculate the centroid for all elements and the orientation for your polygons. Due to the fact that SVG isn't very 3d compatible **d3-3d** adds 3d transformations to SVG.
 
 With **d3-3d** you can easily visualize your 3d data.
 ```js
@@ -70,9 +70,6 @@ function init(data){
 <a name="_3d" href="#_3d">#</a> d3.<b>_3d</b>() [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L58 "Source")
 
 Constructs a new function object with the default settings.
-
-
-<!-- The function will take care for you how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [*_3d*.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on. -->
 
 ### Shapes
 Depending on the shape you choose, the function object you get back will be constructed differently.
@@ -135,3 +132,29 @@ This function will be invoked for each point in the input data array.
 _Default:_ `1`
 
 If *scale* is specified, sets the scale to the specified number and returns the **d3-3d** function object. If *scale* is not specified, returns the current scale.
+
+<a name="rotateX" href="#rotateX">#</a> _3d.<b>rotateX</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L75 "Source")
+
+_Default:_ `0`
+
+If *angle* is specified, sets rotateX to the specified number and returns the **d3-3d** function object. If *angle* is not specified, returns the current angle.
+
+<a name="rotateY" href="#rotateY">#</a> _3d.<b>rotateY</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L79 "Source")
+
+_Default:_ `0`
+
+If *angle* is specified, sets rotateY to the specified number and returns the **d3-3d** function object. If *angle* is not specified, returns the current angle.
+
+<a name="rotateZ" href="#rotateZ">#</a> _3d.<b>rotateZ</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L83 "Source")
+
+_Default:_ `0`
+
+If *angle* is specified, sets rotateZ to the specified number and returns the **d3-3d** function object. If *angle* is not specified, returns the current angle.
+
+<a name="sort" href="#sort">#</a> _3d.<b>sort</b>(a,b) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 "Source")
+
+Sorts the elements accordingly to the z coordinate of the calculated centroid.
+
+<a name="draw" href="#draw">#</a> _3d.<b>draw</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 "Source")
+
+Constructs a string for the SVG `<path>` element. Depending on the [shape](#shape) this function will take care how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [*_3d*.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on.
