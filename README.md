@@ -72,15 +72,18 @@ function init(data){
 Constructs a new function object with the default settings.
 
 ### Shapes
-Depending on the shape you choose, the function object you get back will be constructed differently.
-* **POINT** represented by the `<circle>`. no draw method
-* **LINE** represented by the `<line>`. no draw method
-* **LINE_STRIP** represented by the `<path>`
-* **TRIANGLE** represented by the `<path>`
-* **PLANE** represented by the `<path>`
-* **GRID** represented by x planes. Special because you have to pass in row
+Depending on the shape the input data array has to be accordingly to the shape.
+* **POINT** A point is represented by the `<circle>` element. It does not have a draw function because it can be represented as a `<circle>`. The input data array has to be an array of points where each point has three coordinates which can be accessed via the [x](#x), [y](#y) and [z](#z) accessors.
+* **LINE** A line is represented by the `<line>` element. It does not have a draw function because it can be represented as a `<line>`. The input data array has to be an array of lines where each line is defined by a start- and an endpoint.
+* **LINE_STRIP** A continuous line is represented by the `<path>` element.  The input data array has to be an array of points. Every point will be connected to the next point in the input data array.
+* **TRIANGLE** A triangle represented by the `<path>` element. The input data array has to be an array of triangles where each triangle is defined by three points in counter-clockwise order.
+* **PLANE** A plane is represented by the `<path>` element. The input data array has to be an array of planes where each plane is defined by four points in counter-clockwise order.
+* **GRID** A grid is represented by x planes. The input data array has to be an array of points. The [shape](#shape) function aspects the amount of points per row as a second argument. **d3-3d** will construct planes out of the passed data.
+_NOTE:_ A grid has to have always the same number of points per row. Otherwise the code will break.
 * **SURFACE** equivalent to `GRID`
-* **CUBE** represented by 4 planes
+* **CUBE** A grid is represented by 4 planes. The input data array has to be an array of cubes where each cube is defined by 8 vertices. To get the orientation and centroid calculation right you should pass in the data like so:
+
+![cube](assets/cube.png "Cube")
 
 <a name="shape" href="#shape">#</a> _3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L87 "Source")
 
