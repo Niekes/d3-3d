@@ -22,6 +22,7 @@
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
     "test": "tape 'test/**/*-test.js' | tap-spec",
+    "coverage": "istanbul cover tape ./test/*-test.js",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
@@ -32,6 +33,7 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "istanbul": "^0.4.5",
     "rollup": "0.41",
     "tap-spec": "^4.1.1",
     "tape": "4",
