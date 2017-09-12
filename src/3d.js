@@ -4,12 +4,10 @@ import {lineStrip}     from './primitiveShapes/lineStrip';
 import {line}          from './primitiveShapes/line';
 import {plane}         from './primitiveShapes/plane';
 import {point}         from './primitiveShapes/point';
-import {polygon}       from './primitiveShapes/polygon';
 import {triangle}      from './primitiveShapes/triangle';
 
 import {drawLineStrip} from './draw/drawLineStrip';
 import {drawPlane}     from './draw/drawPlane';
-import {drawPolygon}   from './draw/drawPolygon';
 import {drawTriangle}  from './draw/drawTriangle';
 
 import {orthographic}  from './projection-orthographic';
@@ -41,7 +39,6 @@ export default function() {
             'LINE_STRIP' : lineStrip,
             'PLANE'      : plane,
             'POINT'      : point,
-            'POLYGON'    : polygon,
             'SURFACE'    : gridPlane,
             'TRIANGLE'   : triangle,
         },
@@ -50,7 +47,6 @@ export default function() {
             'GRID'       : drawPlane,
             'LINE_STRIP' : drawLineStrip,
             'PLANE'      : drawPlane,
-            'POLYGON'    : drawPolygon,
             'SURFACE'    : drawPlane,
             'TRIANGLE'   : drawTriangle,
         };

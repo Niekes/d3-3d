@@ -15,7 +15,5 @@ export function lineStrip(lineStrip, options, point, angles){
 
         l.centroid = t === m ? centroid([ l[m - 1], l[m] ]) : { x: l[t].rotated.x, y: l[t].rotated.y, z: l[t].rotated.z };
     }
-
-
     return lineStrip;
 }

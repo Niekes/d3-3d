@@ -18,8 +18,6 @@ tape('cube naming is correct', function(test){
         ]
     ];
 
-    console.log(cubes(data)[0].faces);
-
     test.equal(cubes(data)[0].faces[0].face, 'front');
     test.equal(cubes(data)[0].faces[1].face, 'back');
     test.equal(cubes(data)[0].faces[2].face, 'left');

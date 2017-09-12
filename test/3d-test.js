@@ -19,6 +19,12 @@ tape('set origin', function(test) {
 	test.end();
 });
 
+tape('set rotateCenter', function(test) {
+	var _3d = d3._3d().rotateCenter([100, 100, 100]);
+	test.deepEqual(_3d.rotateCenter(), [100, 100, 100]);
+	test.end();
+});
+
 tape('set scale', function(test) {
 	var _3d1 = d3._3d();
 	var _3d2 = d3._3d().scale(2);
@@ -44,4 +50,32 @@ tape('set angles', function(test){
 	test.equal(_3d.rotateY(), Math.PI/2);
 	test.equal(_3d.rotateZ(), 3/2*Math.PI);
 	test.end();
+});
+
+tape('test x,y,z accesor', function(test){
+    var cubes3D = d3._3d().shape('CUBE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
+
+    test.equal(typeof cubes3D.x(), 'function');
+    test.equal(typeof cubes3D.y(), 'function');
+    test.equal(typeof cubes3D.z(), 'function');
+    cubes3D.x(1);
+    cubes3D.y(1);
+    cubes3D.z(1);
+    test.deepEqual(cubes3D.x(), 1);
+    test.deepEqual(cubes3D.y(), 1);
+    test.deepEqual(cubes3D.z(), 1);
+
+	test.end();
+});
+
+tape('test ascending sorting', function(test){
+
+	test.deepEqual(d3._3d().sort({centroid: { z: 1 } }, {centroid: { z:10 } }), -1);
+	test.deepEqual(d3._3d().sort({centroid: { z:10 } }, {centroid: { z: 1 } }),  1);
+	test.deepEqual(d3._3d().sort({centroid: { z: 1 } }, {centroid: { z: 1 } }),  0);
+	test.deepEqual(d3._3d().sort({centroid: { z: 1 } }, {centroid: { z:'1'} }),  0);
+	test.deepEqual(isNaN(d3._3d().sort({centroid: { z: function(){ return false ;} } }, {centroid: { z:false} })),  true);
+
+	test.end();
+
 });
