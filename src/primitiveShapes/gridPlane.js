@@ -12,7 +12,7 @@ export function gridPlane(grid, options, point, angles){
     for (var i = numRow - 1; i > 0; i--) {
         for (var j = numPts - 1; j > 0; j--) {
 
-            var p1 = j + i * numRow, p4 = p1 - 1, p2 = p4 - numRow + 1, p3 = p2 - 1;
+            var p1 = j + i * numPts, p4 = p1 - 1, p2 = p4 - numPts + 1, p3 = p2 - 1;
             var pl = [points[p1], points[p2], points[p3], points[p4]];
 
             pl.plane    = 'plane_' + cnt++;

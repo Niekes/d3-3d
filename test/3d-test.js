@@ -1,14 +1,14 @@
 var tape = require('tape');
 var d3   = require('../');
 
-tape('_3d has expected defaults', function(test) {
+tape("d3-3d has expected defaults", function(test) {
 	var _3d = d3._3d();
 	test.deepEqual(_3d.origin(), [0, 0]);
 	test.equal(_3d.scale(), 1);
 	test.equal(_3d.rotateX(), 0);
 	test.equal(_3d.rotateY(), 0);
 	test.equal(_3d.rotateZ(), 0);
-	test.equal(_3d.shape(), 'POINT');
+	test.equal(_3d.shape(), "POINT");
 	test.deepEqual(_3d.rotateCenter(), [0,0,0]);
 	test.end();
 });

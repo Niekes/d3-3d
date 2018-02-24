@@ -18,8 +18,7 @@ export function rotateRzRyRx(po, angles){
 }
 
 function rotateX(p, a){
-    var sa = Math.sin(a);
-    var ca = Math.cos(a);
+    var sa = Math.sin(a), ca = Math.cos(a);
     return {
         x: p.x,
         y: p.y * ca - p.z * sa,
@@ -28,8 +27,7 @@ function rotateX(p, a){
 }
 
 function rotateY(p, a){
-    var sa = Math.sin(a);
-    var ca = Math.cos(a);
+    var sa = Math.sin(a), ca = Math.cos(a);
     return {
         x: p.z * sa + p.x * ca,
         y: p.y,
@@ -38,8 +36,7 @@ function rotateY(p, a){
 }
 
 function rotateZ(p, a){
-    var sa = Math.sin(a);
-    var ca = Math.cos(a);
+    var sa = Math.sin(a), ca = Math.cos(a);
     return {
         x: p.x * ca - p.y * sa,
         y: p.y * sa + p.y * ca,

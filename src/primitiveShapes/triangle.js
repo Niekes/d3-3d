@@ -5,9 +5,7 @@ import {rotateRzRyRx}   from '../rotation';
 export function triangle(triangles, options, point, angles){
 
     for (var i = triangles.length - 1; i >= 0; i--) {
-
         var tri      = triangles[i];
-
         var p1       = tri[0];
         var p2       = tri[1];
         var p3       = tri[2];
