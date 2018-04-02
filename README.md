@@ -9,6 +9,8 @@
     </tr>
 </table>
 
+If you like d3-3d, please feel free to to support me on [flattr](https://flattr.com/@Niekes).
+
 See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>
 ## Installing
 
