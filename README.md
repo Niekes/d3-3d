@@ -9,9 +9,7 @@
     </tr>
 </table>
 
-If you like d3-3d, please feel free to to support me on [flattr](https://flattr.com/@Niekes).
-
-See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>
+If you like d3-3d, please feel free to to support me on [flattr](https://flattr.com/@Niekes). See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
 ## Installing
 
 If you use npm, `npm install d3-3d`. You can also download the [latest release](https://github.com/Niekes/d3-3d/releases). Otherwise use [unpkg](https://unpkg.com/d3-3d/) to get the latest release. For example:
