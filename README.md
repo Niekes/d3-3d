@@ -1,6 +1,10 @@
 # d3-3d
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
+[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+<a href="https://www.npmjs.com/package/d3-3d"><img src="https://badge.fury.io/js/d3-3d.svg" alt="npm version" height="18"></a>
+<a href="https://www.paypal.me/niekes/5" rel="nofollow"><img src="https://camo.githubusercontent.com/3904d2b6aba8c2b98707ac7e3deb29a393824ae1/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f6e6174652d50617950616c2e6d652d70696e6b2e737667" alt="Donate with PayPal" data-canonical-src="https://img.shields.io/badge/donate-PayPal.me-pink.svg" style="max-width:100%;"></a>
+
 <table>
     <tr>
         <td> <a target="_blank" href="https://bl.ocks.org/niekes/e920c03edd7950578b8a6cded8b5a1a5"> <img src="assets/surfaceplot.gif"> </a> </td>
@@ -8,8 +12,8 @@
         <td> <a target="_blank" href="https://bl.ocks.org/niekes/613d43d39372f99ae2dcea14f0f90617"> <img src="assets/3d-barchart.gif"> </a> </td>
     </tr>
 </table>
+See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
 
-If you like d3-3d, please feel free to to support me on [flattr](https://flattr.com/@Niekes). See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
 ## Installing
 
 If you use npm, `npm install d3-3d`. You can also download the [latest release](https://github.com/Niekes/d3-3d/releases). Otherwise use [unpkg](https://unpkg.com/d3-3d/) to get the latest release. For example:
