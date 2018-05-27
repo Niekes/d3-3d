@@ -44,6 +44,7 @@ For the minified version:
 * [*_3d*.rotateX](#rotateX) - set the angle for the x rotation.
 * [*_3d*.rotateY](#rotateY) - set the angle for the y rotation.
 * [*_3d*.rotateZ](#rotateZ) - set the angle for the z rotation.
+* [*_3d*.rotateCenter](#rotateCenter) - set the the totation center.
 * [*_3d*.sort](#sort) - sort the 3d elements by the centroid.
 * [*_3d*.draw](#draw) - draw the 3d elements.
 
@@ -157,6 +158,12 @@ If *angle* is specified, sets rotateY to the specified number and returns the **
 _Default:_ `0`
 
 If *angle* is specified, sets rotateZ to the specified number and returns the **d3-3d** function object. If *angle* is not specified, returns the current angle.
+
+<a name="rotateCenter" href="#rotateCenter">#</a> _3d.<b>rotateCenter</b>(point) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L87 "Source")
+
+_Default:_ `[0, 0, 0]`
+
+If *point* is specified, sets rotateCenter to the specified point and returns the **d3-3d** function object. If *rotateCenter* is not specified, returns the current rotateCenter.
 
 <a name="sort" href="#sort">#</a> _3d.<b>sort</b>(a,b) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 "Source")
 
