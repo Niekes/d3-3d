@@ -7,8 +7,8 @@ export function centroid(polygon){
         _z += polygon[i].rotated.z;
     }
     return {
-        x: _x/_n,
-        y: _y/_n,
-        z: _z/_n,
+        x: _x / _n,
+        y: _y / _n,
+        z: _z / _n,
     };
 }
