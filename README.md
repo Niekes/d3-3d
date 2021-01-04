@@ -33,7 +33,7 @@ For the minified version:
 <script src="https://unpkg.com/d3-3d@version/build/d3-3d.min.js"></script>
 ```
 
-## Import 
+## Import
 
 ES6:
 
