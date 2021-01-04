@@ -33,6 +33,14 @@ For the minified version:
 <script src="https://unpkg.com/d3-3d@version/build/d3-3d.min.js"></script>
 ```
 
+## Import 
+
+ES6:
+
+```js
+import { _3d } from 'd3-3d' ;
+```
+
 ## API Reference
 
 * [d3._3d](#_3d) - create a new 3d function object.
