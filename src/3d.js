@@ -17,7 +17,6 @@ import {x as px, y as py, z as pz } from './point';
 /**
 * @author Stefan Nieke / http://niekes.com/
 */
-
 export default function() {
 
     var origin          = [0, 0],
