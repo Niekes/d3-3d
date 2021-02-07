@@ -1,9 +1,17 @@
 # d3-3d
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
+<center>
+<a href="https://www.buymeacoffee.com/niekes" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;"></a>
+</center>
+
+<center>
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 <a href="https://www.npmjs.com/package/d3-3d"><img src="https://badge.fury.io/js/d3-3d.svg" alt="npm version" height="18"></a>
-<a href="https://www.paypal.me/niekes/5" rel="nofollow"><img src="https://camo.githubusercontent.com/3904d2b6aba8c2b98707ac7e3deb29a393824ae1/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f646f6e6174652d50617950616c2e6d652d70696e6b2e737667" alt="Donate with PayPal" data-canonical-src="https://img.shields.io/badge/donate-PayPal.me-pink.svg" style="max-width:100%;"></a>
+</center>
+
+
+#### INFO: PLEASE DON NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE EMAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB. 
 
 <table>
     <tr>
