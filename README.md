@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 <a href="https://www.npmjs.com/package/d3-3d"><img src="https://badge.fury.io/js/d3-3d.svg" alt="npm version" height="18"></a>
 
-#### INFO: PLEASE DON NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE EMAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB.
+#### INFO: PLEASE DO NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE E-MAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB.
 
 <table>
     <tr>
