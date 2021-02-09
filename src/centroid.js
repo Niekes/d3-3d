@@ -1,14 +1,20 @@
-export function centroid(polygon){
-    var _x = 0, _y = 0, _z = 0, _n = polygon.length;
+// eslint-disable-next-line import/prefer-default-export
+export function centroid(polygon) {
+    const n = polygon.length;
 
-    for (var i = _n - 1; i >= 0; i--) {
-        _x += polygon[i].rotated.x;
-        _y += polygon[i].rotated.y;
-        _z += polygon[i].rotated.z;
+    let x = 0;
+    let y = 0;
+    let z = 0;
+
+    for (let i = n - 1; i >= 0; i -= 1) {
+        x += polygon[i].rotated.x;
+        y += polygon[i].rotated.y;
+        z += polygon[i].rotated.z;
     }
+
     return {
-        x: _x / _n,
-        y: _y / _n,
-        z: _z / _n,
+        x: x / n,
+        y: y / n,
+        z: z / n,
     };
 }

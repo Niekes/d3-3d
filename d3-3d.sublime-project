@@ -3,13 +3,12 @@
         {
             "path": ".",
             "file_exclude_patterns": [
-                "*.sublime-workspace",
-                "*.code-workspace",
+                "*.sublime-workspace"
             ],
             "folder_exclude_patterns": [
-                ".vscode",
-                "build",
                 "dist",
+                "build",
+                "coverage",
                 "node_modules"
             ],
         }
@@ -24,22 +23,7 @@
             "format_on_save": true,
             "local_eslint_path": {
                 "osx": "/usr/local/bin/eslint_d"
-            },
-            "format_on_save_extensions": [
-                "js",
-                "jsx",
-                "es",
-                "es6",
-                "vue",
-                "babel"
-            ]
-        },
-        "hyper_click": {
-            "aliases": {
-                "js": {
-                    "@": "src",
-                }
             }
-        }
+        },
     }
 }
