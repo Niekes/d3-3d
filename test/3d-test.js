@@ -1,6 +1,7 @@
 const tape = require('tape');
 const d3 = require('../');
 
+/* eslint-disable no-underscore-dangle */
 tape('d3-3d has expected defaults', (test) => {
     const _3d = d3._3d();
 

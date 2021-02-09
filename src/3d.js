@@ -12,21 +12,11 @@ import { orthographic } from './projection-orthographic';
 import { x as px, y as py, z as pz } from './point';
 
 /**
-* @author Stefan Nieke / http://niekes.com/
+* @author Stefan Nieke, http://niekes.com/
 */
 export default function () {
-    let origin = [0, 0];
-    let scale = 1;
     const projection = orthographic;
-    let angleX = 0;
-    let angleY = 0;
-    let angleZ = 0;
-    let rotateCenter = [0, 0, 0];
-    let x = px;
-    let y = py;
-    let z = pz;
-    let row;
-    let shape = 'POINT';
+
     const processData = {
         CUBE: cube,
         GRID: gridPlane,
@@ -37,6 +27,7 @@ export default function () {
         SURFACE: gridPlane,
         TRIANGLE: triangle,
     };
+
     const draw = {
         CUBE: drawPlane,
         GRID: drawPlane,
@@ -45,6 +36,18 @@ export default function () {
         SURFACE: drawPlane,
         TRIANGLE: drawTriangle,
     };
+
+    let origin = [0, 0];
+    let scale = 1;
+    let angleX = 0;
+    let angleY = 0;
+    let angleZ = 0;
+    let rotateCenter = [0, 0, 0];
+    let x = px;
+    let y = py;
+    let z = pz;
+    let row;
+    let shape = 'POINT';
 
     function _3d(data) {
         return processData[shape](
