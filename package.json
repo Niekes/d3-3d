@@ -11,6 +11,7 @@
     "visualization"
   ],
   "jsnext:main": "index",
+  "main": "build/d3-3d.js",
   "author": "Stefan Nieke (https://niekes.com)",
   "license": "BSD-3-Clause",
   "homepage": "https://github.com/niekes/d3-3d",
