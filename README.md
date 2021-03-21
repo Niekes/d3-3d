@@ -1,10 +1,13 @@
 # d3-3d
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
-<a href="https://www.buymeacoffee.com/niekes" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="70"></a>
-
-[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-<a href="https://www.npmjs.com/package/d3-3d"><img src="https://badge.fury.io/js/d3-3d.svg" alt="npm version" height="18"></a>
+[![Codecov](https://img.shields.io/codecov/c/github/niekes/d3-3d)](https://app.codecov.io/gh/niekes/d3-3d)
+[![Travis (.org) branch](https://img.shields.io/travis/niekes/d3-3d/master)](https://travis-ci.com/github/Niekes/d3-3d)
+[![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
+[![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
+[![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
+[![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 
 #### INFO: PLEASE DO NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE E-MAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB.
 
@@ -183,3 +186,6 @@ Sorts the elements accordingly to the z coordinate of the calculated centroid.
 <a name="draw" href="#draw">#</a> _3d.<b>draw</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 "Source")
 
 Constructs a string for the SVG `<path>` element. Depending on the [shape](#shape) this function will take care how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [*_3d*.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on.
+
+# Funding
+<a href="https://www.buymeacoffee.com/niekes" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="70"></a>
