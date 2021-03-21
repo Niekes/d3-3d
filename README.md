@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
-[![npm bundle size](https://img.shields.io/bundlephobia/min/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
 [![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 
 <table>
