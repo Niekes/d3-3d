@@ -58,9 +58,11 @@ test('test x,y,z accesor', function(t){
     t.equal(typeof cubes3D.x(), 'function');
     t.equal(typeof cubes3D.y(), 'function');
     t.equal(typeof cubes3D.z(), 'function');
+
     cubes3D.x(1);
     cubes3D.y(1);
     cubes3D.z(1);
+
     t.deepEqual(cubes3D.x(), 1);
     t.deepEqual(cubes3D.y(), 1);
     t.deepEqual(cubes3D.z(), 1);
@@ -77,5 +79,4 @@ test('test ascending sorting', function(t){
 	t.deepEqual(isNaN(d3._3d().sort({centroid: { z: function(){ return false ;} } }, {centroid: { z:false} })),  true);
 
 	t.end();
-
 });
