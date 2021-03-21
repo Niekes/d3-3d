@@ -1,6 +1,6 @@
 {
   "name": "d3-3d",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "D3.js plugin for 3d visualization",
   "keywords": [
     "d3",
@@ -22,7 +22,7 @@
     "build": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
     "test": "c8 --reporter=lcov tape -r esm ./tests/setup.js tests/**/*-test.js | tap-spec",
     "coverage": "c8 tape -r esm ./tests/setup.js ./tests/**/*-test.js | tap-spec && c8 report",
-    "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
+    "prepack": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
   "devDependencies": {

@@ -24,6 +24,10 @@ If you use npm, `npm install d3-3d`. You can also download the [latest release](
 
 ```html
 <script src="https://unpkg.com/d3-3d/build/d3-3d.js"></script>
+
+<!-- OR -->
+
+<script src="https://unpkg.com/d3-3d/build/d3-3d.min.js"></script>
 ```
 
 For a specific version:
