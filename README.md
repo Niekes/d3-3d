@@ -31,12 +31,6 @@ For a specific version:
 <script src="https://unpkg.com/d3-3d@version/build/d3-3d.js"></script>
 ```
 
-For the minified version:
-
-```html
-<script src="https://unpkg.com/d3-3d@version/build/d3-3d.min.js"></script>
-```
-
 ## Import
 
 ES6:
