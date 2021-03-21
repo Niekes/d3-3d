@@ -37,7 +37,7 @@
     "rollup": "2.42.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.2.2",
-    "uglify-js": "3"
+    "uglify-js": "^3.13.1"
   },
   "bugs": {
     "url": "https://github.com/niekes/d3-3d/issues"
