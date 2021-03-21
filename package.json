@@ -21,7 +21,8 @@
     "url": "git+https://github.com/niekes/d3-3d.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
+    "pretest": "npm run build",
+    "build": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
     "test": "c8 --reporter=lcov tape tests/**/*-test.js | tap-spec",
     "coverage": "c8 tape tests/**/*-test.js | tap-spec && c8 report",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
