@@ -1,6 +1,6 @@
 {
   "name": "d3-3d",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "D3.js plugin for 3d visualization",
   "keywords": [
     "d3",
@@ -10,6 +10,7 @@
     "projection",
     "visualization"
   ],
+  "main": "build/d3-3d.js",
   "jsnext:main": "index",
   "module": "index.js",
   "author": "Stefan Nieke (https://niekes.com)",
