@@ -33,13 +33,6 @@
                 "vue",
                 "babel"
             ]
-        },
-        "hyper_click": {
-            "aliases": {
-                "js": {
-                    "@": "src",
-                }
-            }
         }
     }
 }
