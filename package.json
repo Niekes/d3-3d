@@ -22,8 +22,8 @@
   },
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
-    "test": "c8 --reporter=lcov tape 'test/**/*-test.js' | tap-spec",
-    "coverage": "c8 tape 'test/**/*-test.js' | tap-spec && c8 report",
+    "test": "c8 --reporter=lcov tape test/**/*-test.js | tap-spec",
+    "coverage": "c8 tape test/**/*-test.js | tap-spec && c8 report",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
