@@ -22,22 +22,22 @@
   },
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
-    "test": "tape 'test/**/*-test.js' | tap-spec",
-    "coverage": "istanbul cover tape ./test/*-test.js",
+    "test": "c8 --reporter=lcov tape 'test/**/*-test.js' | tap-spec",
+    "coverage": "c8 tape 'test/**/*-test.js' | tap-spec && c8 report",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
   "devDependencies": {
+    "c8": "^7.6.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
-    "istanbul": "^0.4.5",
     "rollup": "0.41",
-    "tap-spec": "^4.1.1",
-    "tape": "4",
+    "tap-spec": "^5.0.0",
+    "tape": "^5.2.2",
     "uglify-js": "3"
   },
   "bugs": {
