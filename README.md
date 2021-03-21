@@ -9,10 +9,7 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/min/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
 [![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 
-#### INFO: PLEASE DO NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE E-MAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB.
-
-
-
+<!-- #### INFO: PLEASE DO NOT WRITE ME ON LINKEDIN, FACEBOOK OR TO MY PRIVATE E-MAIL. USE STACK OVERFLOW OR CREATE AN ISSUE ON GITHUB. -->
 
 <table>
     <tr>
