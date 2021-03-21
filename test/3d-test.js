@@ -76,7 +76,12 @@ tape('test ascending sorting', (test) => {
     test.deepEqual(d3._3d().sort({ centroid: { z: 10 } }, { centroid: { z: 1 } }), 1);
     test.deepEqual(d3._3d().sort({ centroid: { z: 1 } }, { centroid: { z: 1 } }), 0);
     test.deepEqual(d3._3d().sort({ centroid: { z: 1 } }, { centroid: { z: '1' } }), 0);
-    test.deepEqual(isNaN(d3._3d().sort({ centroid: { z() { return false; } } }, { centroid: { z: false } })), true);
+    test.deepEqual(
+        Number.isNaN(
+            d3._3d().sort({ centroid: { z() { return false; } } }, { centroid: { z: false } }),
+        ),
+        true,
+    );
 
     test.end();
 });

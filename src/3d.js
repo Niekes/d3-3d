@@ -49,6 +49,7 @@ export default function () {
     let row;
     let shape = 'POINT';
 
+    /* eslint-disable */
     function _3d(data) {
         return processData[shape](
             data,

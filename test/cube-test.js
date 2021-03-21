@@ -1,21 +1,22 @@
-var tape = require('tape');
-var d3   = require('../');
+const tape = require('tape');
+const d3 = require('../');
 
-tape('cube naming is correct', function(test){
+/* eslint-disable no-underscore-dangle */
+tape('cube naming is correct', (test) => {
+    const cubes = d3._3d().shape('CUBE').x(d => d.x).y(d => d.y)
+        .z(d => d.z);
 
-    var cubes = d3._3d().shape('CUBE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
-
-    var data = [
+    const data = [
         [
-            {x: 0, y: 0, z: 0},
-            {x: 0, y: 1, z: 0},
-            {x: 1, y: 1, z: 0},
-            {x: 1, y: 0, z: 0},
-            {x: 0, y: 0, z: 1},
-            {x: 0, y: 1, z: 1},
-            {x: 1, y: 1, z: 1},
-            {x: 1, y: 0, z: 1},
-        ]
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 },
+            { x: 1, y: 1, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 0, z: 1 },
+            { x: 0, y: 1, z: 1 },
+            { x: 1, y: 1, z: 1 },
+            { x: 1, y: 0, z: 1 },
+        ],
     ];
 
     test.equal(cubes(data)[0].faces[0].face, 'front');
