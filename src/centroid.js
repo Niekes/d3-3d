@@ -6,6 +6,7 @@ export function centroid(polygon){
         _y += polygon[i].rotated.y;
         _z += polygon[i].rotated.z;
     }
+
     return {
         x: _x / _n,
         y: _y / _n,
