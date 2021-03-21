@@ -1,8 +1,7 @@
-var tape = require('tape');
-var d3   = require('../');
+import { test } from 'tape';
+import * as d3 from '../';
 
-tape('test if the number of planes per row are calculated correct when it\'s a quadratic grid', function(test){
-
+test('test if the number of planes per row are calculated correct when it\'s a quadratic grid', function(t){
     var j = 10, points = [];
 
     for(var z = -j; z < j; z++){
@@ -11,13 +10,19 @@ tape('test if the number of planes per row are calculated correct when it\'s a q
         }
     }
 
-    var grid3d = d3._3d().shape('GRID', j*2).x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; })(points);
-    var row    = Math.sqrt(points.length) - 1;
-    test.equal(grid3d.length, row*row);
-    test.end();
+    const grid3d = d3._3d()
+        .shape('GRID', j * 2)
+        .x(function(d){ return d.x; })
+        .y(function(d){ return d.y; })
+        .z(function(d){ return d.z; })(points);
+
+    const row = Math.sqrt(points.length) - 1;
+
+    t.equal(grid3d.length, row*row);
+    t.end();
 });
 
-tape('test if the number of planes per row are calculated correct when it\'s not a quadratic grid', function(test){
+test('test if the number of planes per row are calculated correct when it\'s not a quadratic grid', function(t){
 
     var points = [], pointsPerRow = 5;
 
@@ -28,7 +33,7 @@ tape('test if the number of planes per row are calculated correct when it\'s not
     }
     var grid3d = d3._3d().shape('GRID', pointsPerRow).x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; })(points);
 
-    test.equal(8, grid3d.length);
+    t.equal(8, grid3d.length);
 
-    test.end();
+    t.end();
 });

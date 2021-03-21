@@ -1,13 +1,13 @@
-var tape = require('tape');
-var d3   = require('../');
+import { test } from 'tape';
+import * as d3 from '../';
 
-tape('lines don\'t have a draw function', function(test){
+test('lines don\'t have a draw function', function(t){
     var _3d = d3._3d().shape('LINE');
-    test.equal(_3d.draw(), undefined);
-    test.end();
+    t.equal(_3d.draw(), undefined);
+    t.end();
 });
 
-tape('centroid calculation for lines', function(test){
+test('centroid calculation for lines', function(t){
 	var _3d = d3._3d().shape('LINE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
 	var data = [
 		[{x:  0, y:   0, z:   0}, {x:    0, y:    0, z:    0}],
@@ -17,8 +17,8 @@ tape('centroid calculation for lines', function(test){
 	var line0 = _3d(data)[0];
 	var line1 = _3d(data)[1];
 	var line2 = _3d(data)[2];
-	test.deepEqual(line0.centroid, {x:     0, y:     0, z:  0});
-	test.deepEqual(line1.centroid, {x:     2, y:     2, z:  2});
-	test.deepEqual(line2.centroid, {x: 22.15, y: 10.35, z: 18});
-	test.end();
+	t.deepEqual(line0.centroid, {x:     0, y:     0, z:  0});
+	t.deepEqual(line1.centroid, {x:     2, y:     2, z:  2});
+	t.deepEqual(line2.centroid, {x: 22.15, y: 10.35, z: 18});
+	t.end();
 });

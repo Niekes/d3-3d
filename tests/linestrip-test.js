@@ -1,7 +1,7 @@
-var tape = require('tape');
-var d3   = require('../');
+import { test } from 'tape';
+import * as d3 from '../';
 
-tape('linestrip draws correctly', function(test){
+test('linestrip draws correctly', function(t){
 
     var data = [
 		[ 3,5,2],
@@ -18,11 +18,11 @@ tape('linestrip draws correctly', function(test){
         .origin([220,340])
         .shape('LINE_STRIP');
 
-    test.equal(ls3D.draw(ls3D([data])[0]), 'M130,340L160,580L190,430L220,610L250,370L280,1690L310,490');
-    test.end();
+    t.equal(ls3D.draw(ls3D([data])[0]), 'M130,340L160,580L190,430L220,610L250,370L280,1690L310,490');
+    t.end();
 });
 
-tape('centroid calculation for linesstrip', function(test){
+test('centroid calculation for linesstrip', function(t){
 
     var data = [
         [ 3,5,2],
@@ -48,8 +48,8 @@ tape('centroid calculation for linesstrip', function(test){
         .origin([220,340])
         .shape('LINE_STRIP');
 
-    test.deepEqual(ls3D([data])[0].centroid, {x:     0, y:     9, z:  3});
-	test.deepEqual(ls3D([data2])[0].centroid, { x: 0.5, y: 5, z: 2.5 });
+    t.deepEqual(ls3D([data])[0].centroid, {x:     0, y:     9, z:  3});
+	t.deepEqual(ls3D([data2])[0].centroid, { x: 0.5, y: 5, z: 2.5 });
 
-	test.end();
+	t.end();
 });

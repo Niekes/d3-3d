@@ -23,18 +23,20 @@
   "scripts": {
     "pretest": "npm run build",
     "build": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
-    "test": "c8 --reporter=lcov tape tests/**/*-test.js | tap-spec && c8 report",
-    "coverage": "c8 tape tests/**/*-test.js | tap-spec && c8 report",
+    "test": "c8 --reporter=lcov tape -r esm ./tests/setup.js tests/**/*-test.js | tap-spec && c8 report",
+    "coverage": "c8 tape -r esm ./tests/setup.js tests/**/*-test.js | tap-spec && c8 report",
     "prepublish": "npm run test && uglifyjs build/d3-3d.js -c -m -o build/d3-3d.min.js",
     "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
   },
   "devDependencies": {
+    "browser-env": "^3.3.0",
     "c8": "^7.6.0",
     "eslint": "^7.22.0",
     "eslint-config-standard": "^16.0.2",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.3.1",
+    "esm": "^3.2.25",
     "rollup": "2.42.1",
     "tap-spec": "^5.0.0",
     "tape": "^5.2.2",
