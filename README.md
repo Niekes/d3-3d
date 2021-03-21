@@ -2,7 +2,7 @@
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
 [![Codecov](https://img.shields.io/codecov/c/github/niekes/d3-3d)](https://app.codecov.io/gh/niekes/d3-3d)
-[![Travis (.org) branch](https://img.shields.io/travis/niekes/d3-3d/master)](https://travis-ci.com/github/Niekes/d3-3d)
+[![Travis (.org) branch](https://travis-ci.com/Niekes/d3-3d.svg?branch=master)](https://travis-ci.com/github/Niekes/d3-3d)
 [![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
