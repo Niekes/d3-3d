@@ -12,7 +12,6 @@
   ],
   "author": "Stefan Nieke (https://niekes.com)",
   "license": "BSD-3-Clause",
-  "jsnext:main": "index",
   "homepage": "https://github.com/niekes/d3-3d",
   "repository": {
     "type": "git",
