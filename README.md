@@ -40,6 +40,7 @@ Any amount, big or small, is genuinely appreciated and will go directly into the
 Thank you so much for your support and for being a part of this journey with me. Let's make data visualization in 3D even better!
 
 Best regards,
+
 Niekes
 
 ## Installing
