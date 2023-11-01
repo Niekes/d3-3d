@@ -20,6 +20,7 @@
 See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
 
 ## Funding
+
 Hello Everyone 👋,
 
 I hope you're doing well! As you may know, I've been working on the d3-3d JavaScript library in my free time. The goal of this project is to make 3D data visualization easier and more accessible for developers.
@@ -30,11 +31,11 @@ Developing and maintaining an open-source project like this takes time, energy, 
 
 Any amount, big or small, is genuinely appreciated and will go directly into the development and improvement of this library. With your support, we can:
 
-Keep the library updated with the latest features
-Address bugs and issues more efficiently
-Develop new functionalities and enhancements
-Keep the documentation robust and up-to-date
-Even if you can't donate at this time, sharing this with your network or giving the project a star on GitHub can go a long way!
+* Keep the library updated with the latest features
+* Address bugs and issues more efficiently
+* Develop new functionalities and enhancements
+* Keep the documentation robust and up-to-date
+* Even if you can't donate at this time, sharing this with your network or giving the project a star on GitHub can go a long way!
 
 Thank you so much for your support and for being a part of this journey with me. Let's make data visualization in 3D even better!
 
