@@ -26,7 +26,7 @@ I hope you're doing well! As you may know, I've been working on the d3-3d JavaSc
 
 Developing and maintaining an open-source project like this takes time, energy, and resources. That's why I'm reaching out for your support. If you've found value in using d3-3d, or appreciate the work that goes into it, consider supporting the project with a donation.
 
-<a href='https://ko-fi.com/supportkofi' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<a href='https://ko-fi.com/niekes' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
 
 Any amount, big or small, is genuinely appreciated and will go directly into the development and improvement of this library. With your support, we can:
 
