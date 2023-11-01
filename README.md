@@ -1,4 +1,5 @@
 # d3-3d
+
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
 [![Codecov](https://img.shields.io/codecov/c/github/niekes/d3-3d)](https://app.codecov.io/gh/niekes/d3-3d)
@@ -17,6 +18,28 @@
     </tr>
 </table>
 See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
+
+## Funding
+Hello Everyone 👋,
+
+I hope you're doing well! As you may know, I've been working on the d3-3d JavaScript library in my free time. The goal of this project is to make 3D data visualization easier and more accessible for developers.
+
+Developing and maintaining an open-source project like this takes time, energy, and resources. That's why I'm reaching out for your support. If you've found value in using d3-3d, or appreciate the work that goes into it, consider supporting the project with a donation.
+
+<a href='https://ko-fi.com/supportkofi' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+
+Any amount, big or small, is genuinely appreciated and will go directly into the development and improvement of this library. With your support, we can:
+
+Keep the library updated with the latest features
+Address bugs and issues more efficiently
+Develop new functionalities and enhancements
+Keep the documentation robust and up-to-date
+Even if you can't donate at this time, sharing this with your network or giving the project a star on GitHub can go a long way!
+
+Thank you so much for your support and for being a part of this journey with me. Let's make data visualization in 3D even better!
+
+Best regards,
+Niekes
 
 ## Installing
 
@@ -182,7 +205,3 @@ Sorts the elements accordingly to the z coordinate of the calculated centroid.
 <a name="draw" href="#draw">#</a> _3d.<b>draw</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 "Source")
 
 Constructs a string for the SVG `<path>` element. Depending on the [shape](#shape) this function will take care how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [*_3d*.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on.
-
-# Funding
-<a href='https://ko-fi.com/supportkofi' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' />
-
