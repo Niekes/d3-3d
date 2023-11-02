@@ -2,8 +2,8 @@
 
 **d3-3d** is meant for 3d visualizations. **d3-3d** allows the projection of 3d data onto the screen in the webbrowser. It is specially designed to work with **[d3.js](https://d3js.org/)**.
 
-[![Codecov](https://img.shields.io/codecov/c/github/niekes/d3-3d)](https://app.codecov.io/gh/niekes/d3-3d)
-[![Travis (.org) branch](https://travis-ci.com/Niekes/d3-3d.svg?branch=master)](https://travis-ci.com/github/Niekes/d3-3d)
+[![Build][build-badge]][build]
+[![Coverage][coverage-badge]][coverage]
 [![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
@@ -209,3 +209,12 @@ Sorts the elements accordingly to the z coordinate of the calculated centroid.
 Constructs a string for the SVG `<path>` element. Depending on the [shape](#shape) this function will take care how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [*_3d*.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A3QJPZ9)
+
+<!-- Definitions -->
+[build-badge]: https://github.com/niekes/d3-3d/workflows/main/badge.svg
+
+[build]: https://github.com/niekes/d3-3d/actions
+
+[coverage-badge]: https://img.shields.io/codecov/c/github/niekes/d3-3d.svg
+
+[coverage]: https://codecov.io/github/niekes/d3-3d
