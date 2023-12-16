@@ -1,23 +1,30 @@
 import { test } from 'tape';
-import * as d3 from '../';
+import * as d3 from '../index.js';
 
-test('cube naming is correct', function(t){
-    const cubes = d3._3d()
+test('cube naming is correct', function (t) {
+    const cubes = d3
+        ._3d()
         .shape('CUBE')
-        .x(function(d){ return d.x; })
-        .y(function(d){ return d.y; })
-        .z(function(d){ return d.z; });
+        .x(function (d) {
+            return d.x;
+        })
+        .y(function (d) {
+            return d.y;
+        })
+        .z(function (d) {
+            return d.z;
+        });
 
     const data = [
         [
-            {x: 0, y: 0, z: 0},
-            {x: 0, y: 1, z: 0},
-            {x: 1, y: 1, z: 0},
-            {x: 1, y: 0, z: 0},
-            {x: 0, y: 0, z: 1},
-            {x: 0, y: 1, z: 1},
-            {x: 1, y: 1, z: 1},
-            {x: 1, y: 0, z: 1},
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 },
+            { x: 1, y: 1, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 0, z: 1 },
+            { x: 0, y: 1, z: 1 },
+            { x: 1, y: 1, z: 1 },
+            { x: 1, y: 0, z: 1 }
         ]
     ];
 

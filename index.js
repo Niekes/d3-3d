@@ -1,1 +1,1 @@
-export { default as _3d } from './src/3d';
+export { default as _3d } from './src/3d.js';

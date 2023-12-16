@@ -1,5 +1,5 @@
 import { test } from 'tape';
-import * as d3 from '../';
+import * as d3 from '../index.js';
 
 test('triangle draw', function(t){
 	var triangles = d3._3d().shape('TRIANGLE').x(function(d){ return d.x; }).y(function(d){ return d.y; }).z(function(d){ return d.z; });
