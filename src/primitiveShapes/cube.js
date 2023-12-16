@@ -50,13 +50,11 @@ export function cube(cubes, options, point, angles) {
         top.face = 'top';
         bottom.face = 'bottom';
 
-        var faces = [front, back, left, right, top, bottom];
-
-        cube.faces = faces;
+        cube.faces = [front, back, left, right, top, bottom];
         cube.centroid = {
             x: (left.centroid.x + right.centroid.x) / 2,
             y: (top.centroid.y + bottom.centroid.y) / 2,
-            z: front.centroid.z + back.centroid.z / 2
+            z: (front.centroid.z + back.centroid.z) / 2
         };
     }
     return cubes;
