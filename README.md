@@ -14,35 +14,11 @@
     <tr>
         <td><a target="_blank" href="https://codepen.io/Niekes/pen/YzBmYzR"><img src="assets/surfaceplot.gif"></a></td>
         <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMpLw"><img src="assets/3d-scatterplot.gif"></a></td>
-        <td><a target="_blank" href="https://bl.ocks.org/niekes/613d43d39372f99ae2dcea14f0f90617"><img src="assets/3d-barchart.gif"> </a> </td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMKXY"><img src="assets/3d-barchart.gif"> </a></td>
     </tr>
 </table>
 
 See more [examples][examples]
-
-## Funding
-
-Hello Everyone 👋,
-
-I hope you're doing well! As you may know, I've been working on the d3-3d JavaScript library in my free time. The goal of this project is to make 3D data visualization easier and more accessible for developers.
-
-Developing and maintaining an open-source project like this takes time, energy, and resources. That's why I'm reaching out for your support. If you've found value in using d3-3d, or appreciate the work that goes into it, consider supporting the project with a donation.
-
-<a href='https://ko-fi.com/niekes' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-
-Any amount, big or small, is genuinely appreciated and will go directly into the development and improvement of this library. With your support, we can:
-
-- Keep the library updated with the latest features
-- Address bugs and issues more efficiently
-- Develop new functionalities and enhancements
-- Keep the documentation robust and up-to-date
-- Even if you can't donate at this time, sharing this with your network or giving the project a star on GitHub can go a long way!
-
-Thank you so much for your support and for being a part of this journey with me. Let's make data visualization in 3D even better!
-
-Best regards,
-
-Niekes
 
 ## Installing
 
