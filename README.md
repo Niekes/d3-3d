@@ -12,12 +12,13 @@
 
 <table>
     <tr>
-        <td> <a target="_blank" href="https://bl.ocks.org/niekes/e920c03edd7950578b8a6cded8b5a1a5"> <img src="assets/surfaceplot.gif"> </a> </td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/YzBmYzR"><img src="assets/surfaceplot.gif"></a></td>
         <td> <a target="_blank" href="https://bl.ocks.org/niekes/1c15016ae5b5f11508f92852057136b5"> <img src="assets/3d-scatterplot.gif"> </a> </td>
         <td> <a target="_blank" href="https://bl.ocks.org/niekes/613d43d39372f99ae2dcea14f0f90617"> <img src="assets/3d-barchart.gif"> </a> </td>
     </tr>
 </table>
-See more <a href="https://bl.ocks.org/niekes" target="_blank">examples</a>.
+
+See more [examples][examples]
 
 ## Funding
 
@@ -226,3 +227,4 @@ Constructs a string for the SVG `<path>` element. Depending on the [shape](#shap
 [build]: https://github.com/niekes/d3-3d/actions
 [coverage-badge]: https://img.shields.io/codecov/c/github/niekes/d3-3d.svg
 [coverage]: https://codecov.io/github/niekes/d3-3d
+[examples]: https://codepen.io/collection/DpmByZ
