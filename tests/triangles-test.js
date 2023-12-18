@@ -376,3 +376,16 @@ test("triangles' centroid calculation is correct", (t) => {
     t.deepEqual(triangles(data)[2].centroid, { x: 1.3333333333333333, y: 1, z: 0 });
     t.end();
 });
+
+test('set scale', (t) => {
+    const triangles1 = triangles3D();
+    const triangles2 = triangles3D().scale(2);
+    const triangles3 = triangles3D().scale(3);
+    const triangles4 = triangles3D().scale(4);
+
+    t.equal(triangles1.scale(), 1);
+    t.equal(triangles2.scale(), 2);
+    t.equal(triangles3.scale(), 3);
+    t.equal(triangles4.scale(), 4);
+    t.end();
+});

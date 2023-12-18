@@ -71,11 +71,11 @@ export function triangles3D() {
         );
     }
 
-    fn.origin = (o) => {
+    fn.origin = function (o) {
         return arguments.length ? ((origin = o), fn) : origin;
     };
 
-    fn.scale = (s) => {
+    fn.scale = function (s) {
         return arguments.length ? ((scale = s), fn) : scale;
     };
 

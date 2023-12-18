@@ -1,5 +1,6 @@
 import { test } from 'tape';
 import * as d3 from '../index.js';
+import { triangles3D, points3D } from '../index.js';
 
 test('d3-3d has expected defaults', function (t) {
     const _3d = d3._3d();
@@ -106,5 +107,29 @@ test('test ascending sorting', function (t) {
         true
     );
 
+    t.end();
+});
+
+/**
+ * v1.0.0
+ *
+ */
+test('d3-3d has expected defaults', (t) => {
+    const triangles = triangles3D();
+    const points = points3D();
+
+    t.deepEqual(triangles.origin(), [0, 0]);
+    t.equal(triangles.scale(), 1);
+    t.equal(triangles.rotateX(), 0);
+    t.equal(triangles.rotateY(), 0);
+    t.equal(triangles.rotateZ(), 0);
+    t.deepEqual(triangles.rotateCenter(), [0, 0, 0]);
+
+    t.deepEqual(points.origin(), [0, 0]);
+    t.equal(points.scale(), 1);
+    t.equal(points.rotateX(), 0);
+    t.equal(points.rotateY(), 0);
+    t.equal(points.rotateZ(), 0);
+    t.deepEqual(points.rotateCenter(), [0, 0, 0]);
     t.end();
 });
