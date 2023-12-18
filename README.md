@@ -13,8 +13,8 @@
 <table>
     <tr>
         <td><a target="_blank" href="https://codepen.io/Niekes/pen/YzBmYzR"><img src="assets/surfaceplot.gif"></a></td>
-        <td> <a target="_blank" href="https://bl.ocks.org/niekes/1c15016ae5b5f11508f92852057136b5"> <img src="assets/3d-scatterplot.gif"> </a> </td>
-        <td> <a target="_blank" href="https://bl.ocks.org/niekes/613d43d39372f99ae2dcea14f0f90617"> <img src="assets/3d-barchart.gif"> </a> </td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMpLw"><img src="assets/3d-scatterplot.gif"></a></td>
+        <td><a target="_blank" href="https://bl.ocks.org/niekes/613d43d39372f99ae2dcea14f0f90617"><img src="assets/3d-barchart.gif"> </a> </td>
     </tr>
 </table>
 
