@@ -68,7 +68,7 @@ import { _3d } from 'd3-3d';
 With **d3-3d** you can easily visualize your 3d data.
 
 ```js
-var data3D = [
+const data3D = [
   [
     [0, -1, 0],
     [-1, 1, 0],
@@ -76,14 +76,14 @@ var data3D = [
   ]
 ];
 
-var triangles3D = d3._3d().scale(100).origin([480, 250]).shape('TRIANGLE');
+const triangles3D = d3._3d().scale(100).origin([480, 250]).shape('TRIANGLE');
 
-var projectedData = triangles3D(data3D);
+const projectedData = triangles3D(data3D);
 
 init(projectedData);
 
 function init(data) {
-  var triangles = svg.selectAll('path').data(data);
+  const triangles = svg.selectAll('path').data(data);
 
   // add your logic here...
 }
@@ -118,7 +118,7 @@ Sets the shape to _shape_. If _shape_ is not specified the current shape will be
 If _shape_ is specified, sets the shape to the specified shape and returns the **d3-3d** function object. If _shape_ is not specified, returns the current shape.
 
 ```js
-var triangles3D = d3._3d().shape('TRIANGLE');
+const triangles3D = d3._3d().shape('TRIANGLE');
 ```
 
 <a name="x" href="#x">#</a> \_3d.<b>x</b>([x]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L1 'Source')
