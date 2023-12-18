@@ -203,4 +203,4 @@ Constructs a string for the SVG `<path>` element. Depending on the [shape](#shap
 [build]: https://github.com/niekes/d3-3d/actions
 [coverage-badge]: https://img.shields.io/codecov/c/github/niekes/d3-3d.svg
 [coverage]: https://codecov.io/github/niekes/d3-3d
-[examples]: https://codepen.io/collection/DpmByZ
+[examples]: https://codepen.io/collection/DpmByZ?sort_order=desc&sort_by=id
