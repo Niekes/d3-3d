@@ -1,3 +1,4 @@
+import { generator3D } from '../generator.js';
 import { centroid } from '../centroid.js';
 import { rotateRzRyRx } from '../rotation.js';
 
@@ -17,4 +18,8 @@ export function line(lines, options, point, angles) {
         line.centroid = centroid(line);
     }
     return lines;
+}
+
+export function lines3D() {
+    return generator3D(line, undefined);
 }

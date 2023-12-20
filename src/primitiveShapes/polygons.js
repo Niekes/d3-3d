@@ -1,6 +1,8 @@
+import { generator3D } from '../generator.js';
 import { ccw } from '../counter-clockwise.js';
 import { centroid } from '../centroid.js';
 import { rotateRzRyRx } from '../rotation.js';
+import { drawPolygon } from '../draw/drawPolygon.js';
 
 export function polygon(polygons, options, point, angles) {
     for (var i = polygons.length - 1; i >= 0; i--) {
@@ -16,4 +18,8 @@ export function polygon(polygons, options, point, angles) {
         polygon.centroid = centroid(polygon);
     }
     return polygons;
+}
+
+export function polygons3D() {
+    return generator3D(polygon, drawPolygon);
 }

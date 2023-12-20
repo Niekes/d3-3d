@@ -204,7 +204,7 @@ test('triangles3D has expected defaults', (t) => {
     t.equal(triangles.rotateX(), 0);
     t.equal(triangles.rotateY(), 0);
     t.equal(triangles.rotateZ(), 0);
-    t.deepEqual(triangles.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(triangles.rotationCenter(), [0, 0, 0]);
     t.equal(typeof triangles.draw, 'function');
     t.equal(typeof triangles.sort, 'function');
     t.equal(typeof triangles.x, 'function');

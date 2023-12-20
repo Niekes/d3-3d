@@ -8,6 +8,23 @@ test("points don't have draw function", function (t) {
     t.end();
 });
 
+test('points3D has expected defaults', (t) => {
+    var _3d = d3._3d();
+
+    t.deepEqual(_3d.origin(), [0, 0]);
+    t.equal(_3d.scale(), 1);
+    t.equal(_3d.rotateX(), 0);
+    t.equal(_3d.rotateY(), 0);
+    t.equal(_3d.rotateZ(), 0);
+    t.deepEqual(_3d.rotateCenter(), [0, 0, 0]);
+    t.equal(_3d.draw(), undefined);
+    t.equal(typeof _3d.sort, 'function');
+    t.equal(typeof _3d.x, 'function');
+    t.equal(typeof _3d.y, 'function');
+    t.equal(typeof _3d.z, 'function');
+    t.end();
+});
+
 test('access point coords via array', function (t) {
     var _3d = d3._3d();
     var data = [
@@ -86,7 +103,14 @@ test('project point 1|1|1 on to screen', function (t) {
 /**
  *  v1.0.0
  **/
-test('triangles3D is exported correctly', (t) => {
+test("points don't have draw function", function (t) {
+    const points = points3D();
+
+    t.equal(points.draw, undefined);
+    t.end();
+});
+
+test('points3D is exported correctly', (t) => {
     t.equal(typeof points3D, 'function');
     t.end();
 });
@@ -99,7 +123,7 @@ test('points3D has expected defaults', (t) => {
     t.equal(points.rotateX(), 0);
     t.equal(points.rotateY(), 0);
     t.equal(points.rotateZ(), 0);
-    t.deepEqual(points.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(points.rotationCenter(), [0, 0, 0]);
     t.equal(points.draw, undefined);
     t.equal(typeof points.sort, 'function');
     t.equal(typeof points.x, 'function');

@@ -1,33 +1,35 @@
+import { generator3D } from '../generator.js';
 import { ccw } from '../counter-clockwise.js';
 import { centroid } from '../centroid.js';
-import { point as pt } from './point.js';
+import { point as pt } from './points.js';
+import { drawPlane } from '../draw/drawPlane.js';
 
 export function cube(cubes, options, point, angles) {
-    for (var i = cubes.length - 1; i >= 0; i--) {
-        var cube = cubes[i];
+    for (let i = cubes.length - 1; i >= 0; i--) {
+        const cube = cubes[i];
 
-        var vertices = pt(
+        const vertices = pt(
             [cube[0], cube[1], cube[2], cube[3], cube[4], cube[5], cube[6], cube[7]],
             options,
             point,
             angles
         );
 
-        var v1 = vertices[0];
-        var v2 = vertices[1];
-        var v3 = vertices[2];
-        var v4 = vertices[3];
-        var v5 = vertices[4];
-        var v6 = vertices[5];
-        var v7 = vertices[6];
-        var v8 = vertices[7];
+        const v1 = vertices[0];
+        const v2 = vertices[1];
+        const v3 = vertices[2];
+        const v4 = vertices[3];
+        const v5 = vertices[4];
+        const v6 = vertices[5];
+        const v7 = vertices[6];
+        const v8 = vertices[7];
 
-        var front = [v1, v2, v3, v4];
-        var back = [v8, v7, v6, v5];
-        var left = [v5, v6, v2, v1];
-        var right = [v4, v3, v7, v8];
-        var top = [v5, v1, v4, v8];
-        var bottom = [v2, v6, v7, v3];
+        const front = [v1, v2, v3, v4];
+        const back = [v8, v7, v6, v5];
+        const left = [v5, v6, v2, v1];
+        const right = [v4, v3, v7, v8];
+        const top = [v5, v1, v4, v8];
+        const bottom = [v2, v6, v7, v3];
 
         front.centroid = centroid(front);
         back.centroid = centroid(back);
@@ -57,5 +59,10 @@ export function cube(cubes, options, point, angles) {
             z: (front.centroid.z + back.centroid.z) / 2
         };
     }
+
     return cubes;
+}
+
+export function cubes3D() {
+    return generator3D(cube, drawPlane);
 }

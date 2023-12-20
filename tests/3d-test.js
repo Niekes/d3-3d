@@ -115,6 +115,8 @@ test('test ascending sorting', function (t) {
  *
  */
 test('d3-3d has expected defaults', (t) => {
+    t.plan(12);
+
     const triangles = triangles3D();
     const points = points3D();
 
@@ -123,13 +125,13 @@ test('d3-3d has expected defaults', (t) => {
     t.equal(triangles.rotateX(), 0);
     t.equal(triangles.rotateY(), 0);
     t.equal(triangles.rotateZ(), 0);
-    t.deepEqual(triangles.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(triangles.rotationCenter(), [0, 0, 0]);
 
     t.deepEqual(points.origin(), [0, 0]);
     t.equal(points.scale(), 1);
     t.equal(points.rotateX(), 0);
     t.equal(points.rotateY(), 0);
     t.equal(points.rotateZ(), 0);
-    t.deepEqual(points.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(points.rotationCenter(), [0, 0, 0]);
     t.end();
 });

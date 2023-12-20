@@ -1,10 +1,10 @@
-import { cube } from './primitiveShapes/cube.js';
-import { gridPlane } from './primitiveShapes/gridPlane.js';
-import { lineStrip } from './primitiveShapes/lineStrip.js';
-import { line } from './primitiveShapes/line.js';
-import { plane } from './primitiveShapes/plane.js';
-import { point } from './primitiveShapes/point.js';
-import { triangle } from './primitiveShapes/triangle.js';
+import { cube } from './primitiveShapes/cubes.js';
+import { gridPlane } from './primitiveShapes/gridPlanes.js';
+import { lineStrip } from './primitiveShapes/lineStrips.js';
+import { line } from './primitiveShapes/lines.js';
+import { plane } from './primitiveShapes/planes.js';
+import { point } from './primitiveShapes/points.js';
+import { triangle } from './primitiveShapes/triangles.js';
 
 import { drawLineStrip } from './draw/drawLineStrip.js';
 import { drawPlane } from './draw/drawPlane.js';

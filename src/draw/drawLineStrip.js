@@ -1,9 +1,3 @@
-/**
- * Draws a line strip based on projected coordinates.
- *
- * @param {Array<Point>} lineStrip - An array of points representing the line strip with projected coordinates.
- * @returns {string} The SVG path data for the drawn line strip.
- */
 export function drawLineStrip(lineStrip) {
     const lastPoint = lineStrip[lineStrip.length - 1];
 
