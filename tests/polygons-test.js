@@ -1,7 +1,7 @@
 import { test } from 'tape';
 import { polygons3D } from '../index.js';
 
-test.only('polygons3D draws correctly', function (t) {
+test('polygons3D draws correctly', function (t) {
     t.plan(1);
 
     const data = [
