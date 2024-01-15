@@ -1,10 +1,10 @@
-import { cube } from './primitiveShapes/cubes.js';
-import { gridPlane } from './primitiveShapes/gridPlanes.js';
-import { lineStrip } from './primitiveShapes/lineStrips.js';
-import { line } from './primitiveShapes/lines.js';
-import { plane } from './primitiveShapes/planes.js';
-import { point } from './primitiveShapes/points.js';
-import { triangle } from './primitiveShapes/triangles.js';
+import { cube } from './shapes/cubes.js';
+import { gridPlane } from './shapes/gridPlanes.js';
+import { lineStrip } from './shapes/lineStrips.js';
+import { line } from './shapes/lines.js';
+import { plane } from './shapes/planes.js';
+import { point } from './shapes/points.js';
+import { triangle } from './shapes/triangles.js';
 
 import { drawLineStrip } from './draw/drawLineStrip.js';
 import { drawPlane } from './draw/drawPlane.js';
@@ -18,13 +18,13 @@ import { x as px, y as py, z as pz } from './point.js';
  * @author Stefan Nieke / http://niekes.com/
  */
 export default function () {
-    var origin = [0, 0],
+    var origin = { x: 0, y: 0 },
         scale = 1,
         projection = orthographic,
         angleX = 0,
         angleY = 0,
         angleZ = 0,
-        rotateCenter = [0, 0, 0],
+        rotateCenter = { x: 0, y: 0, z: 0 },
         x = px,
         y = py,
         z = pz,

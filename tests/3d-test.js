@@ -4,13 +4,13 @@ import { triangles3D, points3D } from '../index.js';
 
 test('d3-3d has expected defaults', function (t) {
     const _3d = d3._3d();
-    t.deepEqual(_3d.origin(), [0, 0]);
+    t.deepEqual(_3d.origin(), { x: 0, y: 0 });
     t.equal(_3d.scale(), 1);
     t.equal(_3d.rotateX(), 0);
     t.equal(_3d.rotateY(), 0);
     t.equal(_3d.rotateZ(), 0);
     t.equal(_3d.shape(), 'POINT');
-    t.deepEqual(_3d.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(_3d.rotateCenter(), { x: 0, y: 0, z: 0 });
     t.end();
 });
 
@@ -120,18 +120,18 @@ test('d3-3d has expected defaults', (t) => {
     const triangles = triangles3D();
     const points = points3D();
 
-    t.deepEqual(triangles.origin(), [0, 0]);
+    t.deepEqual(triangles.origin(), { x: 0, y: 0 });
     t.equal(triangles.scale(), 1);
     t.equal(triangles.rotateX(), 0);
     t.equal(triangles.rotateY(), 0);
     t.equal(triangles.rotateZ(), 0);
-    t.deepEqual(triangles.rotationCenter(), [0, 0, 0]);
+    t.deepEqual(triangles.rotationCenter(), { x: 0, y: 0, z: 0 });
 
-    t.deepEqual(points.origin(), [0, 0]);
+    t.deepEqual(points.origin(), { x: 0, y: 0 });
     t.equal(points.scale(), 1);
     t.equal(points.rotateX(), 0);
     t.equal(points.rotateY(), 0);
     t.equal(points.rotateZ(), 0);
-    t.deepEqual(points.rotationCenter(), [0, 0, 0]);
+    t.deepEqual(points.rotationCenter(), { x: 0, y: 0, z: 0 });
     t.end();
 });

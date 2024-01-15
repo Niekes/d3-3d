@@ -13,8 +13,8 @@ export function generator3D(transform, draw) {
     let angleX = 0;
     let angleY = 0;
     let angleZ = 0;
-    let origin = [0, 0];
-    let rotateCenter = [0, 0, 0];
+    let origin = { x: 0, y: 0 };
+    let rotateCenter = { x: 0, y: 0, z: 0 };
     let scale = 1;
     let x = px;
     let y = py;

@@ -30,9 +30,9 @@ test('access triangle coords via array', function (t) {
     var triangles = d3._3d().shape('TRIANGLE');
     var data = [
         [
-            [0, 0, 0],
-            [0, 1, 0],
-            [1, 0, 0]
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 },
+            { x: 1, y: 0, z: 0 }
         ]
     ];
 
@@ -199,12 +199,12 @@ test('triangles3D is exported correctly', (t) => {
 test('triangles3D has expected defaults', (t) => {
     const triangles = triangles3D();
 
-    t.deepEqual(triangles.origin(), [0, 0]);
+    t.deepEqual(triangles.origin(), { x: 0, y: 0 });
     t.equal(triangles.scale(), 1);
     t.equal(triangles.rotateX(), 0);
     t.equal(triangles.rotateY(), 0);
     t.equal(triangles.rotateZ(), 0);
-    t.deepEqual(triangles.rotationCenter(), [0, 0, 0]);
+    t.deepEqual(triangles.rotationCenter(), { x: 0, y: 0, z: 0 });
     t.equal(typeof triangles.draw, 'function');
     t.equal(typeof triangles.sort, 'function');
     t.equal(typeof triangles.x, 'function');
@@ -231,35 +231,19 @@ test('triangle draw', (t) => {
     t.end();
 });
 
-test('access triangle coords via array', (t) => {
-    const triangles = triangles3D();
-    const data = [
-        [
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9]
-        ]
-    ];
-
-    t.deepEqual(triangles(data)[0][0].rotated, { x: 1, y: 2, z: 3 });
-    t.deepEqual(triangles(data)[0][1].rotated, { x: 4, y: 5, z: 6 });
-    t.deepEqual(triangles(data)[0][2].rotated, { x: 7, y: 8, z: 9 });
-    t.end();
-});
-
 test('access triangle coords via function', (t) => {
     const data = [
         [
-            { x: 1, y: 2, z: 3 },
-            { x: 4, y: 5, z: 6 },
-            { x: 7, y: 8, z: 9 }
+            { x1: 1, y2: 2, z3: 3 },
+            { x1: 4, y2: 5, z3: 6 },
+            { x1: 7, y2: 8, z3: 9 }
         ]
     ];
 
     const triangles = triangles3D()
-        .x((d) => d.x)
-        .y((d) => d.y)
-        .z((d) => d.z);
+        .x((d) => d.x1)
+        .y((d) => d.y2)
+        .z((d) => d.z3);
 
     t.deepEqual(triangles(data)[0][0].rotated, { x: 1, y: 2, z: 3 });
     t.deepEqual(triangles(data)[0][1].rotated, { x: 4, y: 5, z: 6 });
@@ -286,10 +270,7 @@ test('triangles are a closed path', function (t) {
 });
 
 test('triangles are getting drawn counter-clockwise', (t) => {
-    const triangles = triangles3D()
-        .x((d) => d.x)
-        .y((d) => d.y)
-        .z((d) => d.z);
+    const triangles = triangles3D();
 
     const data1 = [
         [
@@ -334,10 +315,7 @@ test('triangles are getting drawn counter-clockwise', (t) => {
 });
 
 test("triangles' centroid calculation is correct", (t) => {
-    const triangles = triangles3D()
-        .x((d) => d.x)
-        .y((d) => d.y)
-        .z((d) => d.z);
+    const triangles = triangles3D();
 
     const data = [
         [

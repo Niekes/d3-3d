@@ -43,23 +43,22 @@ For a specific version:
 ES6:
 
 ```js
-import { _3d } from 'd3-3d';
+import { triangles3D, cubes3D, gridPlanes3D, points3D, lineStrips3D } from 'd3-3d';
 ```
 
 ## API Reference
 
-- [d3.\_3d](#_3d) - create a new 3d function object.
-- [_\_3d_.shape](#shape) - set the shape.
-- [_\_3d_.x](#x) - set the x accessor.
-- [_\_3d_.y](#y) - set the y accessor.
-- [_\_3d_.z](#z) - set the z accessor.
-- [_\_3d_.scale](#scale) - sets the scale for the projected points.
-- [_\_3d_.rotateX](#rotateX) - set the angle for the x rotation.
-- [_\_3d_.rotateY](#rotateY) - set the angle for the y rotation.
-- [_\_3d_.rotateZ](#rotateZ) - set the angle for the z rotation.
-- [_\_3d_.rotateCenter](#rotateCenter) - set the the rotation center.
-- [_\_3d_.sort](#sort) - sort the 3d elements by the centroid.
-- [_\_3d_.draw](#draw) - draw the 3d elements.
+- [triangles3D().x](#x) - set the x accessor.
+- [triangles3D().y](#y) - set the y accessor.
+- [triangles3D().z](#z) - set the z accessor.
+- [triangles3D().scale](#scale) - sets the scale for the projected points.
+- [triangles3D().rotateX](#rotateX) - set the angle for the x rotation.
+- [triangles3D().rotateY](#rotateY) - set the angle for the y rotation.
+- [triangles3D().rotateZ](#rotateZ) - set the angle for the z rotation.
+- [triangles3D().rotateCenter](#rotateCenter) - set the the rotation center.
+- [triangles3D().origin](#origin) - set the the origin.
+- [triangles3D().sort](#sort) - sort the 3d elements by the centroid.
+- [triangles3D().draw](#draw) - draw the 3d elements.
 
 ### Overview
 
@@ -70,15 +69,15 @@ With **d3-3d** you can easily visualize your 3d data.
 ```js
 const data3D = [
   [
-    [0, -1, 0],
-    [-1, 1, 0],
-    [1, 1, 0]
+    { x: 0, y: -1, z: 0 },
+    { x: -1, y: 1, z: 0 },
+    { x: 1, y: 1, z: 0 }
   ]
 ];
 
-const triangles3D = d3._3d().scale(100).origin([480, 250]).shape('TRIANGLE');
+const triangles3d = triangles3D().scale(100).origin({ 480, 250 });
 
-const projectedData = triangles3D(data3D);
+const projectedData = triangles3d(data3D);
 
 init(projectedData);
 
@@ -89,111 +88,106 @@ function init(data) {
 }
 ```
 
-<a name="_3d" href="#_3d">#</a> d3.<b>\_3d</b>() [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L58 'Source')
-
-Constructs a new function object with the default settings.
-
 ### Shapes
 
 Depending on the shape the input data array has to be accordingly to the shape.
 
-- **POINT** A point is represented by the `<circle>` element. It does not have a draw function because it can be represented as a `<circle>`. The input data array has to be an array of points where each point has three coordinates which can be accessed via the [x](#x), [y](#y) and [z](#z) accessors.
-- **LINE** A line is represented by the `<line>` element. It does not have a draw function because it can be represented as a `<line>`. The input data array has to be an array of lines where each line is defined by a start- and an endpoint.
-- **LINE_STRIP** A continuous line is represented by the `<path>` element. The input data array has to be an array of points. Every point will be connected to the next point in the input data array.
-- **TRIANGLE** A triangle represented by the `<path>` element. The input data array has to be an array of triangles where each triangle is defined by three points in counter-clockwise order.
-- **PLANE** A plane is represented by the `<path>` element. The input data array has to be an array of planes where each plane is defined by four points in counter-clockwise order.
-- **GRID** A grid is represented by x planes. The input data array has to be an array of points. The [shape](#shape) function aspects the amount of points per row as a second argument. **d3-3d** will construct planes out of the passed data.
-  _NOTE:_ A grid has to have always the same number of points per row. Otherwise the code will break.
-- **SURFACE** equivalent to `GRID`
-- **CUBE** A grid is represented by 4 planes. The input data array has to be an array of cubes where each cube is defined by 8 vertices. To get the orientation and centroid calculation right you should pass in the data like so:
+- **points3D** A point is represented by the `<circle>` element. It does not have a draw function because it can be represented as a `<circle>`. The input data array has to be an array of points where each point has three coordinates which can be accessed via the [x](#x), [y](#y) and [z](#z) accessors.
+- **lines3D** A line is represented by the `<line>` element. It does not have a draw function because it can be represented as a `<line>`. The input data array has to be an array of lines where each line is defined by a start- and an endpoint.
+- **lineStrips3D** A continuous line is represented by the `<path>` element. The input data array has to be an array of points. Every point will be connected to the next point in the input data array.
+- **triangles3D** A triangle represented by the `<path>` element. The input data array has to be an array of triangles where each triangle is defined by three points in counter-clockwise order.
+- **planes3D** A plane is represented by the `<path>` element. The input data array has to be an array of planes where each plane is defined by four points in counter-clockwise order.
+- **gridPlanes3D** A grid is represented by _x_ planes. The input data array has to be an array of points. **d3-3d** will construct planes out of the passed data. _NOTE:_ A grid has to have always the same number of points per row. Otherwise the code will break.
+- **polygons3D** A polygon is represented by the `<path>` element. The input data array has to be an array of polygons where each polygon is defined by _x_ points in counter-clockwise order.
+- **cubes3D** A grid is represented by 4 planes. The input data array has to be an array of cubes where each cube is defined by 8 vertices. To get the orientation and centroid calculation right you should pass in the data like so:
 
 ![cube](assets/cube.png 'Cube')
 
-<a name="shape" href="#shape">#</a> \_3d.<b>shape</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L87 'Source')
+#### triangles3D().x(_x_)
 
-_Default:_ `'POINT'`
-
-Sets the shape to _shape_. If _shape_ is not specified the current shape will be returned.
-
-If _shape_ is specified, sets the shape to the specified shape and returns the **d3-3d** function object. If _shape_ is not specified, returns the current shape.
-
-```js
-const triangles3D = d3._3d().shape('TRIANGLE');
-```
-
-<a name="x" href="#x">#</a> \_3d.<b>x</b>([x]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L1 'Source')
-
-If _x_ is specified, sets the x accessor to the specified function or number and returns the **d3-3d** function object. If _x_ is not specified, returns the current x accessor, which defaults to:
+If _x_ is specified, sets the _x_ accessor to the specified function or number and returns the **d3-3d** function object. If _x_ is not specified, returns the current _x_ accessor, which defaults to:
 
 ```js
 function x(p) {
-  return p[0];
+  return p.x;
 }
 ```
 
 This function will be invoked for each point in the input data array.
 
-<a name="y" href="#y">#</a> \_3d.<b>y</b>([y]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L5 'Source')
+#### triangles3D().y(_y_)
 
-If _y_ is specified, sets the y accessor to the specified function or number and returns the **d3-3d** function object. If _y_ is not specified, returns the current y accessor, which defaults to:
+If _y_ is specified, sets the _y_ accessor to the specified function or number and returns the **d3-3d** function object. If _y_ is not specified, returns the current _y_ accessor, which defaults to:
 
 ```js
 function y(p) {
-  return p[1];
+  return p.y;
 }
 ```
 
 This function will be invoked for each point in the input data array.
 
-<a name="z" href="#z">#</a> \_3d.<b>z</b>([z]) [<>](https://github.com/Niekes/d3-3d/blob/master/src/point.js#L9 'Source')
+#### triangles3D().z(_z_)
 
-If _z_ is specified, sets the z accessor to the specified function or number and returns the **d3-3d** function object. If _z_ is not specified, returns the current z accessor, which defaults to:
+If _z_ is specified, sets the _z_ accessor to the specified function or number and returns the **d3-3d** function object. If _z_ is not specified, returns the current _z_ accessor, which defaults to:
 
 ```js
 function z(p) {
-  return p[2];
+  return p.z;
 }
 ```
 
 This function will be invoked for each point in the input data array.
 
-<a name="scale" href="#scale">#</a> \_3d.<b>scale</b>(scale) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L71 'Source')
+#### triangles3D().scale(_scale_)
+
+If _scale_ is specified, sets the _scale_ to the specified number and returns the **d3-3d** function object. If _scale_ is not specified, returns the current _scale_.
 
 _Default:_ `1`
 
-If _scale_ is specified, sets the scale to the specified number and returns the **d3-3d** function object. If _scale_ is not specified, returns the current scale.
+#### triangles3D().rotateX(_angleX_)
 
-<a name="rotateX" href="#rotateX">#</a> \_3d.<b>rotateX</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L75 'Source')
-
-_Default:_ `0`
-
-If _angle_ is specified, sets rotateX to the specified number and returns the **d3-3d** function object. If _angle_ is not specified, returns the current angle.
-
-<a name="rotateY" href="#rotateY">#</a> \_3d.<b>rotateY</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L79 'Source')
+If _angleX_ is specified, sets _angleX_ to the specified number and returns the **d3-3d** function object. If _angleX_ is not specified, returns the current _angleX_.
 
 _Default:_ `0`
 
-If _angle_ is specified, sets rotateY to the specified number and returns the **d3-3d** function object. If _angle_ is not specified, returns the current angle.
+_angleX_ should be expressed in radians, for example: `Math.PI / 4`.
 
-<a name="rotateZ" href="#rotateZ">#</a> \_3d.<b>rotateZ</b>(angle) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L83 'Source')
+#### triangles3D().rotateY(_angleY_)
+
+If _angleY_ is specified, sets _angleY_ to the specified number and returns the **d3-3d** function object. If _angleY_ is not specified, returns the current _angleY_.
 
 _Default:_ `0`
 
-If _angle_ is specified, sets rotateZ to the specified number and returns the **d3-3d** function object. If _angle_ is not specified, returns the current angle.
+_angleY_ should be expressed in radians, for example: `Math.PI / 4`.
 
-<a name="rotateCenter" href="#rotateCenter">#</a> \_3d.<b>rotateCenter</b>(point) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#L87 'Source')
+#### triangles3D().rotateZ(_angleZ_)
 
-_Default:_ `[0, 0, 0]`
+If _angleZ_ is specified, sets _angleZ_ to the specified number and returns the **d3-3d** function object. If _angleZ_ is not specified, returns the current _angleZ_.
 
-If _point_ is specified, sets rotateCenter to the specified point and returns the **d3-3d** function object. If _rotateCenter_ is not specified, returns the current rotateCenter.
+_Default:_ `0`
 
-<a name="sort" href="#sort">#</a> \_3d.<b>sort</b>(a,b) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 'Source')
+_angleZ_ should be expressed in radians, for example: `Math.PI / 4`.
+
+#### triangles3D().rotateCenter(_rotateCenter_)
+
+If _rotateCenter_ is specified, sets rotateCenter to the specified point and returns the **d3-3d** function object. If _rotateCenter_ is not specified, returns the current _rotateCenter_.
+
+_Default:_ `{ x: 0, y: 0, z: 0 }`
+
+#### triangles3D().origin(_origin_)
+
+If _origin_ is specified, sets origin to the specified point and returns the **d3-3d** function object. If _origin_ is not specified, returns the current _origin_.
+
+_Default:_ `{ x: 0, y: 0 }`
+
+#### triangles3D().sort()
 
 Sorts the elements accordingly to the z coordinate of the calculated centroid.
 
-<a name="draw" href="#draw">#</a> \_3d.<b>draw</b>(shape) [<>](https://github.com/Niekes/d3-3d/blob/master/src/3d.js#107 'Source')
+#### triangles3D().draw()
 
-Constructs a string for the SVG `<path>` element. Depending on the [shape](#shape) this function will take care how the elements get drawn. For instance, if you choose `'TRIANGLE'` **d3-3d** aspects that you want to draw a triangle with three points and each point has three coordinates. The [_\_3d_.draw](#draw) method will draw a triangle with these three points. If you want to draw a plane, you have to pass in four points and so on.
+This function constructs an SVG `<path>` element string based on the chosen [shape](#shapes). For example, selecting triangles3D in **d3-3d** implies drawing a triangle with three points, each having three coordinates `{ x: 0, y: 0, z: 0 }`. The `triangles3D().draw` method facilitates this. To draw a plane, provide four points, and so forth.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A3QJPZ9)
 

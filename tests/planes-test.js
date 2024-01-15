@@ -31,12 +31,13 @@ test("draw function of 'planes' draws correctly", function (t) {
     var _3d = d3._3d().shape('PLANE');
     var data = [
         [
-            [5, 0, 2],
-            [6, 4, 1],
-            [4, 5, 8],
-            [1, 5, 9]
+            { x: 5, y: 0, z: 2 },
+            { x: 6, y: 4, z: 1 },
+            { x: 4, y: 5, z: 8 },
+            { x: 1, y: 5, z: 9 }
         ]
     ];
+
     t.deepEqual(_3d.draw(_3d(data)[0]), 'M5,0L6,4L4,5L1,5Z');
     t.end();
 });
@@ -86,10 +87,10 @@ test("draw function of 'planes' draws correctly", (t) => {
 
     const data = [
         [
-            [5, 0, 2],
-            [6, 4, 1],
-            [4, 5, 8],
-            [1, 5, 9]
+            { x: 5, y: 0, z: 2 },
+            { x: 6, y: 4, z: 1 },
+            { x: 4, y: 5, z: 8 },
+            { x: 1, y: 5, z: 9 }
         ]
     ];
     t.equal(planes.draw(planes(data)[0]), 'M5,0L6,4L4,5L1,5Z');

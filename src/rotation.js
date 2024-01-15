@@ -12,17 +12,17 @@
 export function rotateRzRyRx(po, angles) {
     const rc = angles.rotateCenter;
 
-    po.x -= rc[0];
-    po.y -= rc[1];
-    po.z -= rc[2];
+    po.x -= rc.x;
+    po.y -= rc.y;
+    po.z -= rc.z;
 
     const rz = rotateZ(po, angles.z);
     const ry = rotateY(rz, angles.y);
     const rx = rotateX(ry, angles.x);
 
-    rx.x += rc[0];
-    rx.y += rc[1];
-    rx.z += rc[2];
+    rx.x += rc.x;
+    rx.y += rc.y;
+    rx.z += rc.z;
 
     return rx;
 }

@@ -11,12 +11,12 @@ test("points don't have draw function", function (t) {
 test('points3D has expected defaults', (t) => {
     var _3d = d3._3d();
 
-    t.deepEqual(_3d.origin(), [0, 0]);
+    t.deepEqual(_3d.origin(), { x: 0, y: 0 });
     t.equal(_3d.scale(), 1);
     t.equal(_3d.rotateX(), 0);
     t.equal(_3d.rotateY(), 0);
     t.equal(_3d.rotateZ(), 0);
-    t.deepEqual(_3d.rotateCenter(), [0, 0, 0]);
+    t.deepEqual(_3d.rotateCenter(), { x: 0, y: 0, z: 0 });
     t.equal(_3d.draw(), undefined);
     t.equal(typeof _3d.sort, 'function');
     t.equal(typeof _3d.x, 'function');
@@ -28,8 +28,8 @@ test('points3D has expected defaults', (t) => {
 test('access point coords via array', function (t) {
     var _3d = d3._3d();
     var data = [
-        [1, 2, 3],
-        [4, 5, 6]
+        { x: 1, y: 2, z: 3 },
+        { x: 4, y: 5, z: 6 }
     ];
     t.deepEqual(_3d(data)[0].rotated, { x: 1, y: 2, z: 3 });
     t.deepEqual(_3d(data)[1].rotated, { x: 4, y: 5, z: 6 });
@@ -94,7 +94,7 @@ test('rotate point 1|1|1 along x axis by 180°', function (t) {
 });
 
 test('project point 1|1|1 on to screen', function (t) {
-    var data = [[1, 1, 1]];
+    var data = [{ x: 1, y: 1, z: 1 }];
     var _3d = d3._3d().scale(100);
     t.deepEqual(_3d(data)[0].projected, { x: 100, y: 100 });
     t.end();
@@ -118,12 +118,12 @@ test('points3D is exported correctly', (t) => {
 test('points3D has expected defaults', (t) => {
     const points = points3D();
 
-    t.deepEqual(points.origin(), [0, 0]);
+    t.deepEqual(points.origin(), { x: 0, y: 0 });
     t.equal(points.scale(), 1);
     t.equal(points.rotateX(), 0);
     t.equal(points.rotateY(), 0);
     t.equal(points.rotateZ(), 0);
-    t.deepEqual(points.rotationCenter(), [0, 0, 0]);
+    t.deepEqual(points.rotationCenter(), { x: 0, y: 0, z: 0 });
     t.equal(points.draw, undefined);
     t.equal(typeof points.sort, 'function');
     t.equal(typeof points.x, 'function');
@@ -134,21 +134,8 @@ test('points3D has expected defaults', (t) => {
 
 test('access point coords via array', (t) => {
     const data = [
-        [1, 2, 3],
-        [4, 5, 6]
-    ];
-
-    const points = points3D();
-
-    t.deepEqual(points(data)[0].rotated, { x: 1, y: 2, z: 3 });
-    t.deepEqual(points(data)[1].rotated, { x: 4, y: 5, z: 6 });
-    t.end();
-});
-
-test('access point coords via array', function (t) {
-    const data = [
-        [1, 2, 3],
-        [4, 5, 6]
+        { x: 1, y: 2, z: 3 },
+        { x: 4, y: 5, z: 6 }
     ];
 
     const points = points3D();
@@ -200,7 +187,7 @@ test('rotate point 1|1|1 along x axis by 180°', (t) => {
 });
 
 test('project point 1|1|1 on to screen', (t) => {
-    const data = [[1, 1, 1]];
+    const data = [{ x: 1, y: 1, z: 1 }];
     const points = points3D().scale(100);
 
     t.deepEqual(points(data)[0].projected, { x: 100, y: 100 });
