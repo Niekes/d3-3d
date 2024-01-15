@@ -48,17 +48,17 @@ import { triangles3D, cubes3D, gridPlanes3D, points3D, lineStrips3D } from 'd3-3
 
 ## API Reference
 
-- [triangles3D().x](#x) - set the x accessor.
-- [triangles3D().y](#y) - set the y accessor.
-- [triangles3D().z](#z) - set the z accessor.
-- [triangles3D().scale](#scale) - sets the scale for the projected points.
-- [triangles3D().rotateX](#rotateX) - set the angle for the x rotation.
-- [triangles3D().rotateY](#rotateY) - set the angle for the y rotation.
-- [triangles3D().rotateZ](#rotateZ) - set the angle for the z rotation.
-- [triangles3D().rotateCenter](#rotateCenter) - set the the rotation center.
-- [triangles3D().origin](#origin) - set the the origin.
-- [triangles3D().sort](#sort) - sort the 3d elements by the centroid.
-- [triangles3D().draw](#draw) - draw the 3d elements.
+- [triangles3D().x](#triangles3dxx) - set the x accessor.
+- [triangles3D().y](#triangles3dyy) - set the y accessor.
+- [triangles3D().z](#triangles3dzz) - set the z accessor.
+- [triangles3D().scale](#triangles3dscalescale) - sets the scale for the projected points.
+- [triangles3D().rotateX](#triangles3drotatexanglex) - set the angle for the x rotation.
+- [triangles3D().rotateY](#triangles3drotateyangley) - set the angle for the y rotation.
+- [triangles3D().rotateZ](#triangles3drotatezanglez) - set the angle for the z rotation.
+- [triangles3D().rotateCenter](#triangles3drotatecenterrotatecenter) - set the the rotation center.
+- [triangles3D().origin](#triangles3doriginorigin) - set the the origin.
+- [triangles3D().sort](#triangles3dsort) - sort the 3d elements by the centroid.
+- [triangles3D().draw](#triangles3ddraw) - draw the 3d elements.
 
 ### Overview
 
