@@ -75,7 +75,7 @@ const data3D = [
   ]
 ];
 
-const triangles3d = triangles3D().scale(100).origin({ 480, 250 });
+const triangles3d = triangles3D().scale(100).origin({ x: 480, y: 250 });
 
 const projectedData = triangles3d(data3D);
 
