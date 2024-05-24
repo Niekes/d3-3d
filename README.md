@@ -13,8 +13,13 @@
 <table>
     <tr>
         <td><a target="_blank" href="https://codepen.io/Niekes/pen/YzBmYzR"><img src="assets/surfaceplot.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMpLw"><img src="assets/3d-scatterplot.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMKXY"><img src="assets/3d-barchart.gif"> </a></td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMpLw"><img src="assets/scatterplot.gif"></a></td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMKXY"><img src="assets/barchart.gif"> </a></td>
+    </tr>
+    <tr>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/KKEPBVb"><img src="assets/sphere.gif"></a></td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/wvbzGMG"><img src="assets/cone.gif"></a></td>
+        <td><a target="_blank" href="https://codepen.io/Niekes/pen/eYadJVg"><img src="assets/cylinder.gif"> </a></td>
     </tr>
 </table>
 
