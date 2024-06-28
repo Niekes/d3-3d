@@ -1,3 +1,5 @@
+import type { SvgProperties } from 'csstype';
+
 /**
  * A generic type for a 3D generator function, capable of transforming data into 3D shapes.
  */
@@ -129,52 +131,52 @@ type Point2D = {
 };
 
 /**
- * Represents a point in 3D space.
+ * A point in 3D space represented by the <circle> element.
  * Each point has three coordinates which can be accessed via the x, y, and z accessors.
  */
 export type Point3D = {
     x: number;
     y: number;
     z: number;
-};
+} & SvgProperties;
 
 /**
- * Represents a line in 3D space, defined by a start and an endpoint.
+ * A line in 3D space represented by the <line> element, defined by a start and an endpoint.
  */
 export type Line3D = {
     start: Point3D;
     end: Point3D;
-};
+} & SvgProperties;
 
 /**
- * Represents a line strip in 3D space, constructed from an array of points.
+ * A line strip in 3D space, constructed from an array of points, represented by the <path> element.
  * Every point will be connected to the next point in the input data array.
  */
 export type LineStrips3D = Point3D[];
 
 /**
- * Represents a triangle in 3D space, defined by three points in counter-clockwise order.
+ * A triangle in 3D space, defined by three points in counter-clockwise order, represented by the <path> element.
  */
 export type Triangle3D = [Point3D, Point3D, Point3D];
 
 /**
- * Represents a plane in 3D space, defined by four points in counter-clockwise order.
+ * A plane in 3D space, defined by four points in counter-clockwise order, represented by the <path> element.
  */
 export type Plane3D = [Point3D, Point3D, Point3D, Point3D];
 
 /**
- * Represents a grid plane (multiple planes) in 3D space, constructed from an array of points.
+ * A grid plane (multiple planes) in 3D space, constructed from an array of points, represented by x planes.
  * Note: A grid must always have the same number of points per row.
  */
 export type GridPlane3D = Point3D[];
 
 /**
- * Represents a polygon in 3D space, defined by x points in counter-clockwise order.
+ * A polygon in 3D space, defined by x points in counter-clockwise order, represented by the <path> element.
  */
 export type Polygon3D = Point3D[];
 
 /**
- * Represents a cube in 3D space, defined by 8 vertices.
+ * A cube in 3D space, defined by 8 vertices, represented by 4 planes.
  */
 export type Cube3D = Point3D[];
 
