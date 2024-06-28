@@ -3,7 +3,7 @@ import type { SvgProperties } from 'csstype';
 /**
  * A generic type for a 3D generator function, capable of transforming data into 3D shapes.
  */
-export type Shape3DGenerator<Shape3D> = {
+export type Shape3DGenerator<ShapeInput, Shape = ShapeInput> = {
     /**
      * Generates 3D shapes based on specified parameters and transformations.
      *
@@ -11,7 +11,7 @@ export type Shape3DGenerator<Shape3D> = {
      * @returns An array of 3D shapes generated with the specified parameters and transformations.
      *
      */
-    (data: Shape3D[]): Shape3D[];
+    (data: ShapeInput[]): Shape[];
 
     /**
      * Sets or retrieves the origin for rendering the 3D shapes.
@@ -19,7 +19,9 @@ export type Shape3DGenerator<Shape3D> = {
      * @param o The origin point for rendering the 3D shapes.
      * @returns If no argument is provided, returns the current origin. Otherwise, sets the origin and returns the function.
      */
-    origin(o?: Point2D): typeof o extends undefined ? Point2D : Shape3DGenerator<Shape3D>;
+    origin(
+        o?: Coordinate2D
+    ): typeof o extends undefined ? Coordinate2D : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the scale factor for the 3D shapes.
@@ -27,7 +29,7 @@ export type Shape3DGenerator<Shape3D> = {
      * @param s The scale factor for the 3D shapes.
      * @returns If no argument is provided, returns the current scale factor. Otherwise, sets the scale factor and returns the function.
      */
-    scale(s?: number): typeof s extends undefined ? number : Shape3DGenerator<Shape3D>;
+    scale(s?: number): typeof s extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the rotation angle around the x-axis.
@@ -35,7 +37,9 @@ export type Shape3DGenerator<Shape3D> = {
      * @param ax The rotation angle around the x-axis.
      * @returns If no argument is provided, returns the current rotation angle around the x-axis. Otherwise, sets the rotation angle and returns the function.
      */
-    rotateX(ax?: number): typeof ax extends undefined ? number : Shape3DGenerator<Shape3D>;
+    rotateX(
+        ax?: number
+    ): typeof ax extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the rotation angle around the y-axis.
@@ -43,7 +47,9 @@ export type Shape3DGenerator<Shape3D> = {
      * @param ay The rotation angle around the y-axis.
      * @returns If no argument is provided, returns the current rotation angle around the y-axis. Otherwise, sets the rotation angle and returns the function.
      */
-    rotateY(ay?: number): typeof ay extends undefined ? number : Shape3DGenerator<Shape3D>;
+    rotateY(
+        ay?: number
+    ): typeof ay extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the rotation angle around the z-axis.
@@ -51,7 +57,9 @@ export type Shape3DGenerator<Shape3D> = {
      * @param az The rotation angle around the z-axis.
      * @returns If no argument is provided, returns the current rotation angle around the z-axis. Otherwise, sets the rotation angle and returns the function.
      */
-    rotateZ(az?: number): typeof az extends undefined ? number : Shape3DGenerator<Shape3D>;
+    rotateZ(
+        az?: number
+    ): typeof az extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the rotation center for the 3D shapes.
@@ -60,8 +68,8 @@ export type Shape3DGenerator<Shape3D> = {
      * @returns If no argument is provided, returns the current rotation center. Otherwise, sets the rotation center and returns the function.
      */
     rotationCenter(
-        rc?: number[]
-    ): typeof rc extends undefined ? number[] : Shape3DGenerator<Shape3D>;
+        rc?: Coordinate3D
+    ): typeof rc extends undefined ? Coordinate3D : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the x-coordinate for the 3D shapes.
@@ -71,7 +79,7 @@ export type Shape3DGenerator<Shape3D> = {
      */
     x(
         px?: number | ((p: Point3D) => number)
-    ): typeof px extends undefined ? number : Shape3DGenerator<Shape3D>;
+    ): typeof px extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the y-coordinate for the 3D shapes.
@@ -81,7 +89,7 @@ export type Shape3DGenerator<Shape3D> = {
      */
     y(
         py?: number | ((p: Point3D) => number)
-    ): typeof py extends undefined ? number : Shape3DGenerator<Shape3D>;
+    ): typeof py extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Sets or retrieves the z-coordinate for the 3D shapes.
@@ -91,7 +99,7 @@ export type Shape3DGenerator<Shape3D> = {
      */
     z(
         pz?: number | ((p: Point3D) => number)
-    ): typeof pz extends undefined ? number : Shape3DGenerator<Shape3D>;
+    ): typeof pz extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * !IMPORT! ONLY FOR gridplanes
@@ -100,7 +108,7 @@ export type Shape3DGenerator<Shape3D> = {
      * @param pz The z-coordinate for the 3D shapes.
      * @returns If no argument is provided, returns the current rows. Otherwise, sets the rows and returns the function.
      */
-    rows(pz?: number): typeof pz extends undefined ? number : Shape3DGenerator<Shape3D>;
+    rows(pz?: number): typeof pz extends undefined ? number : Shape3DGenerator<ShapeInput, Shape>;
 
     /**
      * Comparator function to sort objects based on their centroid z-values.
@@ -117,73 +125,154 @@ export type Shape3DGenerator<Shape3D> = {
      * // Sorting an array of objects based on centroid z-values
      * const sortedArray = unsortedArray.sort(sort);
      */
-    sort(a: Shape3D, b: Shape3D): number;
+    sort(a: ShapeInput, b: ShapeInput): number;
 
     /**
      * A function that draws 3D shapes.
      */
-    draw(shapes: Shape3D[]): void;
+    draw(shapes: ShapeInput[]): void;
 };
 
-type Point2D = {
+export type Coordinate2D = {
     x: number;
     y: number;
+};
+
+export type Coordinate3D = {
+    x: number;
+    y: number;
+    z: number;
 };
 
 /**
  * A point in 3D space represented by the <circle> element.
  * Each point has three coordinates which can be accessed via the x, y, and z accessors.
  */
-export type Point3D = {
+export type Point3DInput = {
     x: number;
     y: number;
     z: number;
 } & SvgProperties;
 
 /**
+ * A point in 3D space represented by the <circle> element.
+ * Each point has three coordinates which can be accessed via the x, y, and z accessors.
+ */
+export type Point3D = Point3DInput & {
+    rotated: Coordinate3D;
+    centroid: Coordinate3D;
+    /**
+     * The projected point in 2D space.
+     */
+    projected: Coordinate2D;
+};
+
+/**
  * A line in 3D space represented by the <line> element, defined by a start and an endpoint.
  */
-export type Line3D = {
+export type Line3DInput = {
     start: Point3D;
     end: Point3D;
 } & SvgProperties;
 
 /**
- * A line strip in 3D space, constructed from an array of points, represented by the <path> element.
+ * A line in 3D space represented by the <line> element, defined by a start and an endpoint.
+ */
+export type Line3D = Line3DInput & {
+    centroid: Coordinate3D;
+};
+
+/**
+ * A line strip in 3D space, constructed from an array of lines, represented by the <path> element.
  * Every point will be connected to the next point in the input data array.
  */
-export type LineStrips3D = Point3D[];
+export type LineStrips3DInput = Line3DInput[];
+
+/**
+ * A line strip in 3D space, constructed from an array of lines, represented by the <path> element.
+ * Every point will be connected to the next point in the input data array.
+ */
+export type LineStrips3D = LineStrips3DInput;
 
 /**
  * A triangle in 3D space, defined by three points in counter-clockwise order, represented by the <path> element.
  */
-export type Triangle3D = [Point3D, Point3D, Point3D];
+export type Triangle3DInput = [Point3D, Point3D, Point3D];
+
+/**
+ * A triangle in 3D space, defined by three points in counter-clockwise order, represented by the <path> element.
+ */
+export type Triangle3D = Triangle3DInput & {
+    centroid: Coordinate3D;
+    /**
+     * True if the triangle is counter-clockwise
+     */
+    ccw: boolean;
+};
 
 /**
  * A plane in 3D space, defined by four points in counter-clockwise order, represented by the <path> element.
  */
-export type Plane3D = [Point3D, Point3D, Point3D, Point3D];
+export type Plane3DInput = [Point3D, Point3D, Point3D, Point3D];
+
+/**
+ * A plane in 3D space, defined by four points in counter-clockwise order, represented by the <path> element.
+ */
+export type Plane3D = Plane3DInput & {
+    centroid: Coordinate3D;
+    /**
+     * True if the plane is counter-clockwise
+     */
+    ccw: boolean;
+};
 
 /**
  * A grid plane (multiple planes) in 3D space, constructed from an array of points, represented by x planes.
  * Note: A grid must always have the same number of points per row.
  */
-export type GridPlane3D = Point3D[];
+export type GridPlane3DInput = Point3D[];
+
+/**
+ * A grid plane (multiple planes) in 3D space, constructed from an array of points, represented by x planes.
+ * Note: A grid must always have the same number of points per row.
+ */
+export type GridPlane3D = (Plane3D & { plane: `plane-${number}` })[];
 
 /**
  * A polygon in 3D space, defined by x points in counter-clockwise order, represented by the <path> element.
  */
-export type Polygon3D = Point3D[];
+export type Polygon3DInput = Point3D[];
+
+/**
+ * A polygon in 3D space, defined by x points in counter-clockwise order, represented by the <path> element.
+ */
+export type Polygon3D = Polygon3DInput & {
+    centroid: Coordinate3D;
+    /**
+     * True if the polygon is counter-clockwise
+     */
+    ccw: boolean;
+};
 
 /**
  * A cube in 3D space, defined by 8 vertices, represented by 4 planes.
  */
-export type Cube3D = Point3D[];
+export type Cube3DInput = [Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D];
+
+/**
+ * A cube in 3D space, defined by 8 vertices, represented by 4 planes.
+ */
+export type Cube3D = Cube3DInput & {
+    centroid: Coordinate3D;
+    faces: [Face, Face, Face, Face, Face, Face];
+};
+
+export type Face = Plane3D & { face: 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom' };
 
 /**
  * Creates a new 3D generator for drawing a shape specified by the shape method.
  */
-export function _3d<Shape3D>(): Shape3DGenerator<Shape3D> & {
+export function _3d<Shape3DInput, Shape3D>(): Shape3DGenerator<Shape3DInput, Shape3D> & {
     /**
      * Sets or retrieves the shape for the 3D generator.
      *
@@ -193,7 +282,7 @@ export function _3d<Shape3D>(): Shape3DGenerator<Shape3D> & {
     shape(
         s?: ShapeKind,
         row?: number
-    ): typeof s extends undefined ? ShapeKind : Shape3DGenerator<Shape3D>;
+    ): typeof s extends undefined ? ShapeKind : Shape3DGenerator<Shape3DInput, Shape3D>;
 };
 
 type ShapeKind =
@@ -208,53 +297,40 @@ type ShapeKind =
 
 /**
  * Creates a new 3D generator for drawing points.
- * A point is represented by the <circle> element. It does not have a draw function because it can be represented as a <circle>.
- * The input data array has to be an array of points where each point has three coordinates which can be accessed via the x, y, and z accessors.
  */
-export function points3D(): Shape3DGenerator<Point3D>;
+export function points3D(): Shape3DGenerator<Point3DInput, Point3D>;
 
 /**
  * Creates a new 3D generator for drawing lines.
- * A line is represented by the <line> element. It does not have a draw function because it can be represented as a <line>.
- * The input data array has to be an array of lines where each line is defined by a start- and an endpoint.
  */
-export function lines3D(): Shape3DGenerator<Line3D>;
+export function lines3D(): Shape3DGenerator<Line3DInput, Line3D>;
 
 /**
  * Creates a new 3D generator for drawing line strips.
- * A continuous line is represented by the <path> element. The input data array has to be an array of points.
- * Every point will be connected to the next point in the input data array.
  */
-export function lineStrips3D(): Shape3DGenerator<LineStrips3D>;
+export function lineStrips3D(): Shape3DGenerator<LineStrips3DInput, LineStrips3D>;
 
 /**
  * Creates a new 3D generator for drawing triangles.
- * A triangle is represented by the <path> element. The input data array has to be an array of triangles where each triangle is defined by three points in counter-clockwise order.
  */
-export function triangles3D(): Shape3DGenerator<Triangle3D>;
+export function triangles3D(): Shape3DGenerator<Triangle3DInput, Triangle3D>;
 
 /**
  * Creates a new 3D generator for drawing planes.
- * A plane is represented by the <path> element. The input data array has to be an array of planes where each plane is defined by four points in counter-clockwise order.
  */
-export function planes3D(): Shape3DGenerator<Plane3D>;
+export function planes3D(): Shape3DGenerator<Plane3DInput, Plane3D>;
 
 /**
  * Creates a new 3D generator for drawing grid planes.
- * A grid is represented by x planes. The input data array has to be an array of points. d3-3d will construct planes out of the passed data.
- * NOTE: A grid has to have always the same number of points per row. Otherwise, the code will break.
  */
-export function gridPlanes3D(): Shape3DGenerator<GridPlane3D>;
+export function gridPlanes3D(): Shape3DGenerator<GridPlane3DInput, GridPlane3D>;
 
 /**
  * Creates a new 3D generator for drawing polygons.
- * A polygon is represented by the <path> element. The input data array has to be an array of polygons where each polygon is defined by x points in counter-clockwise order.
  */
-export function polygons3D(): Shape3DGenerator<Polygon3D>;
+export function polygons3D(): Shape3DGenerator<Polygon3DInput, Polygon3D>;
 
 /**
  * Creates a new 3D generator for drawing cubes.
- * A cube is represented by 4 planes. The input data array has to be an array of cubes where each cube is defined by 8 vertices.
- * To get the orientation and centroid calculation right, you should pass in the data like so:
  */
-export function cubes3D(): Shape3DGenerator<Cube3D>;
+export function cubes3D(): Shape3DGenerator<Cube3DInput, Cube3D>;
