@@ -18,6 +18,8 @@
         "url": "git+https://github.com/niekes/d3-3d.git"
     },
     "type": "module",
+    "types": "./index.d.ts",
+    "source": "./index.js",
     "scripts": {
         "pretest": "npm run build",
         "build": "rm -rf build && mkdir build && rollup -f umd -n d3 -o build/d3-3d.js -- index.js",
