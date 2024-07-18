@@ -171,16 +171,18 @@ export type Point3D = Point3DInput & {
  * A line in 3D space represented by the <line> element, defined by a start and an endpoint.
  */
 export type Line3DInput = {
-    start: Point3D;
-    end: Point3D;
+    start: Point3DInput;
+    end: Point3DInput;
 } & SvgProperties;
 
 /**
  * A line in 3D space represented by the <line> element, defined by a start and an endpoint.
  */
-export type Line3D = Line3DInput & {
+export type Line3D = {
+    start: Point3D;
+    end: Point3D;
     centroid: Coordinate3D;
-};
+} & SvgProperties;
 
 /**
  * A line strip in 3D space, constructed from an array of lines, represented by the <path> element.
@@ -192,17 +194,17 @@ export type LineStrips3DInput = Line3DInput[];
  * A line strip in 3D space, constructed from an array of lines, represented by the <path> element.
  * Every point will be connected to the next point in the input data array.
  */
-export type LineStrips3D = LineStrips3DInput;
+export type LineStrips3D = Line3D[];
 
 /**
  * A triangle in 3D space, defined by three points in counter-clockwise order, represented by the <path> element.
  */
-export type Triangle3DInput = [Point3D, Point3D, Point3D];
+export type Triangle3DInput = [Point3DInput, Point3DInput, Point3DInput];
 
 /**
  * A triangle in 3D space, defined by three points in counter-clockwise order, represented by the <path> element.
  */
-export type Triangle3D = Triangle3DInput & {
+export type Triangle3D = [Point3D, Point3D, Point3D] & {
     centroid: Coordinate3D;
     /**
      * True if the triangle is counter-clockwise
@@ -213,12 +215,12 @@ export type Triangle3D = Triangle3DInput & {
 /**
  * A plane in 3D space, defined by four points in counter-clockwise order, represented by the <path> element.
  */
-export type Plane3DInput = [Point3D, Point3D, Point3D, Point3D];
+export type Plane3DInput = [Point3DInput, Point3DInput, Point3DInput, Point3DInput];
 
 /**
  * A plane in 3D space, defined by four points in counter-clockwise order, represented by the <path> element.
  */
-export type Plane3D = Plane3DInput & {
+export type Plane3D = [Point3D, Point3D, Point3D, Point3D] & {
     centroid: Coordinate3D;
     /**
      * True if the plane is counter-clockwise
@@ -230,7 +232,7 @@ export type Plane3D = Plane3DInput & {
  * A grid plane (multiple planes) in 3D space, constructed from an array of points, represented by x planes.
  * Note: A grid must always have the same number of points per row.
  */
-export type GridPlane3DInput = Point3D[];
+export type GridPlane3DInput = Point3DInput[];
 
 /**
  * A grid plane (multiple planes) in 3D space, constructed from an array of points, represented by x planes.
@@ -241,12 +243,12 @@ export type GridPlane3D = (Plane3D & { plane: `plane-${number}` })[];
 /**
  * A polygon in 3D space, defined by x points in counter-clockwise order, represented by the <path> element.
  */
-export type Polygon3DInput = Point3D[];
+export type Polygon3DInput = Point3DInput[];
 
 /**
  * A polygon in 3D space, defined by x points in counter-clockwise order, represented by the <path> element.
  */
-export type Polygon3D = Polygon3DInput & {
+export type Polygon3D = Point3D[] & {
     centroid: Coordinate3D;
     /**
      * True if the polygon is counter-clockwise
@@ -257,12 +259,21 @@ export type Polygon3D = Polygon3DInput & {
 /**
  * A cube in 3D space, defined by 8 vertices, represented by 4 planes.
  */
-export type Cube3DInput = [Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D];
+export type Cube3DInput = [
+    Point3DInput,
+    Point3DInput,
+    Point3DInput,
+    Point3DInput,
+    Point3DInput,
+    Point3DInput,
+    Point3DInput,
+    Point3DInput
+];
 
 /**
  * A cube in 3D space, defined by 8 vertices, represented by 4 planes.
  */
-export type Cube3D = Cube3DInput & {
+export type Cube3D = [Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D, Point3D] & {
     centroid: Coordinate3D;
     faces: [Face, Face, Face, Face, Face, Face];
 };
