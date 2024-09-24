@@ -34,7 +34,7 @@
         "eslint-plugin-import": "2.29.1",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "6.1.1",
-        "rollup": "4.9.0",
+        "rollup": "4.22.4",
         "tap-spec": "^2.2.2",
         "tape": "5.7.2",
         "uglify-js": "^3.13.1"
