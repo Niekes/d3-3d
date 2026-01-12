@@ -27,7 +27,7 @@ See more [examples][examples]
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=d3-3d/d3-3d,niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#d3-3d/d3-3d&niekes/d3-3d&type=date&legend=bottom-right)
+[![Star History Chart](https://api.star-history.com/svg?repos=niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#niekes/d3-3d&type=date&legend=bottom-right)
 
 ## Installing
 
