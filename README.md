@@ -25,6 +25,10 @@
 
 See more [examples][examples]
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=d3-3d/d3-3d,niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#d3-3d/d3-3d&niekes/d3-3d&type=date&legend=bottom-right)
+
 ## Installing
 
 If you use npm, `npm install d3-3d`. You can also download the [latest release](https://github.com/Niekes/d3-3d/releases). Otherwise use [unpkg](https://unpkg.com/d3-3d/) to get the latest release. For example:
@@ -203,3 +207,5 @@ This function constructs an SVG `<path>` element string based on the chosen [sha
 [coverage-badge]: https://img.shields.io/codecov/c/github/niekes/d3-3d.svg
 [coverage]: https://codecov.io/github/niekes/d3-3d
 [examples]: https://codepen.io/collection/DpmByZ?sort_order=desc&sort_by=id
+
+[start-history]: https://api.star-history.com/svg?repos=d3-3d/d3-3d,niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#d3-3d/d3-3d&niekes/d3-3d&type=date&legend=bottom-right
