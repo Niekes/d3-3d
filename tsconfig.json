@@ -1,15 +1,22 @@
 {
     "compilerOptions": {
-        "target": "ES2019",
-        "module": "ES2022",
-        "moduleResolution": "node",
-        "rootDir": "src",
-        "outDir": "build/esm",
+        "target": "ES2020",
+        "module": "ES2020",
+        "lib": ["ES2020", "DOM"],
         "declaration": true,
-        "declarationDir": "build/types",
+        "outDir": "./build",
         "strict": true,
         "esModuleInterop": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "tests"]
+    "include": ["index.ts", "src/**/*"],
+    "exclude": ["node_modules", "build", "tests"]
 }

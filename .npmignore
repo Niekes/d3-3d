@@ -1,3 +1,10 @@
 build/*.zip
 test/
 coverage/
+src/
+tests/
+*.ts
+!*.d.ts
+tsconfig.json
+rollup.config.js
+.eslintrc.js
