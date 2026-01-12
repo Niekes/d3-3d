@@ -25,10 +25,6 @@
 
 See more [examples][examples]
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#niekes/d3-3d&type=date&legend=bottom-right)
-
 ## Installing
 
 If you use npm, `npm install d3-3d`. You can also download the [latest release](https://github.com/Niekes/d3-3d/releases). Otherwise use [unpkg](https://unpkg.com/d3-3d/) to get the latest release. For example:
@@ -198,6 +194,10 @@ Sorts the elements accordingly to the z coordinate of the calculated centroid.
 
 This function constructs an SVG `<path>` element string based on the chosen [shape](#shapes). For example, selecting triangles3D in **d3-3d** implies drawing a triangle with three points, each having three coordinates `{ x: 0, y: 0, z: 0 }`. The `triangles3D().draw` method facilitates this. To draw a plane, provide four points, and so forth.
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#niekes/d3-3d&type=date&legend=bottom-right)
+
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A3QJPZ9)
 
 <!-- Definitions -->
@@ -207,5 +207,3 @@ This function constructs an SVG `<path>` element string based on the chosen [sha
 [coverage-badge]: https://img.shields.io/codecov/c/github/niekes/d3-3d.svg
 [coverage]: https://codecov.io/github/niekes/d3-3d
 [examples]: https://codepen.io/collection/DpmByZ?sort_order=desc&sort_by=id
-
-[start-history]: https://api.star-history.com/svg?repos=d3-3d/d3-3d,niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#d3-3d/d3-3d&niekes/d3-3d&type=date&legend=bottom-right
