@@ -1,4 +1,4 @@
-import type { Point2D } from '../projection-orthographic.js';
+import { Point2D } from '../types';
 
 export interface LineStripVertex {
     projected: Point2D;

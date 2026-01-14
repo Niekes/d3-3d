@@ -1,15 +1,4 @@
-export interface Point3D {
-    x: number;
-    y: number;
-    z: number;
-}
-
-export interface RotationAngles {
-    x: number;
-    y: number;
-    z: number;
-    rotateCenter: Point3D;
-}
+import { Point3D, RotationAngles } from './types';
 
 export function rotateRzRyRx(point: Point3D, angles: RotationAngles): Point3D {
     const rc = angles.rotateCenter;

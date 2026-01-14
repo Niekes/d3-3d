@@ -1,13 +1,4 @@
-export interface Point2D {
-    x: number;
-    y: number;
-}
-
-export interface Point3D {
-    x: number;
-    y: number;
-    z: number;
-}
+import { Point3D, Point2D } from './types';
 
 export interface OrthographicOptions {
     origin: Point2D;

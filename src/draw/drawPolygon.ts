@@ -1,10 +1,10 @@
-import type { Point2D } from '../projection-orthographic';
+import { Point2D } from '../types';
 
-export interface PolygonVertex {
+export interface Datum {
     projected: Point2D;
 }
 
-export function drawPolygon(vertices: PolygonVertex[]): string {
+export function drawPolygon(vertices: Datum[]): string {
     const lastPoint = vertices[vertices.length - 1];
     let path = `M${lastPoint.projected.x},${lastPoint.projected.y}`;
 

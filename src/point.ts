@@ -1,8 +1,4 @@
-export interface Point3D {
-    x: number;
-    y: number;
-    z: number;
-}
+import { Point3D } from './types';
 
 export function x(p: Point3D): number {
     return p.x;

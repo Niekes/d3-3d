@@ -1,73 +1,57 @@
-import {
-    generator3D,
-    type CoordinateAccessors,
-    type CoordinateAccessor,
-    type CoordinateValue,
-    type ProjectionParams,
-    type RotationConfig
-} from '../generator';
-import { ccw, type PolygonPoint as CCWPolygonPoint } from '../counter-clockwise';
-import { centroid, type RotatedPoint } from '../centroid';
+import { TransformedPoint, Point3D } from '../types';
+import { drawPolygon } from '../draw/drawPolygon';
+import { ShapeInstance, ShapeRenderer } from './shape';
 import { rotateRzRyRx } from '../rotation';
-import { drawPolygon, type PolygonVertex } from '../draw/drawPolygon';
-import type { Point3D } from '../point';
-import type { Point2D } from '../projection-orthographic';
+import { orthographic } from '../projection-orthographic';
 
-export interface PolygonPoint extends Point3D, CCWPolygonPoint {
-    projected?: Point2D;
+interface Polygons3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+    data(data: Datum[][]): TransformedPoint<Datum>[][];
+    draw(polygons: Datum[]): string;
 }
 
-export type PolygonShape<Datum extends PolygonPoint = PolygonPoint> = Datum[] & {
-    centroid?: RotatedPoint;
-    ccw?: boolean;
-};
-
-function toAccessor<Datum extends Point3D>(
-    value: CoordinateValue<Datum>
-): CoordinateAccessor<Datum> {
-    return typeof value === 'function' ? value : () => Number(value);
-}
-
-export function polygon<Datum extends PolygonPoint>(
-    polygons: PolygonShape<Datum>[],
-    options: ProjectionParams<Datum>,
-    accessors: CoordinateAccessors<Datum>,
-    angles: RotationConfig
-): PolygonShape<Datum>[] {
-    const getX = toAccessor(accessors.x);
-    const getY = toAccessor(accessors.y);
-    const getZ = toAccessor(accessors.z);
-
-    for (let i = polygons.length - 1; i >= 0; i -= 1) {
-        const poly = polygons[i];
-
-        for (let j = poly.length - 1; j >= 0; j -= 1) {
-            const vertex = poly[j];
-
-            vertex.rotated = rotateRzRyRx(
-                {
-                    x: getX(vertex),
-                    y: getY(vertex),
-                    z: getZ(vertex)
-                },
-                angles
-            );
-
-            vertex.projected = options.project(vertex.rotated, options);
-        }
-
-        poly.ccw = ccw(poly);
-        poly.centroid = centroid(poly);
+class Polygons3DRenderer<Datum = Point3D>
+    extends ShapeRenderer<Datum>
+    implements Polygons3DInstance<Datum>
+{
+    constructor() {
+        super();
     }
 
-    return polygons;
+    data(data: Datum[][]): TransformedPoint<Datum>[][] {
+        for (let index = 0; index < data.length; index++) {
+            const polygon = data[index];
+
+            for (let j = 0; j < polygon.length; j++) {
+                const vertex = polygon[j];
+
+                const startPoint: Point3D = {
+                    x: this.x()(vertex),
+                    y: this.y()(vertex),
+                    z: this.z()(vertex)
+                };
+
+                (vertex as TransformedPoint<Datum>).projected = orthographic(startPoint, {
+                    scale: this.scale(),
+                    origin: this.origin()
+                });
+
+                (vertex as TransformedPoint<Datum>).rotated = rotateRzRyRx(startPoint, {
+                    x: this.rotateX(),
+                    y: this.rotateY(),
+                    z: this.rotateZ(),
+                    rotateCenter: this.rotationCenter()
+                });
+            }
+        }
+
+        return data as TransformedPoint<Datum>[][];
+    }
+
+    draw(polygons: Datum[]): string {
+        return drawPolygon(polygons as TransformedPoint<Datum>[]);
+    }
 }
 
-export function polygons3D() {
-    return generator3D<
-        PolygonShape<PolygonPoint>[],
-        PolygonPoint,
-        PolygonShape<PolygonPoint>[],
-        PolygonVertex[]
-    >(polygon, drawPolygon);
+export function polygons3D<Datum = Point3D>(): Polygons3DInstance<Datum> {
+    return new Polygons3DRenderer<Datum>();
 }
