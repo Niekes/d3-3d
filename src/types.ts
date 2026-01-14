@@ -28,3 +28,5 @@ export interface RotationAngles {
     z: number;
     rotateCenter: Point3D;
 }
+
+export type CubeFaceName = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';

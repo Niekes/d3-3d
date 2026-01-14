@@ -1,10 +1,6 @@
-import { Point2D } from '../types';
+import { TransformedPoint } from '../types';
 
-export interface Datum {
-    projected: Point2D;
-}
-
-export function drawPolygon(vertices: Datum[]): string {
+export function drawPolygon<T>(vertices: ReadonlyArray<TransformedPoint<T>>): string {
     const lastPoint = vertices[vertices.length - 1];
     let path = `M${lastPoint.projected.x},${lastPoint.projected.y}`;
 

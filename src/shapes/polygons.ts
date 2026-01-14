@@ -1,5 +1,5 @@
 import { TransformedPoint, Point3D } from '../types';
-import { drawPolygon, Datum as DrawDatum } from '../draw/drawPolygon';
+import { drawPolygon } from '../draw/drawPolygon';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { rotateRzRyRx } from '../rotation';
 import { orthographic } from '../projection-orthographic';
@@ -57,8 +57,8 @@ class Polygons3DRenderer<Datum = Point3D>
         return data as unknown as Polygon<Datum>[];
     }
 
-    draw(polygons: Datum[]): string {
-        return drawPolygon(polygons as unknown as DrawDatum[]);
+    draw(polygons: TransformedPoint<Datum>[]): string {
+        return drawPolygon(polygons);
     }
 }
 
