@@ -26,15 +26,15 @@ class Polygons3DRenderer<Datum = Point3D>
 
     data(data: Datum[][]): Polygon<Datum>[] {
         for (let index = 0; index < data.length; index++) {
-            const polygon = data[index] as Polygon<Datum>;
+            const polygon = data[index];
 
             for (let j = 0; j < polygon.length; j++) {
                 const vertex = polygon[j];
 
                 const startPoint: Point3D = {
-                    x: this.x()(vertex),
-                    y: this.y()(vertex),
-                    z: this.z()(vertex)
+                    x: this.x()(vertex as Datum),
+                    y: this.y()(vertex as Datum),
+                    z: this.z()(vertex as Datum)
                 };
 
                 (vertex as TransformedPoint<Datum>).projected = orthographic(startPoint, {
@@ -50,8 +50,10 @@ class Polygons3DRenderer<Datum = Point3D>
                 });
             }
 
-            polygon.ccw = ccw(polygon);
-            polygon.centroid = centroid(polygon);
+            (polygon as unknown as Polygon<Datum>).ccw = ccw(polygon as TransformedPoint<Datum>[]);
+            (polygon as unknown as Polygon<Datum>).centroid = centroid(
+                polygon as TransformedPoint<Datum>[]
+            );
         }
 
         return data as unknown as Polygon<Datum>[];

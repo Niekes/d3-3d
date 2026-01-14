@@ -1,57 +1,53 @@
-import {
-    generator3D,
-    type CoordinateAccessors,
-    type CoordinateAccessor,
-    type CoordinateValue,
-    type ProjectionParams,
-    type RotationConfig
-} from '../generator';
+import { TransformedPoint, Point3D } from '../types';
+import { ShapeInstance, ShapeRenderer } from './shape';
 import { rotateRzRyRx } from '../rotation';
-import type { Point3D } from '../point';
-import type { Point2D } from '../projection-orthographic';
+import { orthographic } from '../projection-orthographic';
 
-export interface PointDatum extends Point3D {
-    rotated?: Point3D;
-    centroid?: Point3D;
-    projected?: Point2D;
+interface Points3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+    data(data: Datum[]): Point<Datum>[];
 }
 
-function toAccessor<Datum extends Point3D>(
-    value: CoordinateValue<Datum>
-): CoordinateAccessor<Datum> {
-    return typeof value === 'function' ? value : () => Number(value);
-}
+export type Point<Datum> = TransformedPoint<Datum> & {
+    centroid: Point3D;
+};
 
-export function point<Datum extends PointDatum>(
-    points: Datum[],
-    options: ProjectionParams<Datum>,
-    accessors: CoordinateAccessors<Datum>,
-    angles: RotationConfig
-): Datum[] {
-    const getX = toAccessor(accessors.x);
-    const getY = toAccessor(accessors.y);
-    const getZ = toAccessor(accessors.z);
-
-    for (let i = points.length - 1; i >= 0; i -= 1) {
-        const current = points[i];
-
-        const rotated = rotateRzRyRx(
-            {
-                x: getX(current),
-                y: getY(current),
-                z: getZ(current)
-            },
-            angles
-        );
-
-        current.rotated = rotated;
-        current.centroid = rotated;
-        current.projected = options.project(rotated, options);
+class Points3DRenderer<Datum = Point3D>
+    extends ShapeRenderer<Datum>
+    implements Points3DInstance<Datum>
+{
+    constructor() {
+        super();
     }
 
-    return points;
+    data(data: Datum[]): Point<Datum>[] {
+        for (let index = 0; index < data.length; index++) {
+            const point = data[index] as Point<Datum>;
+
+            const startPoint: Point3D = {
+                x: this.x()(point as Datum),
+                y: this.y()(point as Datum),
+                z: this.z()(point as Datum)
+            };
+
+            (point as TransformedPoint<Datum>).rotated = rotateRzRyRx(startPoint, {
+                x: this.rotateX(),
+                y: this.rotateY(),
+                z: this.rotateZ(),
+                rotateCenter: this.rotationCenter()
+            });
+
+            (point as TransformedPoint<Datum>).projected = orthographic(startPoint, {
+                scale: this.scale(),
+                origin: this.origin()
+            });
+
+            point.centroid = point.rotated;
+        }
+
+        return data as unknown as Point<Datum>[];
+    }
 }
 
-export function points3D() {
-    return generator3D<PointDatum[], PointDatum, PointDatum[]>(point, undefined);
+export function points3D<Datum = Point3D>(): Points3DInstance<Datum> {
+    return new Points3DRenderer<Datum>();
 }

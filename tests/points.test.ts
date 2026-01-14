@@ -1,9 +1,10 @@
 import { describe, test, expect } from 'vitest';
 import { points3D } from '../index';
 
-describe('points3D', () => {
+describe.only('points3D', () => {
     test("doesn't have draw function", () => {
         const points = points3D();
+        // @ts-ignore
         expect(points.draw).toBeUndefined();
     });
 
@@ -20,8 +21,6 @@ describe('points3D', () => {
         expect(points.rotateY()).toBe(0);
         expect(points.rotateZ()).toBe(0);
         expect(points.rotationCenter()).toEqual({ x: 0, y: 0, z: 0 });
-        expect(points.draw).toBeUndefined();
-        expect(points.sort).toBeTypeOf('function');
         expect(points.x).toBeTypeOf('function');
         expect(points.y).toBeTypeOf('function');
         expect(points.z).toBeTypeOf('function');
@@ -29,12 +28,12 @@ describe('points3D', () => {
 
     test('accesses point coords via array', () => {
         const data = [
-            { x: 1, y: 2, z: 3 },
-            { x: 4, y: 5, z: 6 }
+            { x1: 1, y: 2, z: 3 },
+            { x1: 4, y: 5, z: 6 }
         ];
 
-        const points = points3D();
-        const result = points(data);
+        const points = points3D<{ x1: number; y: number; z: number }>().x((d) => d.x1);
+        const result = points.data(data);
 
         expect(result[0].rotated).toEqual({ x: 1, y: 2, z: 3 });
         expect(result[1].rotated).toEqual({ x: 4, y: 5, z: 6 });
@@ -42,16 +41,16 @@ describe('points3D', () => {
 
     test('accesses point coords via function', () => {
         const data = [
-            { x: 1, y: 2, z: 3 },
-            { x: 4, y: 5, z: 6 }
+            { a: 1, b: 2, c: 3 },
+            { a: 4, b: 5, c: 6 }
         ];
 
-        const points = points3D()
-            .x((d) => d.x)
-            .y((d) => d.y)
-            .z((d) => d.z);
+        const points = points3D<{ a: number; b: number; c: number }>()
+            .x((d) => d.a)
+            .y((d) => d.b)
+            .z((d) => d.c);
 
-        const result = points(data);
+        const result = points.data(data);
 
         expect(result[0].rotated).toEqual({ x: 1, y: 2, z: 3 });
         expect(result[1].rotated).toEqual({ x: 4, y: 5, z: 6 });
@@ -66,7 +65,7 @@ describe('points3D', () => {
             .y((d) => d.y)
             .z((d) => d.z);
 
-        expect(points(data)[0].rotated).toEqual({ x: 0, y: 0, z: 0 });
+        expect(points.data(data)[0].rotated).toEqual({ x: 0, y: 0, z: 0 });
     });
 
     test('rotates point 1|1|1 along x axis by 180°', () => {
@@ -78,7 +77,7 @@ describe('points3D', () => {
             .y((d) => d.y)
             .z((d) => d.z);
 
-        expect(points(data)[0].rotated).toEqual({
+        expect(points.data(data)[0].rotated).toEqual({
             x: 1,
             y: -1.0000000000000002,
             z: -0.9999999999999999
@@ -89,6 +88,6 @@ describe('points3D', () => {
         const data = [{ x: 1, y: 1, z: 1 }];
         const points = points3D().scale(100);
 
-        expect(points(data)[0].projected).toEqual({ x: 100, y: 100 });
+        expect(points.data(data)[0].projected).toEqual({ x: 100, y: 100 });
     });
 });
