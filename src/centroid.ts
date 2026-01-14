@@ -1,14 +1,6 @@
-export interface RotatedPoint {
-    x: number;
-    y: number;
-    z: number;
-}
+import { Point3D, TransformedPoint } from './types';
 
-export interface PolygonPoint {
-    rotated?: RotatedPoint;
-}
-
-export function centroid(polygon: ReadonlyArray<PolygonPoint>): RotatedPoint {
+export function centroid<T>(polygon: ReadonlyArray<TransformedPoint<T>>): Point3D {
     let sumX = 0;
     let sumY = 0;
     let sumZ = 0;

@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { polygons3D } from '../index';
 
-describe.only('polygons3D', () => {
+describe('polygons3D', () => {
     test('draws correctly', () => {
         type TestDatum = { x1: number; y: number; z: number };
 

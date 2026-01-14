@@ -11,3 +11,5 @@ export { points3D } from './src/shapes/points';
 export { polygons3D } from './src/shapes/polygons';
 export { triangles3D } from './src/shapes/triangles';
 export { sort } from './src/sort';
+
+export * from './src/types';

@@ -1,14 +1,6 @@
-export interface RotatedPoint {
-    x: number;
-    y: number;
-    z: number;
-}
+import { TransformedPoint } from './types';
 
-export interface PolygonPoint {
-    rotated?: RotatedPoint;
-}
-
-export function ccw(polygon: ReadonlyArray<PolygonPoint>): boolean {
+export function ccw<T>(polygon: ReadonlyArray<TransformedPoint<T>>): boolean {
     const poly = [...polygon, polygon[0]];
 
     let sum = 0;

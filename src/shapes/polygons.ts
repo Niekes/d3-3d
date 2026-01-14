@@ -1,13 +1,20 @@
 import { TransformedPoint, Point3D } from '../types';
-import { drawPolygon } from '../draw/drawPolygon';
+import { drawPolygon, Datum as DrawDatum } from '../draw/drawPolygon';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { rotateRzRyRx } from '../rotation';
 import { orthographic } from '../projection-orthographic';
+import { ccw } from '../counter-clockwise';
+import { centroid } from '../centroid';
 
 interface Polygons3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): TransformedPoint<Datum>[][];
+    data(data: Datum[][]): Polygon<Datum>[];
     draw(polygons: Datum[]): string;
 }
+
+export type Polygon<Datum> = TransformedPoint<Datum>[] & {
+    ccw: boolean;
+    centroid: Point3D;
+};
 
 class Polygons3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
@@ -17,9 +24,9 @@ class Polygons3DRenderer<Datum = Point3D>
         super();
     }
 
-    data(data: Datum[][]): TransformedPoint<Datum>[][] {
+    data(data: Datum[][]): Polygon<Datum>[] {
         for (let index = 0; index < data.length; index++) {
-            const polygon = data[index];
+            const polygon = data[index] as Polygon<Datum>;
 
             for (let j = 0; j < polygon.length; j++) {
                 const vertex = polygon[j];
@@ -42,13 +49,16 @@ class Polygons3DRenderer<Datum = Point3D>
                     rotateCenter: this.rotationCenter()
                 });
             }
+
+            polygon.ccw = ccw(polygon);
+            polygon.centroid = centroid(polygon);
         }
 
-        return data as TransformedPoint<Datum>[][];
+        return data as unknown as Polygon<Datum>[];
     }
 
     draw(polygons: Datum[]): string {
-        return drawPolygon(polygons as TransformedPoint<Datum>[]);
+        return drawPolygon(polygons as unknown as DrawDatum[]);
     }
 }
 
