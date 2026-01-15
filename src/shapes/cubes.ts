@@ -1,31 +1,31 @@
-import {
-    generator3D,
-    type CoordinateAccessors,
-    type ProjectionParams,
-    type RotationConfig
-} from '../generator';
+import { TransformedPoint, Point3D } from '../types';
+import { drawPlane, ProjectedVertex } from '../draw/drawPlane';
+import { ShapeInstance, ShapeRenderer } from './shape';
+import { rotateRzRyRx } from '../rotation';
+import { orthographic } from '../projection-orthographic';
 import { ccw } from '../counter-clockwise';
-import { centroid, type RotatedPoint } from '../centroid';
-import { point as pt, type PointDatum } from './points';
-import { drawPlane, type ProjectedVertex } from '../draw/drawPlane';
+import { centroid } from '../centroid';
 
 export type CubeFaceName = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
 
-export interface CubeVertex extends PointDatum {}
-
-export type CubeFace<Datum extends CubeVertex = CubeVertex> = Datum[] & {
-    centroid: RotatedPoint;
+export type CubeFace<Datum = Point3D> = TransformedPoint<Datum>[] & {
+    centroid: Point3D;
     ccw: boolean;
     face: CubeFaceName;
 };
 
-export type CubeShape<Datum extends CubeVertex = CubeVertex> = Datum[] & {
+export type CubeShape<Datum = Point3D> = TransformedPoint<Datum>[] & {
     faces?: CubeFace<Datum>[];
-    centroid?: RotatedPoint;
+    centroid?: Point3D;
 };
 
-function annotateFace<Datum extends CubeVertex>(
-    vertices: Datum[],
+interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+    data(data: Datum[][]): CubeShape<Datum>[];
+    draw(face: ProjectedVertex[]): string;
+}
+
+function createFace<Datum = Point3D>(
+    vertices: TransformedPoint<Datum>[],
     name: CubeFaceName
 ): CubeFace<Datum> {
     const face = vertices as CubeFace<Datum>;
@@ -35,64 +35,62 @@ function annotateFace<Datum extends CubeVertex>(
     return face;
 }
 
-export function cube<Datum extends CubeVertex>(
-    cubes: CubeShape<Datum>[],
-    options: ProjectionParams<Datum>,
-    accessors: CoordinateAccessors<Datum>,
-    angles: RotationConfig
-): CubeShape<Datum>[] {
-    for (let i = cubes.length - 1; i >= 0; i -= 1) {
-        const cubeShape = cubes[i];
+class Cubes3DRenderer<Datum = Point3D>
+    extends ShapeRenderer<Datum>
+    implements Cubes3DInstance<Datum>
+{
+    data(data: Datum[][]): CubeShape<Datum>[] {
+        for (let i = data.length - 1; i >= 0; i -= 1) {
+            const cube = data[i] as unknown as CubeShape<Datum>;
 
-        const vertices = pt(
-            [
-                cubeShape[0],
-                cubeShape[1],
-                cubeShape[2],
-                cubeShape[3],
-                cubeShape[4],
-                cubeShape[5],
-                cubeShape[6],
-                cubeShape[7]
-            ],
-            options,
-            accessors,
-            angles
-        );
+            for (let j = 0; j < cube.length; j++) {
+                const vertex = cube[j];
 
-        const v1 = vertices[0];
-        const v2 = vertices[1];
-        const v3 = vertices[2];
-        const v4 = vertices[3];
-        const v5 = vertices[4];
-        const v6 = vertices[5];
-        const v7 = vertices[6];
-        const v8 = vertices[7];
+                const startPoint: Point3D = {
+                    x: this.x()(vertex as Datum),
+                    y: this.y()(vertex as Datum),
+                    z: this.z()(vertex as Datum)
+                };
 
-        const front = annotateFace([v1, v2, v3, v4], 'front');
-        const back = annotateFace([v8, v7, v6, v5], 'back');
-        const left = annotateFace([v5, v6, v2, v1], 'left');
-        const right = annotateFace([v4, v3, v7, v8], 'right');
-        const top = annotateFace([v5, v1, v4, v8], 'top');
-        const bottom = annotateFace([v2, v6, v7, v3], 'bottom');
+                (vertex as TransformedPoint<Datum>).projected = orthographic(startPoint, {
+                    scale: this.scale(),
+                    origin: this.origin()
+                });
 
-        cubeShape.faces = [front, back, left, right, top, bottom];
+                (vertex as TransformedPoint<Datum>).rotated = rotateRzRyRx(startPoint, {
+                    x: this.rotateX(),
+                    y: this.rotateY(),
+                    z: this.rotateZ(),
+                    rotateCenter: this.rotationCenter()
+                });
+            }
 
-        cubeShape.centroid = {
-            x: (left.centroid.x + right.centroid.x) / 2,
-            y: (top.centroid.y + bottom.centroid.y) / 2,
-            z: (front.centroid.z + back.centroid.z) / 2
-        };
+            const v = cube as unknown as TransformedPoint<Datum>[];
+
+            const front = createFace([v[0], v[1], v[2], v[3]], 'front');
+            const back = createFace([v[7], v[6], v[5], v[4]], 'back');
+            const left = createFace([v[4], v[5], v[1], v[0]], 'left');
+            const right = createFace([v[3], v[2], v[6], v[7]], 'right');
+            const top = createFace([v[4], v[0], v[3], v[7]], 'top');
+            const bottom = createFace([v[1], v[5], v[6], v[2]], 'bottom');
+
+            cube.faces = [front, back, left, right, top, bottom];
+
+            cube.centroid = {
+                x: (left.centroid.x + right.centroid.x) / 2,
+                y: (top.centroid.y + bottom.centroid.y) / 2,
+                z: (front.centroid.z + back.centroid.z) / 2
+            };
+        }
+
+        return data as unknown as CubeShape<Datum>[];
     }
 
-    return cubes;
+    draw(face: ProjectedVertex[]): string {
+        return drawPlane(face);
+    }
 }
 
-export function cubes3D() {
-    return generator3D<
-        CubeShape<CubeVertex>[],
-        CubeVertex,
-        CubeShape<CubeVertex>[],
-        ProjectedVertex[]
-    >(cube, drawPlane);
+export function cubes3D<Datum = Point3D>(): Cubes3DInstance<Datum> {
+    return new Cubes3DRenderer<Datum>();
 }

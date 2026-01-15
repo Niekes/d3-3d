@@ -5,7 +5,7 @@ describe('polygons3D', () => {
     test('draws correctly', () => {
         type TestDatum = { x1: number; y: number; z: number };
 
-        const myPolygon = [
+        const myPolygon: TestDatum[][] = [
             [
                 { x1: 3, y: 5, z: 2 },
                 { x1: 2, y: 45, z: 2 },
