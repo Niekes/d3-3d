@@ -14,9 +14,9 @@ describe('lineStrips3D', () => {
         ];
 
         const lineStrip = lineStrips3D().scale(30).origin({ x: 220, y: 340 });
-        const result = lineStrip([data])[0];
+        const result = lineStrip.data([data])[0];
 
-        expect(lineStrip.draw?.(result as any)).toBe(
+        expect(lineStrip.draw?.(result)).toBe(
             'M130,340L160,580L190,430L220,610L250,370L280,1690L310,490'
         );
     });
@@ -43,7 +43,7 @@ describe('lineStrips3D', () => {
 
         const lineStrip = lineStrips3D().scale(30).origin({ x: 220, y: 340 });
 
-        expect(lineStrip([data1])[0].centroid).toEqual({ x: 0, y: 9, z: 3 });
-        expect(lineStrip([data2])[0].centroid).toEqual({ x: 0.5, y: 5, z: 2.5 });
+        expect(lineStrip.data([data1])[0].centroid).toEqual({ x: 0, y: 9, z: 3 });
+        expect(lineStrip.data([data2])[0].centroid).toEqual({ x: 0.5, y: 5, z: 2.5 });
     });
 });
