@@ -4,6 +4,7 @@ import { lines3D } from '../index';
 describe('lines3D', () => {
     test("doesn't have a draw function", () => {
         const lines = lines3D();
+        // @ts-ignore
         expect(lines.draw).toBeUndefined();
     });
 
@@ -28,7 +29,7 @@ describe('lines3D', () => {
             ]
         ];
 
-        const result = lines(data as any);
+        const result = lines.data(data);
 
         expect(result[0].centroid).toEqual({ x: 0, y: 0, z: 0 });
         expect(result[1].centroid).toEqual({ x: 2, y: 2, z: 2 });
