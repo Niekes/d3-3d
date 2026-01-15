@@ -1,3 +1,14 @@
+import { TransformedPoint, Point3D } from '../types';
+import { drawPolygon } from '../draw/drawPolygon';
+import { ShapeInstance, ShapeRenderer } from './shape';
+import { rotateRzRyRx } from '../rotation';
+import { orthographic } from '../projection-orthographic';
+import { ccw } from '../counter-clockwise';
+import { centroid } from '../centroid';
+
+/*
+
+
 import {
     generator3D,
     type CoordinateAccessors,
@@ -80,3 +91,5 @@ export function gridPlanes3D() {
         drawPlane
     );
 }
+
+**/

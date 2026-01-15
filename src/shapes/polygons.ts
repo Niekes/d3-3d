@@ -20,10 +20,6 @@ class Polygons3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Polygons3DInstance<Datum>
 {
-    constructor() {
-        super();
-    }
-
     data(data: Datum[][]): Polygon<Datum>[] {
         for (let index = 0; index < data.length; index++) {
             const polygon = data[index];
