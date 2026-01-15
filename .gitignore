@@ -1,7 +1,7 @@
+.vscode
 .DS_Store
 build/
 coverage/
 node_modules
 npm-debug.log
-*.sublime-workspace
-*.sublime-project
+*.html

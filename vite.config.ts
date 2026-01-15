@@ -6,7 +6,7 @@ export default defineConfig({
     build: {
         lib: {
             entry: resolve(__dirname, 'index.ts'),
-            name: 'd3',
+            name: 'd33d',
             fileName: (format) => `d3-3d.${format === 'umd' ? 'js' : `${format}.js`}`,
             formats: ['es', 'umd']
         },
