@@ -8,10 +8,6 @@ export function centroid<T>(polygon: ReadonlyArray<TransformedPoint<T>>): Point3
     for (let i = polygon.length - 1; i >= 0; i -= 1) {
         const point = polygon[i].rotated;
 
-        if (point === undefined) {
-            throw new Error(`centroid: polygon point at index ${i} is missing rotated coordinates`);
-        }
-
         sumX += point.x;
         sumY += point.y;
         sumZ += point.z;

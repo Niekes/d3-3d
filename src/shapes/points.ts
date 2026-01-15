@@ -1,50 +1,29 @@
-import { TransformedPoint, Point3D } from '../types';
+import { Point3D, TransformedPoint } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
-import { rotateRzRyRx } from '../rotation';
-import { orthographic } from '../projection-orthographic';
+import { transform } from '../transform';
+
+export type Point<Datum> = TransformedPoint<Datum>;
 
 interface Points3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[]): Point<Datum>[];
 }
 
-export type Point<Datum> = TransformedPoint<Datum> & {
-    centroid: Point3D;
-};
-
 class Points3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Points3DInstance<Datum>
 {
-    constructor() {
-        super();
-    }
-
     data(data: Datum[]): Point<Datum>[] {
-        for (let index = 0; index < data.length; index++) {
-            const point = data[index] as Point<Datum>;
-
-            const startPoint: Point3D = {
-                x: this.x()(point as Datum),
-                y: this.y()(point as Datum),
-                z: this.z()(point as Datum)
-            };
-
-            (point as TransformedPoint<Datum>).rotated = rotateRzRyRx(startPoint, {
-                x: this.rotateX(),
-                y: this.rotateY(),
-                z: this.rotateZ(),
-                rotateCenter: this.rotationCenter()
-            });
-
-            (point as TransformedPoint<Datum>).projected = orthographic(startPoint, {
-                scale: this.scale(),
-                origin: this.origin()
-            });
-
-            point.centroid = point.rotated;
-        }
-
-        return data as unknown as Point<Datum>[];
+        return transform(data, {
+            origin: this.origin(),
+            rotateCenter: this.rotationCenter(),
+            rotateX: this.rotateX(),
+            rotateY: this.rotateY(),
+            rotateZ: this.rotateZ(),
+            scale: this.scale(),
+            x: this.x(),
+            y: this.y(),
+            z: this.z()
+        });
     }
 }
 

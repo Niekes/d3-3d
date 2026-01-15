@@ -29,4 +29,14 @@ export interface RotationAngles {
     rotateCenter: Point3D;
 }
 
-export type CubeFaceName = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
+export interface TransformOptions<Datum> {
+    origin: Point2D;
+    rotateCenter: Point3D;
+    rotateX: number;
+    rotateY: number;
+    rotateZ: number;
+    scale: number;
+    x: (point: Datum) => number;
+    y: (point: Datum) => number;
+    z: (point: Datum) => number;
+}

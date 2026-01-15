@@ -1,10 +1,9 @@
 import { TransformedPoint, Point3D } from '../types';
-import { drawPlane, ProjectedVertex } from '../draw/drawPlane';
+import { drawPlane } from '../draw/drawPlane';
 import { ShapeInstance, ShapeRenderer } from './shape';
-import { rotateRzRyRx } from '../rotation';
-import { orthographic } from '../projection-orthographic';
 import { ccw } from '../counter-clockwise';
 import { centroid } from '../centroid';
+import { transform } from '../transform';
 
 export type CubeFaceName = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
 
@@ -14,14 +13,14 @@ export type CubeFace<Datum = Point3D> = TransformedPoint<Datum>[] & {
     face: CubeFaceName;
 };
 
-export type CubeShape<Datum = Point3D> = TransformedPoint<Datum>[] & {
+export type Cube<Datum = Point3D> = TransformedPoint<Datum>[] & {
     faces?: CubeFace<Datum>[];
     centroid?: Point3D;
 };
 
 interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): CubeShape<Datum>[];
-    draw(face: ProjectedVertex[]): string;
+    data(data: Datum[][]): Cube<Datum>[];
+    draw(face: TransformedPoint<Datum>[]): string;
 }
 
 function createFace<Datum = Point3D>(
@@ -39,54 +38,63 @@ class Cubes3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Cubes3DInstance<Datum>
 {
-    data(data: Datum[][]): CubeShape<Datum>[] {
-        for (let i = data.length - 1; i >= 0; i -= 1) {
-            const cube = data[i] as unknown as CubeShape<Datum>;
+    data(data: Datum[][]): Cube<Datum>[] {
+        return data.map((cubeData) => {
+            const transformedCube = transform(cubeData, {
+                origin: this.origin(),
+                rotateCenter: this.rotationCenter(),
+                rotateX: this.rotateX(),
+                rotateY: this.rotateY(),
+                rotateZ: this.rotateZ(),
+                scale: this.scale(),
+                x: this.x(),
+                y: this.y(),
+                z: this.z()
+            }) as Cube<Datum>;
 
-            for (let j = 0; j < cube.length; j++) {
-                const vertex = cube[j];
+            const front = createFace(
+                [transformedCube[0], transformedCube[1], transformedCube[2], transformedCube[3]],
+                'front'
+            );
 
-                const startPoint: Point3D = {
-                    x: this.x()(vertex as Datum),
-                    y: this.y()(vertex as Datum),
-                    z: this.z()(vertex as Datum)
-                };
+            const back = createFace(
+                [transformedCube[7], transformedCube[6], transformedCube[5], transformedCube[4]],
+                'back'
+            );
 
-                (vertex as TransformedPoint<Datum>).projected = orthographic(startPoint, {
-                    scale: this.scale(),
-                    origin: this.origin()
-                });
+            const left = createFace(
+                [transformedCube[4], transformedCube[5], transformedCube[1], transformedCube[0]],
+                'left'
+            );
 
-                (vertex as TransformedPoint<Datum>).rotated = rotateRzRyRx(startPoint, {
-                    x: this.rotateX(),
-                    y: this.rotateY(),
-                    z: this.rotateZ(),
-                    rotateCenter: this.rotationCenter()
-                });
-            }
+            const right = createFace(
+                [transformedCube[3], transformedCube[2], transformedCube[6], transformedCube[7]],
+                'right'
+            );
 
-            const v = cube as unknown as TransformedPoint<Datum>[];
+            const top = createFace(
+                [transformedCube[4], transformedCube[0], transformedCube[3], transformedCube[7]],
+                'top'
+            );
 
-            const front = createFace([v[0], v[1], v[2], v[3]], 'front');
-            const back = createFace([v[7], v[6], v[5], v[4]], 'back');
-            const left = createFace([v[4], v[5], v[1], v[0]], 'left');
-            const right = createFace([v[3], v[2], v[6], v[7]], 'right');
-            const top = createFace([v[4], v[0], v[3], v[7]], 'top');
-            const bottom = createFace([v[1], v[5], v[6], v[2]], 'bottom');
+            const bottom = createFace(
+                [transformedCube[1], transformedCube[5], transformedCube[6], transformedCube[2]],
+                'bottom'
+            );
 
-            cube.faces = [front, back, left, right, top, bottom];
+            transformedCube.faces = [front, back, left, right, top, bottom];
 
-            cube.centroid = {
+            transformedCube.centroid = {
                 x: (left.centroid.x + right.centroid.x) / 2,
                 y: (top.centroid.y + bottom.centroid.y) / 2,
                 z: (front.centroid.z + back.centroid.z) / 2
             };
-        }
 
-        return data as unknown as CubeShape<Datum>[];
+            return transformedCube;
+        });
     }
 
-    draw(face: ProjectedVertex[]): string {
+    draw(face: TransformedPoint<Datum>[]): string {
         return drawPlane(face);
     }
 }

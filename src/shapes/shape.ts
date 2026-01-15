@@ -1,5 +1,4 @@
 import { Point2D, Point3D } from '../types';
-import { HasCentroid } from '../sort';
 import { x as px, y as py, z as pz } from '../point';
 
 export interface ShapeInstance<Datum = Point3D> {

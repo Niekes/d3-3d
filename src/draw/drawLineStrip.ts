@@ -1,15 +1,11 @@
-import { Point2D } from '../types';
+import { TransformedPoint } from '../types';
 
-export interface LineStripVertex {
-    projected: Point2D;
-}
-
-export function drawLineStrip(lineStrip: LineStripVertex[]): string {
-    const lastPoint = lineStrip[lineStrip.length - 1];
+export function drawLineStrip<T>(vertices: ReadonlyArray<TransformedPoint<T>>): string {
+    const lastPoint = vertices[vertices.length - 1];
     let path = `M${lastPoint.projected.x},${lastPoint.projected.y}`;
 
-    for (let i = lineStrip.length - 2; i >= 0; i -= 1) {
-        const p = lineStrip[i].projected;
+    for (let i = vertices.length - 2; i >= 0; i -= 1) {
+        const p = vertices[i].projected;
         path += `L${p.x},${p.y}`;
     }
 

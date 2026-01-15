@@ -1,7 +1,7 @@
 import { describe, test, expect } from 'vitest';
 import { points3D } from '../index';
 
-describe.only('points3D', () => {
+describe('points3D', () => {
     test("doesn't have draw function", () => {
         const points = points3D();
         // @ts-ignore
