@@ -41,11 +41,11 @@ describe('points3D', () => {
 
     test('accesses point coords via function', () => {
         const data = [
-            { a: 1, b: 2, c: 3 },
-            { a: 4, b: 5, c: 6 }
+            { a: 1, b: 2, c: 3, height: 10 },
+            { a: 4, b: 5, c: 6, height: 20 }
         ];
 
-        const points = points3D<{ a: number; b: number; c: number }>()
+        const points = points3D<{ a: number; b: number; c: number; height: number }>()
             .x((d) => d.a)
             .y((d) => d.b)
             .z((d) => d.c);
@@ -54,6 +54,7 @@ describe('points3D', () => {
 
         expect(result[0].rotated).toEqual({ x: 1, y: 2, z: 3 });
         expect(result[1].rotated).toEqual({ x: 4, y: 5, z: 6 });
+        expect(result[0].height).toEqual(10);
     });
 
     test('rotates zero point along x axis by 180°', () => {

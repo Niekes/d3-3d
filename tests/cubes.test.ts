@@ -61,4 +61,41 @@ describe('cubes3D', () => {
         expect(result[0]?.[0]?.rotated.y).toBe(1.2246467991473532e-16);
         expect(result[0]?.[0]?.rotated.z).toBe(-7.498798913309288e-33);
     });
+
+    test('data gets passed through', () => {
+        type TestDatum = { x: number; y: number; z: number; id: string };
+        function makeCube(h: number, x: number, z: number) {
+            return [
+                { x: x - 1, y: h, z: z + 1 }, // FRONT TOP LEFT
+                { x: x - 1, y: 0, z: z + 1 }, // FRONT BOTTOM LEFT
+                { x: x + 1, y: 0, z: z + 1 }, // FRONT BOTTOM RIGHT
+                { x: x + 1, y: h, z: z + 1 }, // FRONT TOP RIGHT
+                { x: x - 1, y: h, z: z - 1 }, // BACK  TOP LEFT
+                { x: x - 1, y: 0, z: z - 1 }, // BACK  BOTTOM LEFT
+                { x: x + 1, y: 0, z: z - 1 }, // BACK  BOTTOM RIGHT
+                { x: x + 1, y: h, z: z - 1 } // BACK  TOP RIGHT
+            ];
+        }
+
+        const myFirstCube = [
+            { x: 1, y: 0, z: 0, id: '0' },
+            { x: 1, y: 1, z: 0, id: '1' },
+            { x: 2, y: 1, z: 0, id: '2' },
+            { x: 2, y: 0, z: 0, id: '3' },
+            { x: 1, y: 0, z: 1, id: '4' },
+            { x: 1, y: 1, z: 1, id: '5' },
+            { x: 2, y: 1, z: 1, id: '6' },
+            { x: 2, y: 0, z: 1, id: '7' }
+        ];
+
+        const cubes = cubes3D<TestDatum>()
+            .rotateX(Math.PI / 2)
+            .rotateY(Math.PI);
+
+        const data: TestDatum[][] = [myFirstCube];
+
+        const result = cubes.data(data);
+
+        expect(result[0]?.[0]?.id).toBe('0');
+    });
 });

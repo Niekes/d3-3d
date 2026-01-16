@@ -1,73 +1,50 @@
-import {
-    generator3D,
-    type CoordinateAccessors,
-    type CoordinateAccessor,
-    type CoordinateValue,
-    type ProjectionParams,
-    type RotationConfig
-} from '../generator';
-import { ccw, type PolygonPoint } from '../counter-clockwise';
-import { centroid, type RotatedPoint } from '../centroid';
-import { rotateRzRyRx } from '../rotation';
-import { drawTriangle, type TriangleVertex } from '../draw/drawTriangle';
-import type { Point3D } from '../point';
-import type { Point2D } from '../projection-orthographic';
+import { TransformedPoint, Point3D } from '../types';
+import { ShapeInstance, ShapeRenderer } from './shape';
+import { ccw } from '../counter-clockwise';
+import { centroid } from '../centroid';
+import { transform } from '../transform';
+import { drawTriangle } from '../draw/drawTriangle';
 
-export interface TrianglePoint extends Point3D, PolygonPoint {
-    projected?: Point2D;
-}
-
-export type TriangleShape<Datum extends TrianglePoint = TrianglePoint> = Datum[] & {
-    centroid?: RotatedPoint;
-    ccw?: boolean;
+export type Triangle<Datum> = TransformedPoint<Datum>[] & {
+    ccw: boolean;
+    centroid: Point3D;
 };
 
-function toAccessor<Datum extends Point3D>(
-    value: CoordinateValue<Datum>
-): CoordinateAccessor<Datum> {
-    return typeof value === 'function' ? value : () => Number(value);
+interface Triangles3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+    data(data: Datum[][]): Triangle<Datum>[];
+    draw(triangles: Datum[]): string;
 }
 
-export function triangle<Datum extends TrianglePoint>(
-    triangles: TriangleShape<Datum>[],
-    options: ProjectionParams<Datum>,
-    accessors: CoordinateAccessors<Datum>,
-    angles: RotationConfig
-): TriangleShape<Datum>[] {
-    const getX = toAccessor(accessors.x);
-    const getY = toAccessor(accessors.y);
-    const getZ = toAccessor(accessors.z);
+class Triangles3DRenderer<Datum = Point3D>
+    extends ShapeRenderer<Datum>
+    implements Triangles3DInstance<Datum>
+{
+    data(data: Datum[][]): Triangle<Datum>[] {
+        return data.map((triangle) => {
+            const transformedTriangles = transform(triangle, {
+                origin: this.origin(),
+                rotateCenter: this.rotationCenter(),
+                rotateX: this.rotateX(),
+                rotateY: this.rotateY(),
+                rotateZ: this.rotateZ(),
+                scale: this.scale(),
+                x: this.x(),
+                y: this.y(),
+                z: this.z()
+            }) as Triangle<Datum>;
 
-    for (let i = triangles.length - 1; i >= 0; i -= 1) {
-        const tri = triangles[i];
+            transformedTriangles.ccw = ccw(transformedTriangles);
+            transformedTriangles.centroid = centroid(transformedTriangles);
 
-        for (let j = 0; j < 3; j += 1) {
-            const vertex = tri[j];
-
-            vertex.rotated = rotateRzRyRx(
-                {
-                    x: getX(vertex),
-                    y: getY(vertex),
-                    z: getZ(vertex)
-                },
-                angles
-            );
-
-            vertex.projected = options.project(vertex.rotated, options);
-        }
-
-        tri.ccw = ccw(tri);
-        tri.centroid = centroid(tri);
+            return transformedTriangles;
+        });
     }
 
-    return triangles;
+    draw(polygons: TransformedPoint<Datum>[]): string {
+        return drawTriangle(polygons);
+    }
 }
 
-export function triangles3D() {
-    return generator3D<
-        TriangleShape<TrianglePoint>[],
-        TrianglePoint,
-        TriangleShape<TrianglePoint>[],
-        TriangleVertex[]
-    >(triangle, drawTriangle);
+export function triangles3D<Datum = Point3D>(): Triangles3DInstance<Datum> {
+    return new Triangles3DRenderer<Datum>();
 }

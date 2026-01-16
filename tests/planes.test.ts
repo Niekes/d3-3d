@@ -17,7 +17,7 @@ describe('planes3D', () => {
             ]
         ];
 
-        expect(planes(data)[0].centroid).toEqual({ x: 0, y: 0, z: 0.5 });
+        expect(planes.data(data)[0].centroid).toEqual({ x: 0, y: 0, z: 0.5 });
     });
 
     test('draw function draws correctly', () => {
@@ -32,23 +32,23 @@ describe('planes3D', () => {
             ]
         ];
 
-        const result = planes(data)[0];
+        const result = planes.data(data)[0];
 
-        expect(planes.draw?.(result as any)).toBe('M5,0L6,4L4,5L1,5Z');
+        expect(planes.draw?.(result)).toBe('M5,0L6,4L4,5L1,5Z');
     });
 
     test('detects counter-clockwise drawing', () => {
         const data = [
             [
-                [-1, 0, 0],
-                [1, 0, 0],
-                [1, 1, 0],
-                [-1, 1, 0]
+                { x: -1, y: 0, z: 0 },
+                { x: 1, y: 0, z: 0 },
+                { x: 1, y: 1, z: 0 },
+                { x: -1, y: 1, z: 0 }
             ]
         ];
 
         const planes = planes3D();
 
-        expect(planes(data as any)[0].ccw).toBe(false);
+        expect(planes.data(data)[0].ccw).toBe(false);
     });
 });

@@ -3,26 +3,24 @@ import { polygons3D } from '../index';
 
 describe('polygons3D', () => {
     test('draws correctly', () => {
-        type TestDatum = { x1: number; y: number; z: number };
+        type TestDatum = { x: number; y: number; z: number };
 
         const myPolygon: TestDatum[][] = [
             [
-                { x1: 3, y: 5, z: 2 },
-                { x1: 2, y: 45, z: 2 },
-                { x1: 1, y: 1, z: 2 },
-                { x1: 0, y: 9, z: 3 },
-                { x1: -1, y: 3, z: 2 },
-                { x1: -2, y: 8, z: 4 },
-                { x1: -3, y: 0, z: 2 }
+                { x: 3, y: 5, z: 2 },
+                { x: 2, y: 45, z: 2 },
+                { x: 1, y: 1, z: 2 },
+                { x: 0, y: 9, z: 3 },
+                { x: -1, y: 3, z: 2 },
+                { x: -2, y: 8, z: 4 },
+                { x: -3, y: 0, z: 2 }
             ]
         ];
 
-        const polygons = polygons3D<TestDatum>()
-            .scale(30)
-            .origin({ x: 220, y: 340 })
-            .x((d) => d.x1)
-            .y((d) => d.y)
-            .z((d) => d.z);
+        const polygons = polygons3D().scale(30).origin({ x: 220, y: 340 });
+        // .x((d) => d.x1)
+        // .y((d) => d.y)
+        // .z((d) => d.z);
 
         const result = polygons.data(myPolygon)[0];
 

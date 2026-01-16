@@ -20,7 +20,7 @@ export const transform = <Datum = Point3D>(
             rotateCenter: options.rotateCenter
         });
 
-        const projected = orthographic(startPoint, {
+        const projected = orthographic(rotated, {
             scale: options.scale,
             origin: options.origin
         });

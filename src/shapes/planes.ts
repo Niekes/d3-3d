@@ -1,73 +1,50 @@
-import {
-    generator3D,
-    type CoordinateAccessors,
-    type CoordinateAccessor,
-    type CoordinateValue,
-    type ProjectionParams,
-    type RotationConfig
-} from '../generator';
-import { ccw, type PolygonPoint } from '../counter-clockwise';
-import { centroid, type RotatedPoint } from '../centroid';
-import { rotateRzRyRx } from '../rotation';
-import { drawPlane, type ProjectedVertex } from '../draw/drawPlane';
-import type { Point3D } from '../point';
-import type { Point2D } from '../projection-orthographic';
+import { TransformedPoint, Point3D } from '../types';
+import { ShapeInstance, ShapeRenderer } from './shape';
+import { ccw } from '../counter-clockwise';
+import { centroid } from '../centroid';
+import { transform } from '../transform';
+import { drawPlane } from '../draw/drawPlane';
 
-export interface PlanePoint extends Point3D, PolygonPoint {
-    projected?: Point2D;
-}
-
-export type PlaneShape<Datum extends PlanePoint = PlanePoint> = Datum[] & {
-    centroid?: RotatedPoint;
-    ccw?: boolean;
+export type Plane<Datum> = TransformedPoint<Datum>[] & {
+    ccw: boolean;
+    centroid: Point3D;
 };
 
-function toAccessor<Datum extends Point3D>(
-    value: CoordinateValue<Datum>
-): CoordinateAccessor<Datum> {
-    return typeof value === 'function' ? value : () => Number(value);
+interface Planes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+    data(data: Datum[][]): Plane<Datum>[];
+    draw(planes: Datum[]): string;
 }
 
-export function plane<Datum extends PlanePoint>(
-    planes: PlaneShape<Datum>[],
-    options: ProjectionParams<Datum>,
-    accessors: CoordinateAccessors<Datum>,
-    angles: RotationConfig
-): PlaneShape<Datum>[] {
-    const getX = toAccessor(accessors.x);
-    const getY = toAccessor(accessors.y);
-    const getZ = toAccessor(accessors.z);
+class Planes3DRenderer<Datum = Point3D>
+    extends ShapeRenderer<Datum>
+    implements Planes3DInstance<Datum>
+{
+    data(data: Datum[][]): Plane<Datum>[] {
+        return data.map((plane) => {
+            const transformedPlane = transform(plane, {
+                origin: this.origin(),
+                rotateCenter: this.rotationCenter(),
+                rotateX: this.rotateX(),
+                rotateY: this.rotateY(),
+                rotateZ: this.rotateZ(),
+                scale: this.scale(),
+                x: this.x(),
+                y: this.y(),
+                z: this.z()
+            }) as Plane<Datum>;
 
-    for (let i = planes.length - 1; i >= 0; i -= 1) {
-        const currentPlane = planes[i];
+            transformedPlane.ccw = ccw(transformedPlane);
+            transformedPlane.centroid = centroid(transformedPlane);
 
-        for (let j = 0; j < 4; j += 1) {
-            const vertex = currentPlane[j];
-
-            vertex.rotated = rotateRzRyRx(
-                {
-                    x: getX(vertex),
-                    y: getY(vertex),
-                    z: getZ(vertex)
-                },
-                angles
-            );
-
-            vertex.projected = options.project(vertex.rotated, options);
-        }
-
-        currentPlane.ccw = ccw(currentPlane);
-        currentPlane.centroid = centroid(currentPlane);
+            return transformedPlane;
+        });
     }
 
-    return planes;
+    draw(polygons: TransformedPoint<Datum>[]): string {
+        return drawPlane(polygons);
+    }
 }
 
-export function planes3D() {
-    return generator3D<
-        PlaneShape<PlanePoint>[],
-        PlanePoint,
-        PlaneShape<PlanePoint>[],
-        ProjectedVertex[]
-    >(plane, drawPlane);
+export function planes3D<Datum = Point3D>(): Planes3DInstance<Datum> {
+    return new Planes3DRenderer<Datum>();
 }

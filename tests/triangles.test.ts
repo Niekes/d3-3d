@@ -16,7 +16,6 @@ describe('triangles3D', () => {
         expect(triangles.rotateZ()).toBe(0);
         expect(triangles.rotationCenter()).toEqual({ x: 0, y: 0, z: 0 });
         expect(triangles.draw).toBeTypeOf('function');
-        expect(triangles.sort).toBeTypeOf('function');
         expect(triangles.x).toBeTypeOf('function');
         expect(triangles.y).toBeTypeOf('function');
         expect(triangles.z).toBeTypeOf('function');
@@ -36,12 +35,13 @@ describe('triangles3D', () => {
             .y((d) => d.y)
             .z((d) => d.z);
 
-        const result = triangles(data)[0];
+        const result = triangles.data(data)[0];
 
         expect(triangles.draw?.(result as any)).toBe('M0,0L0,1L1,0Z');
     });
 
     test('accesses triangle coords via function', () => {
+        type TestDatum = { x1: number; y2: number; z3: number };
         const data = [
             [
                 { x1: 1, y2: 2, z3: 3 },
@@ -50,17 +50,12 @@ describe('triangles3D', () => {
             ]
         ];
 
-        const triangles = triangles3D()
-            // @ts-ignore
+        const triangles = triangles3D<TestDatum>()
             .x((d) => d.x1)
-
-            // @ts-ignore
             .y((d) => d.y2)
-
-            // @ts-ignore
             .z((d) => d.z3);
 
-        const result = triangles(data as any)[0];
+        const result = triangles.data(data)[0];
 
         expect(result[0].rotated).toEqual({ x: 1, y: 2, z: 3 });
         expect(result[1].rotated).toEqual({ x: 4, y: 5, z: 6 });
@@ -72,14 +67,14 @@ describe('triangles3D', () => {
 
         const data = [
             [
-                [0, 0, 0],
-                [0, 1, 0],
-                [1, 0, 0]
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 1, z: 0 },
+                { x: 1, y: 0, z: 0 }
             ]
         ];
 
-        const result = triangles(data as any)[0] as any;
-        const path = triangles.draw?.(result) as any;
+        const result = triangles.data(data)[0];
+        const path = triangles.draw?.(result);
         const lastChar = path[path.length - 1];
 
         expect(lastChar).toBe('Z');
@@ -121,7 +116,7 @@ describe('triangles3D', () => {
             ]
         ];
 
-        const result = triangles(data1);
+        const result = triangles.data(data1);
 
         expect(result[0].ccw).toBe(true);
         expect(result[1].ccw).toBe(true);
@@ -162,7 +157,7 @@ describe('triangles3D', () => {
             ]
         ];
 
-        const result = triangles(data);
+        const result = triangles.data(data);
 
         expect(result[0].centroid).toEqual({ x: 5, y: 3, z: 0 });
         expect(result[1].centroid).toEqual({

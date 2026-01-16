@@ -39,8 +39,8 @@ class Cubes3DRenderer<Datum = Point3D>
     implements Cubes3DInstance<Datum>
 {
     data(data: Datum[][]): Cube<Datum>[] {
-        return data.map((cubeData) => {
-            const transformedCube = transform(cubeData, {
+        return data.map((cube) => {
+            const transformedCube = transform(cube, {
                 origin: this.origin(),
                 rotateCenter: this.rotationCenter(),
                 rotateX: this.rotateX(),
