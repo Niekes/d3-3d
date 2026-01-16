@@ -1,13 +1,14 @@
 {
     "name": "d3-3d",
-    "version": "1.0.0",
-    "description": "D3.js plugin for 3d visualization",
+    "version": "2.0.0",
+    "description": "D3.js plugin for 3d visualization written in Typescript",
     "keywords": [
         "d3",
         "d3-module",
         "3D",
         "d3-3d",
         "projection",
+        "typescript",
         "visualization"
     ],
     "author": "Niekes (https://niekes.com)",
@@ -30,7 +31,6 @@
     },
     "files": [
         "build/d3-3d.js",
-        "build/d3-3d.min.js",
         "build/index.d.ts",
         "build/**/*.d.ts"
     ],

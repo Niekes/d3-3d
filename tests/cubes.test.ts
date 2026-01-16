@@ -63,19 +63,7 @@ describe('cubes3D', () => {
     });
 
     test('data gets passed through', () => {
-        type TestDatum = { x: number; y: number; z: number; id: string };
-        function makeCube(h: number, x: number, z: number) {
-            return [
-                { x: x - 1, y: h, z: z + 1 }, // FRONT TOP LEFT
-                { x: x - 1, y: 0, z: z + 1 }, // FRONT BOTTOM LEFT
-                { x: x + 1, y: 0, z: z + 1 }, // FRONT BOTTOM RIGHT
-                { x: x + 1, y: h, z: z + 1 }, // FRONT TOP RIGHT
-                { x: x - 1, y: h, z: z - 1 }, // BACK  TOP LEFT
-                { x: x - 1, y: 0, z: z - 1 }, // BACK  BOTTOM LEFT
-                { x: x + 1, y: 0, z: z - 1 }, // BACK  BOTTOM RIGHT
-                { x: x + 1, y: h, z: z - 1 } // BACK  TOP RIGHT
-            ];
-        }
+        type CustomDatum = { x: number; y: number; z: number; id: string };
 
         const myFirstCube = [
             { x: 1, y: 0, z: 0, id: '0' },
@@ -88,11 +76,11 @@ describe('cubes3D', () => {
             { x: 2, y: 0, z: 1, id: '7' }
         ];
 
-        const cubes = cubes3D<TestDatum>()
+        const cubes = cubes3D<CustomDatum>()
             .rotateX(Math.PI / 2)
             .rotateY(Math.PI);
 
-        const data: TestDatum[][] = [myFirstCube];
+        const data: CustomDatum[][] = [myFirstCube];
 
         const result = cubes.data(data);
 
