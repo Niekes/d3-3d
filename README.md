@@ -77,18 +77,28 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 
 ## API Reference
 
-- [triangles3D().data](#triangles3ddata-data) - transform and compute properties for your data.
-- [triangles3D().draw](#triangles3ddrawshape) - draw SVG path for a shape.
-- [triangles3D().x](#triangles3dxx) - set the x accessor.
-- [triangles3D().y](#triangles3dyy) - set the y accessor.
-- [triangles3D().z](#triangles3dzz) - set the z accessor.
-- [triangles3D().scale](#triangles3dscalescale) - sets the scale for the projected points.
-- [triangles3D().rotateX](#triangles3drotatexanglex) - set the angle for the x rotation.
-- [triangles3D().rotateY](#triangles3drotateyangley) - set the angle for the y rotation.
-- [triangles3D().rotateZ](#triangles3drotatezanglez) - set the angle for the z rotation.
-- [triangles3D().rotationCenter](#triangles3drotationcenterpoint) - set the rotation center.
-- [triangles3D().origin](#triangles3doriginorigin) - set the 2D rendering origin.
-- [sort](#sort) - utility function to sort shapes by depth.
+> **Note:** All shapes (`points3D`, `lines3D`, `lineStrips3D`, `triangles3D`, `planes3D`, `polygons3D`, `gridPlanes3D`, `cubes3D`) share the same API. The methods below work for all shape types.
+
+**Core Methods:**
+
+- [.data()](#data-data) - transform and compute properties for your data.
+- [.draw()](#drawshape) - draw SVG path for a shape.
+
+**Configuration Methods:**
+
+- [.x()](#xx) - set the x accessor.
+- [.y()](#yy) - set the y accessor.
+- [.z()](#zz) - set the z accessor.
+- [.scale()](#scalescale) - sets the scale for the projected points.
+- [.rotateX()](#rotatexanglex) - set the angle for the x rotation.
+- [.rotateY()](#rotateyangley) - set the angle for the y rotation.
+- [.rotateZ()](#rotatezanglez) - set the angle for the z rotation.
+- [.rotationCenter()](#rotationcenterpoint) - set the rotation center.
+- [.origin()](#originorigin) - set the 2D rendering origin.
+
+**Utility Functions:**
+
+- [sort()](#sort) - utility function to sort shapes by depth.
 
 ### Overview
 
@@ -185,33 +195,56 @@ svg
   .attr('stroke', 'black');
 ```
 
-````
-
 ### Shapes
 
-Depending on the shape the input data array has to be accordingly to the shape.
+All shapes share the same API for configuration, but differ in their input data format and output properties.
 
-- **points3D** A point is represented by the `<circle>` element. It does not have a draw function because it can be represented as a `<circle>`. The input data array has to be an array of points where each point has three coordinates which can be accessed via the [x](#x), [y](#y) and [z](#z) accessors.
-- **lines3D** A line is represented by the `<line>` element. It does not have a draw function because it can be represented as a `<line>`. The input data array has to be an array of lines where each line is defined by a start- and an endpoint.
-- **lineStrips3D** A continuous line is represented by the `<path>` element. The input data array has to be an array of points. Every point will be connected to the next point in the input data array.
-- **triangles3D** A triangle represented by the `<path>` element. The input data array has to be an array of triangles where each triangle is defined by three points in counter-clockwise order.
-- **planes3D** A plane is represented by the `<path>` element. The input data array has to be an array of planes where each plane is defined by four points in counter-clockwise order.
-- **gridPlanes3D** A grid is represented by _x_ planes. The input data array has to be an array of points. **d3-3d** will construct planes out of the passed data. _NOTE:_ A grid has to have always the same number of points per row. Otherwise the code will break.
-- **polygons3D** A polygon is represented by the `<path>` element. The input data array has to be an array of polygons where each polygon is defined by _x_ points in counter-clockwise order.
-- **cubes3D** A grid is represented by 4 planes. The input data array has to be an array of cubes where each cube is defined by 8 vertices. To get the orientation and centroid calculation right you should pass in the data like so:
+| Shape            | SVG Element | Input Format                           | `.draw()` | `ccw` Property |
+| ---------------- | ----------- | -------------------------------------- | --------- | -------------- |
+| **points3D**     | `<circle>`  | `Datum[]` - Array of points            | ❌        | ❌             |
+| **lines3D**      | `<line>`    | `Datum[][]` - Array of line pairs      | ❌        | ❌             |
+| **lineStrips3D** | `<path>`    | `Datum[][]` - Array of point arrays    | ✅        | ❌             |
+| **triangles3D**  | `<path>`    | `Datum[][]` - Array of 3-point arrays  | ✅        | ✅             |
+| **planes3D**     | `<path>`    | `Datum[][]` - Array of 4-point arrays  | ✅        | ✅             |
+| **polygons3D**   | `<path>`    | `Datum[][]` - Array of N-point arrays  | ✅        | ✅             |
+| **gridPlanes3D** | `<path>`    | `Datum[]` - Grid of points\*           | ✅        | ✅             |
+| **cubes3D**      | `<path>`    | `Datum[][]` - Array of 8-vertex arrays | ✅        | ✅ (per face)  |
+
+**Notes:**
+
+- All shapes compute `centroid`, `rotated`, and `projected` properties
+- `ccw` (counter-clockwise) is computed for polygon-based shapes to detect front/back faces
+- Shapes without `.draw()` method (`points3D`, `lines3D`) can be rendered directly with SVG elements using the `projected` coordinates
+
+**Input Data Details:**
+
+- **points3D**: Each point must have properties accessible via `.x()`, `.y()`, `.z()` accessors (default: `{x, y, z}`)
+- **lines3D**: Each line is defined by exactly 2 points (start and end)
+- **lineStrips3D**: Each strip connects consecutive points in the array
+- **triangles3D**: Each triangle requires exactly 3 points in counter-clockwise order
+- **planes3D**: Each plane requires exactly 4 points in counter-clockwise order
+- **polygons3D**: Each polygon can have any number of points (≥3) in counter-clockwise order
+- **gridPlanes3D**: Input is a flat array of points that forms a grid. **Important:** Grid must have consistent row lengths
+- **cubes3D**: Each cube requires exactly 8 vertices ordered as shown below:
+
+![cube](assets/cube.png 'Cube')
 
 ### API Methods
 
-#### triangles3D().data(_data_)
+#### .data(_data_)
 
 Transforms the input data by applying rotation, projection, and computing additional properties.
 
+**Available on:** All shapes
+
 **Parameters:**
+
 - `data: Datum[][]` - Array of shapes, where each shape is an array of data points
 
 **Returns:** `Triangle<Datum>[]` (or `Polygon<Datum>[]`, `Plane<Datum>[]`, etc. depending on the shape)
 
 Transformed shapes with the following properties:
+
 - **Original data preserved** - All properties from your input data are preserved
 - `rotated: Point3D` - Rotated 3D coordinates for each point
 - `projected: Point2D` - 2D screen coordinates for each point
@@ -219,6 +252,7 @@ Transformed shapes with the following properties:
 - `ccw: boolean` - Whether the shape is counter-clockwise oriented (polygons only)
 
 **Example:**
+
 ```typescript
 const renderer = triangles3D()
   .scale(100)
@@ -235,13 +269,14 @@ const data = [
 const result = renderer.data(data);
 
 // Access computed properties
-console.log(result[0].centroid);  // { x: 0.33, y: 0.33, z: 0 }
-console.log(result[0].ccw);       // true
-console.log(result[0][0].rotated);  // { x: ..., y: ..., z: ... }
+console.log(result[0].centroid); // { x: 0.33, y: 0.33, z: 0 }
+console.log(result[0].ccw); // true
+console.log(result[0][0].rotated); // { x: ..., y: ..., z: ... }
 console.log(result[0][0].projected); // { x: ..., y: ... }
 ```
 
 **TypeScript with custom data:**
+
 ```typescript
 interface CustomPoint {
   x: number;
@@ -268,16 +303,20 @@ result[0].centroid;  // ✓ Point3D
 result[0].ccw;       // ✓ boolean
 ```
 
-#### triangles3D().draw(_shape_)
+#### .draw()
 
 Constructs an SVG `<path>` element string based on the transformed shape data.
 
+**Available on:** `lineStrips3D`, `triangles3D`, `planes3D`, `polygons3D`, `gridPlanes3D`, `cubes3D`
+
 **Parameters:**
+
 - `shape: TransformedPoint<Datum>[]` - A single transformed shape (from `.data()` result)
 
 **Returns:** `string` - SVG path string (e.g., `"M0,0L1,0L0.5,1Z"`)
 
 **Example:**
+
 ```typescript
 const renderer = triangles3D();
 const transformed = renderer.data(myData);
@@ -286,27 +325,28 @@ const transformed = renderer.data(myData);
 const pathString = renderer.draw(transformed[0]);
 
 // Use with D3
-svg.selectAll('path')
-  .data(transformed)
-  .join('path')
-  .attr('d', renderer.draw);
+svg.selectAll('path').data(transformed).join('path').attr('d', renderer.draw);
 ```
 
-#### triangles3D().x(_x_)
+#### .x(_x_)
 
-If _x_ is specified, sets the _x_ accessor to the specified function or number and returns the **d3-3d** function object. If _x_ is not specified, returns the current _x_ accessor, which defaults to:
+If _x_ is specified, sets the _x_ accessor to the specified function or number and returns the shape instance for chaining. If _x_ is not specified, returns the current _x_ accessor, which defaults to:
+
+**Available on:** All shapes
 
 ```js
 function x(p) {
   return p.x;
 }
-````
+```
 
 This function will be invoked for each point in the input data array.
 
-#### triangles3D().y(_y_)
+#### .y(_y_)
 
-If _y_ is specified, sets the _y_ accessor to the specified function or number and returns the **d3-3d** function object. If _y_ is not specified, returns the current _y_ accessor, which defaults to:
+If _y_ is specified, sets the _y_ accessor to the specified function or number and returns the shape instance for chaining. If _y_ is not specified, returns the current _y_ accessor, which defaults to:
+
+**Available on:** All shapes
 
 ```js
 function y(p) {
@@ -316,9 +356,11 @@ function y(p) {
 
 This function will be invoked for each point in the input data array.
 
-#### triangles3D().z(_z_)
+#### .z(_z_)
 
-If _z_ is specified, sets the _z_ accessor to the specified function or number and returns the **d3-3d** function object. If _z_ is not specified, returns the current _z_ accessor, which defaults to:
+If _z_ is specified, sets the _z_ accessor to the specified function or number and returns the shape instance for chaining. If _z_ is not specified, returns the current _z_ accessor, which defaults to:
+
+**Available on:** All shapes
 
 ```js
 function z(p) {
@@ -328,39 +370,49 @@ function z(p) {
 
 This function will be invoked for each point in the input data array.
 
-#### triangles3D().scale(_scale_)
+#### .scale(_scale_)
 
-If _scale_ is specified, sets the _scale_ to the specified number and returns the **d3-3d** function object. If _scale_ is not specified, returns the current _scale_.
+If _scale_ is specified, sets the _scale_ to the specified number and returns the shape instance for chaining. If _scale_ is not specified, returns the current _scale_.
+
+**Available on:** All shapes
 
 _Default:_ `1`
 
-#### triangles3D().rotateX(_angleX_)
+#### .rotateX(_angleX_)
 
-If _angleX_ is specified, sets _angleX_ to the specified number and returns the **d3-3d** function object. If _angleX_ is not specified, returns the current _angleX_.
+If _angleX_ is specified, sets _angleX_ to the specified number (in radians) and returns the shape instance for chaining. If _angleX_ is not specified, returns the current _angleX_.
+
+**Available on:** All shapes
 
 _Default:_ `0`
 
 _angleX_ should be expressed in radians, for example: `Math.PI / 4`.
 
-#### triangles3D().rotateY(_angleY_)
+#### .rotateY(_angleY_)
 
-If _angleY_ is specified, sets _angleY_ to the specified number and returns the **d3-3d** function object. If _angleY_ is not specified, returns the current _angleY_.
+If _angleY_ is specified, sets _angleY_ to the specified number (in radians) and returns the shape instance for chaining. If _angleY_ is not specified, returns the current _angleY_.
+
+**Available on:** All shapes
 
 _Default:_ `0`
 
 _angleY_ should be expressed in radians, for example: `Math.PI / 4`.
 
-#### triangles3D().rotateZ(_angleZ_)
+#### .rotateZ(_angleZ_)
 
-If _angleZ_ is specified, sets _angleZ_ to the specified number and returns the **d3-3d** function object. If _angleZ_ is not specified, returns the current _angleZ_.
+If _angleZ_ is specified, sets _angleZ_ to the specified number (in radians) and returns the shape instance for chaining. If _angleZ_ is not specified, returns the current _angleZ_.
+
+**Available on:** All shapes
 
 _Default:_ `0`
 
 _angleZ_ should be expressed in radians, for example: `Math.PI / 4`.
 
-#### triangles3D().rotationCenter(_point_)
+#### .rotationCenter(_point_)
 
-Sets the center point around which rotations are performed. This is different from `origin()` which controls the 2D rendering position on the screen.
+Sets the center point around which rotations are performed. This is different from `.origin()` which controls the 2D rendering position on the screen.
+
+**Available on:** All shapes
 
 **Parameters:**
 
@@ -383,9 +435,11 @@ const renderer = triangles3D()
 // The rotation will pivot around (50,50,0) instead of (0,0,0)
 ```
 
-#### triangles3D().origin(_origin_)
+#### .origin(_origin_)
 
-If _origin_ is specified, sets origin to the specified point and returns the **d3-3d** function object. If _origin_ is not specified, returns the current _origin_.
+If _origin_ is specified, sets the 2D rendering origin to the specified point and returns the shape instance for chaining. If _origin_ is not specified, returns the current _origin_.
+
+**Available on:** All shapes
 
 _Default:_ `{ x: 0, y: 0 }`
 
