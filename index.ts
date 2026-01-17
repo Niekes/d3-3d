@@ -11,5 +11,7 @@ export { points3D } from './src/shapes/points';
 export { polygons3D } from './src/shapes/polygons';
 export { triangles3D } from './src/shapes/triangles';
 export { sort } from './src/sort';
+export { ccw } from './src/counter-clockwise';
+export { centroid } from './src/centroid';
 
 export * from './src/types';

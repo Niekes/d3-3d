@@ -10,6 +10,8 @@
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
 [![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+<a href="https://github.com/niekes/d3-3d"><img src="https://img.shields.io/github/stars/niekes/d3-3d" alt="stars" /></a>
+<a href="https://github.com/sponsors/niekes"><img src="https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA" alt="sponsor this project" /></a>
 
 <table>
     <tr style="background-color: #f6f8fa">
@@ -95,6 +97,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 - [.rotateZ()](#rotatezanglez) - set the angle for the z rotation.
 - [.rotationCenter()](#rotationcenterpoint) - set the rotation center.
 - [.origin()](#originorigin) - set the 2D rendering origin.
+- [.rows()](#rowsrows) - set the points per row (gridPlanes3D only).
 
 **Utility Functions:**
 
@@ -224,7 +227,7 @@ All shapes share the same API for configuration, but differ in their input data 
 - **triangles3D**: Each triangle requires exactly 3 points in counter-clockwise order
 - **planes3D**: Each plane requires exactly 4 points in counter-clockwise order
 - **polygons3D**: Each polygon can have any number of points (≥3) in counter-clockwise order
-- **gridPlanes3D**: Input is a flat array of points that forms a grid. **Important:** Grid must have consistent row lengths
+- **gridPlanes3D**: Input is a flat array of points that forms a grid. **Important:** You must specify the number of points per row using [.rows()](#rowsrows) so the library can correctly reconstruct the faces. All rows must have the same length.
 - **cubes3D**: Each cube requires exactly 8 vertices ordered as shown below:
 
 ![cube](assets/cube.png 'Cube')
@@ -443,6 +446,40 @@ If _origin_ is specified, sets the 2D rendering origin to the specified point an
 
 _Default:_ `{ x: 0, y: 0 }`
 
+#### .rows(_rows_)
+
+Sets the number of points per row (columns) for `gridPlanes3D`. Since a grid is passed as a flat array, the library needs to know how many points constitute one horizontal line to correctly create the rectangular faces.
+
+**Available on:** `gridPlanes3D`
+
+**Parameters:**
+
+- `rows?: number` - Number of points per row
+
+**Returns:**
+
+- If called without arguments: current `number`
+- If called with arguments: `this` (for chaining)
+
+_Default:_ `1`
+
+**Example:**
+
+```typescript
+const points = [
+  { x: 0, y: 0, z: 0 },
+  { x: 1, y: 0, z: 0 },
+  { x: 2, y: 0, z: 0 }, // Row 0
+  { x: 0, y: 0, z: 1 },
+  { x: 1, y: 0, z: 1 },
+  { x: 2, y: 0, z: 1 } // Row 1
+];
+
+const grid = gridPlanes3D()
+  .rows(3) // 3 points per row
+  .data(points);
+```
+
 ## Utility Functions
 
 ### sort()
@@ -576,8 +613,6 @@ const result = renderer.data(data); // Explicit .data() method
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=niekes/d3-3d&type=date&legend=bottom-right)](https://www.star-history.com/#niekes/d3-3d&type=date&legend=bottom-right)
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A3QJPZ9)
 
 <!-- Definitions -->
 
