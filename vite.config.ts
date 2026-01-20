@@ -17,7 +17,8 @@ export default defineConfig({
             }
         },
         sourcemap: true,
-        outDir: 'build'
+        outDir: 'build',
+        emptyOutDir: false
     },
 
     // Test configuration
