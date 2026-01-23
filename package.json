@@ -1,6 +1,6 @@
 {
     "name": "d3-3d",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "description": "D3.js plugin for 3d visualization written in Typescript",
     "keywords": [
         "d3",
@@ -20,12 +20,12 @@
     },
     "type": "module",
     "main": "build/d3-3d.js",
-    "module": "build/d3-3d.js",
+    "module": "build/d3-3d.es.js",
     "types": "build/index.d.ts",
     "exports": {
         ".": {
             "types": "./build/index.d.ts",
-            "import": "./build/d3-3d.js",
+            "import": "./build/d3-3d.es.js",
             "require": "./build/d3-3d.js"
         }
     },
