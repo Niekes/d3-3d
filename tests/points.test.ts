@@ -91,4 +91,11 @@ describe('points3D', () => {
 
         expect(points.data(data)[0].projected).toEqual({ x: 100, y: 100 });
     });
+
+    test('rotates point 0|0|1 along y axis by 90° and projects onto screen', () => {
+        const data = [{ x: 0, y: 0, z: 1 }];
+        const points = points3D().rotateY(Math.PI / 2);
+
+        expect(points.data(data)[0].projected).toEqual({ x: 1, y: 0 });
+    });
 });
