@@ -34,7 +34,7 @@ export default defineConfig({
                         { text: 'Bar chart', link: '/examples/bar-chart' },
                         { text: 'Scatter plot', link: '/examples/scatter-plot' },
                         { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
-                        { text: 'Sphere', link: '/examples/sphere' },
+                        { text: 'Solar system', link: '/examples/solar-system' },
                         { text: 'Iso stack', link: '/examples/iso-stack' },
                         { text: 'Office tower', link: '/examples/iso-tower' }
                     ]
