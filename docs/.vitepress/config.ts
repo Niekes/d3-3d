@@ -30,6 +30,7 @@ export default defineConfig({
                     text: 'Examples',
                     items: [
                         { text: 'Overview', link: '/examples/' },
+                        { text: 'Surface plot', link: '/examples/surface-plot' },
                         { text: 'Iso stack', link: '/examples/iso-stack' },
                         { text: 'Office tower', link: '/examples/iso-tower' }
                     ]

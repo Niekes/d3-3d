@@ -1,6 +1,11 @@
 {
     "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
 
+    // The documentation figures are a dev surface of the repository: the
+    // shipped package never imports d3, so the docs examples may use it while
+    // it stays a devDependency.
+    "ignoreDependencies": ["d3"],
+
     // The public entry point of the package.
     "entry": ["index.ts", "docs/examples/**/*.ts"],
 
