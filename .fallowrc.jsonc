@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
 
     // The public entry point of the package.
-    "entry": ["index.ts"],
+    "entry": ["index.ts", "docs/examples/**/*.ts"],
 
     // The library template. Every rule that can catch a violation of the
     // documented architecture is an error, so the gates fail the build.
@@ -30,11 +30,13 @@
     //   src/*          core        ->  core
     //   tests/*        tests       ->  public-api, shapes, core
     //   scripts/*      tooling     ->  (nothing)
+    //   docs/*         docs        ->  public-api, shapes, core
     //
     // Dependencies point inwards only. `core` never imports from `shapes` or
     // `draw`; `draw` never imports from `shapes`; the tooling never imports
     // from the library at all; and the test suite never reaches past the
-    // public API into the `draw` helpers.
+    // public API into the `draw` helpers. The docs zone reaches the library
+    // through the public API like the tests do.
     "boundaries": {
         "zones": [
             { "name": "public-api", "patterns": ["index.ts"] },
@@ -42,7 +44,8 @@
             { "name": "draw", "patterns": ["src/draw/**"] },
             { "name": "core", "patterns": ["src/**/*.ts"] },
             { "name": "tests", "patterns": ["tests/**"] },
-            { "name": "tooling", "patterns": ["scripts/**"] }
+            { "name": "tooling", "patterns": ["scripts/**"] },
+            { "name": "docs", "patterns": ["docs/**"] }
         ],
         "rules": [
             { "from": "public-api", "allow": ["shapes", "core"] },
@@ -50,7 +53,8 @@
             { "from": "draw", "allow": ["draw", "core"] },
             { "from": "core", "allow": ["core"] },
             { "from": "tests", "allow": ["public-api", "shapes", "core"] },
-            { "from": "tooling", "allow": [] }
+            { "from": "tooling", "allow": [] },
+            { "from": "docs", "allow": ["public-api", "shapes", "core"] }
         ],
         // Every analysed file has to belong to a zone, so a new module cannot
         // be dropped into src/ without being placed in the architecture.
