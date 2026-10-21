@@ -33,6 +33,7 @@ export default defineConfig({
                         ...[
                             { text: 'Surface plot', link: '/examples/surface-plot' },
                             { text: 'Bar chart', link: '/examples/bar-chart' },
+                            { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Solar system', link: '/examples/solar-system' },
