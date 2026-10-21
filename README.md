@@ -11,7 +11,7 @@
 [![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
 <a href="https://github.com/niekes/d3-3d"><img src="https://img.shields.io/github/stars/niekes/d3-3d" alt="stars" /></a>
-<a href="https://github.com/sponsors/niekes"><img src="https://img.shields.io/badge/sponsor-30363D?logo=GitHub-Sponsors&logoColor=#EA4AAA" alt="sponsor this project" /></a>
+<a href="https://github.com/sponsors/niekes"><img src="https://img.shields.io/github/sponsors/niekes?logo=GitHub+Sponsors&logoColor=%23EA4AAA&style=flat" alt="GitHub Sponsors" /></a>
 
 <table>
     <tr style="background-color: #f6f8fa">
@@ -27,6 +27,29 @@
 </table>
 
 See more [examples][examples]
+
+## Sponsor
+
+**d3-3d** is free, and it always will be. There is no company behind it — just one maintainer working in spare time — so the cost of keeping it alive is paid for by the people who depend on it.
+
+If d3-3d saves you time, [become a sponsor](https://github.com/sponsors/niekes).
+
+| Tier        | What you get                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| **$5/mo**   | Your name in the [sponsors list](#sponsors) and my sincere thanks                           |
+| **$25/mo**  | The above, plus your logo in the README and on the docs site, and priority issue triage     |
+| **$100/mo** | The above, plus direct email access for feature requests and a mention in the release notes |
+
+Where the money goes:
+
+- **Issue triage and bug fixes.** Sponsorship buys a reply within a couple of days instead of whenever I get to it.
+- **Types that stay correct.** Keeping `index.d.ts` accurate as d3, TypeScript and the DOM move on.
+- **The documentation site.** Hosting, builds and the example gallery.
+- **Time for new work.** More shapes, better performance, and eventually a WebGL renderer.
+
+Prefer a one-off? The [sponsor page](https://github.com/sponsors/niekes) also takes one-time contributions.
+
+**Need a company sponsorship or an invoice?** [Get in touch](mailto:s@niekes.com).
 
 ## Features
 
@@ -210,6 +233,7 @@ All shapes share the same API for configuration, but differ in their input data 
 | **polygons3D**   | `<path>`    | `Datum[][]` - Array of N-point arrays  | ✅        | ✅             |
 | **gridPlanes3D** | `<path>`    | `Datum[]` - Grid of points\*           | ✅        | ✅             |
 | **cubes3D**      | `<path>`    | `Datum[][]` - Array of 8-vertex arrays | ✅        | ✅ (per face)  |
+| **iso3D**        | `<path>`    | `IsoBoxSpec[]` - Array of boxes        | ❌        | ❌             |
 
 **Notes:**
 
@@ -229,6 +253,56 @@ All shapes share the same API for configuration, but differ in their input data 
 - **cubes3D**: Each cube requires exactly 8 vertices ordered as shown below:
 
 ![cube](assets/cube.png 'Cube')
+
+### Isometric scenes
+
+`iso3D` draws an isometric scene. Where the other shapes project a polygon,
+it hands out the **affine frame of a face**: the SVG matrix that carries the
+local coordinates of the face onto the screen. Because the projection is
+orthographic, the image of a plane stays affine, so the browser rasterises
+the transform and the projection itself costs nothing at runtime.
+
+```typescript
+import { iso3D, sort } from 'd3-3d';
+
+// The isometric view: the angles that map the world axes onto the 120
+// degree screen axes.
+const iso = iso3D()
+    .rotateX(Math.atan(Math.SQRT2))
+    .rotateZ(Math.PI / 4)
+    .scale(Math.sqrt(1.5));
+
+// Boxes: the visible side and the top face, plus the frame of every face.
+const boxes = iso.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20, r: 6 }]);
+
+// A face: everything inside the group is drawn in the local coordinates
+// of the face.
+const top = iso.plane({
+    origin: { x: 0, y: 0, z: 20 },
+    u: { x: 1, y: 0, z: 0 },
+    v: { x: 0, y: 1, z: 0 }
+});
+
+svg.append('g').attr('transform', top.matrix).append('text').text('Hello');
+```
+
+The depth of a box is the `z` of its rotated centre, so the boxes can be
+sorted with the same [`sort()`](#sort) utility as every other shape:
+
+```typescript
+const sorted = boxes.sort(sort);
+```
+
+| Method             | Returns                                            |
+| ------------------ | -------------------------------------------------- |
+| `.data(boxes)`     | The boxes with their `wall`, `top` and face frames |
+| `.plane(spec)`     | The affine frame of a face: `{ matrix }`           |
+| `.path(points)`    | The path of a 3D polyline                          |
+| `.project(points)` | The screen coordinates of 3D points                |
+| `.frame(points)`   | The `viewBox` that frames a projected scene        |
+
+See the [iso stack example](https://niekes.github.io/d3-3d/examples/iso-stack)
+for a complete scene.
 
 ### API Methods
 
@@ -607,6 +681,12 @@ const result = renderer.data(data); // Explicit .data() method
     .join('path')
     .attr('d', triangles.draw);
 ```
+
+## Sponsors
+
+Thank you to the people who make this possible. Sponsors at $25/mo and above get their logo in this README and on the docs site; everyone gets their name below.
+
+<!-- New sponsors go below this line, one per line. -->
 
 ## Star History
 

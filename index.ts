@@ -6,6 +6,7 @@
 // Shape factories - one per shape module under src/shapes.
 export { cubes3D } from './src/shapes/cubes';
 export { gridPlanes3D } from './src/shapes/gridPlanes';
+export { iso3D } from './src/shapes/iso';
 export { lines3D } from './src/shapes/lines';
 export { lineStrips3D } from './src/shapes/lineStrips';
 export { planes3D } from './src/shapes/planes';
@@ -31,6 +32,7 @@ export type { ShapeInstance } from './src/shapes/shape';
 // Shape result types - one per shape module under src/shapes.
 export type { Cube, CubeFace, CubeFaceName } from './src/shapes/cubes';
 export type { GridPlane } from './src/shapes/gridPlanes';
+export type { IsoBox, IsoPlane } from './src/shapes/iso';
 export type { Line } from './src/shapes/lines';
 export type { LineStrip } from './src/shapes/lineStrips';
 export type { Plane } from './src/shapes/planes';
@@ -41,6 +43,7 @@ export type { Triangle } from './src/shapes/triangles';
 // Shape instance types - one per shape module under src/shapes.
 export type { Cubes3DInstance } from './src/shapes/cubes';
 export type { GridPlanes3DInstance } from './src/shapes/gridPlanes';
+export type { Iso3DInstance } from './src/shapes/iso';
 export type { Lines3DInstance } from './src/shapes/lines';
 export type { LineStrips3DInstance } from './src/shapes/lineStrips';
 export type { Planes3DInstance } from './src/shapes/planes';

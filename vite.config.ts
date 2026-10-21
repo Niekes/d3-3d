@@ -15,9 +15,11 @@ const config: UserConfig = {
         singleQuote: true,
         printWidth: 100,
         trailingComma: 'none',
-        tabWidth: 4
+        tabWidth: 4,
+        ignorePatterns: ['docs/.vitepress/cache/**', 'docs/.vitepress/dist/**']
     },
     lint: {
+        ignorePatterns: ['docs/.vitepress/cache/**', 'docs/.vitepress/dist/**'],
         jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
         rules: { 'vite-plus/prefer-vite-plus-imports': 'error' },
         options: { typeAware: true, typeCheck: true }

@@ -8,3 +8,5 @@ npm-debug.log
 *.tgz
 .vitest/
 .opencode/
+docs/.vitepress/dist/
+docs/.vitepress/cache/

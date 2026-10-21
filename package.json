@@ -11,12 +11,19 @@
         "typescript",
         "visualization"
     ],
-    "homepage": "https://github.com/niekes/d3-3d",
+    "homepage": "https://niekes.github.io/d3-3d/",
+    "bugs": {
+        "url": "https://github.com/Niekes/d3-3d/issues"
+    },
     "license": "BSD-3-Clause",
     "author": "Niekes (https://niekes.com)",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/niekes/d3-3d.git"
+    },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/niekes"
     },
     "files": [
         "build/d3-3d.js",
@@ -46,6 +53,9 @@
         "test:watch": "vp test",
         "test:ui": "vp test --ui",
         "coverage": "vp test run --coverage",
+        "docs:dev": "vitepress dev docs",
+        "docs:build": "vitepress build docs",
+        "docs:preview": "vitepress preview docs",
         "lint:template": "node scripts/check-template.mjs",
         "lint:fallow": "fallow dead-code --ci --format ${FALLOW_FORMAT:-human} && fallow health --ci --coverage-gaps --format ${FALLOW_FORMAT:-human} && fallow dupes --ci --format ${FALLOW_FORMAT:-human}",
         "lint": "npm run lint:template && npm run lint:fallow",
@@ -54,13 +64,16 @@
         "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.es.js build/d3-3d.cjs"
     },
     "devDependencies": {
+        "@types/d3": "^7.4.3",
         "@types/node": "^26.6.5",
         "@vitest/coverage-v8": "5.0.5",
         "@vitest/ui": "5.0.5",
+        "d3": "^7.9.0",
         "fallow": "3.34.1",
         "typescript": "^7.0.2",
         "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
         "vite-plus": "1.3.0",
+        "vitepress": "^2.0.0-alpha.20",
         "vitest": "5.0.5"
     },
     "overrides": {
