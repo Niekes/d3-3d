@@ -91,7 +91,10 @@ export function surfaceFigure(
         group.selectAll<SVGPathElement, GridPlane<Point3D>>('path').sort(sort);
     }
 
-    /** Draws a sampled field, by default through the fade-in of a new surface. */
+    /**
+     * Draws a sampled field, by default through the intro transition: the
+     * first field fades in, every later one morphs the surface into it.
+     */
     function show(field: Point3D[], duration: number = INTRO_DURATION): void {
         points = field;
         draw(surface.data(points), duration);

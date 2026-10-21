@@ -1,4 +1,3 @@
-/// <reference types="vite/client" />
 import {
     interpolateCividis,
     interpolateSpectral,
@@ -85,8 +84,9 @@ export function mountTerrainPlot(host: HTMLElement): () => void {
         tooltip.classList.toggle('is-left', left > host.clientWidth / 2);
     }
 
-    /** Samples the terrain the sliders describe and draws it. */
+    /** Samples the terrain the sliders describe, draws it and hides the stale tooltip. */
     function update(duration?: number): void {
+        tooltip.hidden = true;
         for (const input of [amplitude, frequency]) {
             input.nextElementSibling!.textContent = input.value;
         }

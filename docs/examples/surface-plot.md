@@ -23,7 +23,7 @@ onBeforeUnmount(() => {
 <div ref="host" class="surface-plot"></div>
 
 **Drag the figure** to rotate it. The button samples a new wave with a
-random amplitude and fades it in.
+random amplitude and morphs the surface into it.
 
 ## A surface is a grid of quads
 
@@ -88,8 +88,8 @@ so the order has to be recomputed with every frame.
 
 The paths are joined on the stable `plane` key, so all 961 quads are created
 once and never enter or exit again. A rotation only updates the `d`
-attribute and the fill of the existing paths, and the new surface fades in
-through the same transition:
+attribute and the fill of the existing paths. The first surface fades in,
+and every new wave morphs the surface through the same transition:
 
 ```ts
 const quads = group.selectAll('path').data(planes, (d) => d.plane);
