@@ -1,5 +1,14 @@
-import { iso3D, sort } from '../../index';
+import { sort } from '../../index';
 import type { IsoBox, IsoBoxSpec } from '../../index';
+import {
+    isoFaces,
+    isoFilters,
+    isoKeyGuard,
+    isoMount,
+    isoScene,
+    isoStage,
+    slits
+} from './isoCommon';
 
 /*
  * The system stack: five language cartridges wired to an input interpreter
@@ -8,12 +17,6 @@ import type { IsoBox, IsoBoxSpec } from '../../index';
  * The whole scene is static. It is built once, the interaction only toggles
  * classes, so a running figure costs nothing.
  */
-
-// The isometric view: the angles that map the world axes onto the 120 degree
-// screen axes of a true isometric projection.
-const AX = Math.atan(Math.SQRT2);
-const AZ = Math.PI / 4;
-const SCALE = Math.sqrt(1.5);
 
 // The scene, in world units.
 const SX = 200;
@@ -60,26 +63,6 @@ const CORNERS = [
 ];
 
 /**
- * Repeated detail lines inside a face local group.
- */
-function slits(
-    a0: number,
-    a1: number,
-    step: number,
-    b0: number,
-    b1: number,
-    vertical = true
-): string {
-    let out = '';
-    for (let a = a0; a <= a1 + 1e-6; a += step) {
-        out += vertical
-            ? `<line class="detail" x1="${a}" y1="${b0}" x2="${a}" y2="${b1}"/>`
-            : `<line class="detail" x1="${b0}" y1="${a}" x2="${b1}" y2="${a}"/>`;
-    }
-    return out;
-}
-
-/**
  * The path of a wire: from the side of a cartridge to the front of the
  * interpreter, with a rounded corner.
  */
@@ -106,7 +89,7 @@ function wirePoints(i: number) {
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountIsoStack(host: HTMLElement): () => void {
-    const iso = iso3D().rotateX(AX).rotateZ(AZ).scale(SCALE);
+    const iso = isoScene();
     const boxes = iso.data(SOLIDS);
     const sorted = SOLIDS.map((spec, index) => ({
         spec,
@@ -115,14 +98,7 @@ export function mountIsoStack(host: HTMLElement): () => void {
     })).sort(sort);
 
     const frame = iso.frame(CORNERS);
-    const top = (x: number, y: number, z: number) =>
-        iso.plane({ origin: { x, y, z }, u: { x: 1, y: 0, z: 0 }, v: { x: 0, y: 1, z: 0 } }).matrix;
-    const front = (x: number, y: number, z: number) =>
-        iso.plane({ origin: { x, y, z }, u: { x: 1, y: 0, z: 0 }, v: { x: 0, y: 0, z: -1 } })
-            .matrix;
-    const side = (x: number, y: number, z: number) =>
-        iso.plane({ origin: { x, y, z }, u: { x: 0, y: -1, z: 0 }, v: { x: 0, y: 0, z: -1 } })
-            .matrix;
+    const { top, front, side } = isoFaces(iso);
 
     let svg = '';
 
@@ -173,15 +149,7 @@ export function mountIsoStack(host: HTMLElement): () => void {
     host.innerHTML = `<svg class="iso-svg" viewBox="${frame.viewBox}" role="img"
       aria-label="Exploded isometric architecture: five language cartridges wired to an
       input interpreter above three worker slabs, topped by a supervisor and a service.">
-      <defs>
-        <filter id="iso-soft" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000">
-          <feGaussianBlur stdDeviation="2.2" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="iso-bloom" filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="6000" height="6000">
-          <feGaussianBlur stdDeviation="9"/>
-        </filter>
-      </defs>
+      ${isoFilters()}
       ${svg}
     </svg>`;
 
@@ -287,7 +255,7 @@ function wire(host: HTMLElement): () => void {
         resp: 0,
         last: ''
     };
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    const stage = isoStage();
 
     const query = <T extends Element>(selector: string) => host.querySelector<T>(selector);
 
@@ -300,23 +268,7 @@ function wire(host: HTMLElement): () => void {
     const sup = query('#sup');
     const rpc = query('#rpc');
 
-    const after = (ms: number, fn: () => void) => {
-        timers.push(setTimeout(fn, ms));
-    };
-
-    const replay = (el: Element | null) => {
-        if (!el) return;
-        el.classList.remove('go');
-        void el.getBoundingClientRect();
-        el.classList.add('go');
-    };
-
-    const flash = (el: Element | null, ms = 160) => {
-        if (!el) return;
-        el.classList.add('down', 'lit');
-        after(110, () => el.classList.remove('down'));
-        after(ms, () => el.classList.remove('lit'));
-    };
+    const { after, replay, flash } = stage;
 
     const render = () => {
         wires.forEach((w, i) => w?.classList.toggle('hot', state.wire[i] > 0));
@@ -374,21 +326,10 @@ function wire(host: HTMLElement): () => void {
     };
 
     const onKey = (event: KeyboardEvent) => {
-        if (event.repeat) return;
-        const target = event.target as Element | null;
-        if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA')) return;
+        if (!isoKeyGuard(event)) return;
         const n = Number(event.key);
         if (n >= 1 && n <= LANGS.length) send(n - 1);
     };
 
-    host.addEventListener('click', onClick);
-    window.addEventListener('keydown', onKey);
-    render();
-
-    return () => {
-        host.removeEventListener('click', onClick);
-        window.removeEventListener('keydown', onKey);
-        timers.forEach(clearTimeout);
-        host.innerHTML = '';
-    };
+    return isoMount(host, { onClick, onKey, render, dispose: stage.dispose });
 }

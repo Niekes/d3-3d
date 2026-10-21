@@ -3,6 +3,7 @@
 ## In the documentation
 
 - [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
+- [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
 
 ## On CodePen
 
