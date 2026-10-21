@@ -30,7 +30,7 @@ class Points3DRenderer<Datum = Point3D>
                 rotateCenter: this.rotationCenter()
             });
 
-            const projected = orthographic(startPoint, {
+            const projected = orthographic(rotated, {
                 scale: this.scale(),
                 origin: this.origin()
             });
