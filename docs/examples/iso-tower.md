@@ -65,6 +65,23 @@ spire to hang the beacon on it:
 const beacon = iso.project([{ x: 104, y: 72, z: 336 }])[0];
 ```
 
+## The whole source
+
+The figure lives in
+[docs/examples/isoTower.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoTower.ts)
+in the repository. It shares the projection, the face frames and the filters
+with the [iso stack](/examples/iso-stack), that part lives in
+[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCommon.ts).
+Both files, ready to copy:
+
+The shared parts:
+
+<<< @/examples/isoCommon.ts
+
+The figure itself:
+
+<<< @/examples/isoTower.ts
+
 <style>
 .iso-tower {
     --iso-body: #ececeb;

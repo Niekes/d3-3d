@@ -84,6 +84,23 @@ so a running figure does no projection and writes nothing to the DOM per
 frame. The whole figure is about 250 lines of SVG and a few dozen
 elements.
 
+## The whole source
+
+The figure lives in
+[docs/examples/isoStack.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoStack.ts)
+in the repository. It shares the projection, the face frames and the filters
+with the [office tower](/examples/iso-tower), that part lives in
+[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCommon.ts).
+Both files, ready to copy:
+
+The shared parts:
+
+<<< @/examples/isoCommon.ts
+
+The figure itself:
+
+<<< @/examples/isoStack.ts
+
 <style>
 .iso-stack {
     --iso-body: #ececeb;
