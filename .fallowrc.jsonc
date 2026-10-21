@@ -73,8 +73,10 @@
         }
     },
     // Test files have large `describe()` blocks which are not a code
-    // quality concern. Ignore them from the unit-size penalty.
+    // quality concern. The documentation example mounts into the DOM, it is
+    // exercised by the documentation build and not by a unit test. Ignore
+    // both from the unit-size penalty and the coverage report.
     "health": {
-        "ignore": ["tests/**"]
+        "ignore": ["tests/**", "docs/**"]
     }
 }
