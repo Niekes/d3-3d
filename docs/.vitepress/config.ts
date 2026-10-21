@@ -42,6 +42,7 @@ export default defineConfig({
                             { text: 'Network explorer', link: '/examples/network-explorer' },
                             { text: 'Projection playground', link: '/examples/projection-playground' },
                             { text: 'Solar system', link: '/examples/solar-system' },
+                            { text: 'Mesh inspector', link: '/examples/mesh-inspector' },
                             { text: 'Office tower', link: '/examples/iso-tower' }
                         ].sort((a, b) => a.text.localeCompare(b.text))
                     ]
