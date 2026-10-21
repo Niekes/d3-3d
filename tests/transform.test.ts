@@ -33,7 +33,7 @@ describe('transform', () => {
 
         expect(result).not.toBe(data);
         expect(result[0]).not.toBe(data[0]);
-        // @ts-ignore
+        // @ts-expect-error
         expect(data[0].rotated).toBeUndefined();
     });
 

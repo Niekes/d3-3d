@@ -17,6 +17,6 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["index.ts", "src/**/*"],
-    "exclude": ["node_modules", "build", "tests"]
+    "include": ["index.ts", "src/**/*", "tests/**/*", "vite.config.ts"],
+    "exclude": ["node_modules", "build"]
 }

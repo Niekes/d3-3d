@@ -4,7 +4,7 @@ import { lines3D } from '../index';
 describe('lines3D', () => {
     test("doesn't have a draw function", () => {
         const lines = lines3D();
-        // @ts-ignore
+        // @ts-expect-error
         expect(lines.draw).toBeUndefined();
     });
 
