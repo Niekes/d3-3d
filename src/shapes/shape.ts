@@ -1,4 +1,4 @@
-import { Point2D, Point3D } from '../types';
+import { Point2D, Point3D, TransformOptions } from '../types';
 import { x as px, y as py, z as pz } from '../point';
 
 export interface ShapeInstance<Datum = Point3D> {
@@ -96,5 +96,25 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     z(z: (point: Datum) => number): this;
     z(z?: (point: Datum) => number): this | ((point: Datum) => number) {
         return typeof z === 'function' ? ((this._z = z), this) : this._z;
+    }
+
+    /**
+     * The transform options described by the current renderer state.
+     *
+     * Every shape module transforms its input the same way, so the wiring
+     * lives here instead of being repeated in each shape.
+     */
+    protected transformOptions(): TransformOptions<Datum> {
+        return {
+            origin: this.origin(),
+            rotateCenter: this.rotationCenter(),
+            rotateX: this.rotateX(),
+            rotateY: this.rotateY(),
+            rotateZ: this.rotateZ(),
+            scale: this.scale(),
+            x: this.x(),
+            y: this.y(),
+            z: this.z()
+        };
     }
 }

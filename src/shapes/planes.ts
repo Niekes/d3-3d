@@ -10,7 +10,7 @@ export type Plane<Datum> = TransformedPoint<Datum>[] & {
     centroid: Point3D;
 };
 
-interface Planes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface Planes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Plane<Datum>[];
     draw(planes: Datum[]): string;
 }
@@ -21,17 +21,7 @@ class Planes3DRenderer<Datum = Point3D>
 {
     data(data: Datum[][]): Plane<Datum>[] {
         return data.map((plane) => {
-            const transformedPlane = transform(plane, {
-                origin: this.origin(),
-                rotateCenter: this.rotationCenter(),
-                rotateX: this.rotateX(),
-                rotateY: this.rotateY(),
-                rotateZ: this.rotateZ(),
-                scale: this.scale(),
-                x: this.x(),
-                y: this.y(),
-                z: this.z()
-            }) as Plane<Datum>;
+            const transformedPlane = transform(plane, this.transformOptions()) as Plane<Datum>;
 
             transformedPlane.ccw = ccw(transformedPlane);
             transformedPlane.centroid = centroid(transformedPlane);

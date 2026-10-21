@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { sort } from '../src/sort';
+import { sort } from '../index';
 
 describe('sort', () => {
     test('works properly', () => {

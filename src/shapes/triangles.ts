@@ -10,7 +10,7 @@ export type Triangle<Datum> = TransformedPoint<Datum>[] & {
     centroid: Point3D;
 };
 
-interface Triangles3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface Triangles3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Triangle<Datum>[];
     draw(triangles: Datum[]): string;
 }
@@ -21,17 +21,7 @@ class Triangles3DRenderer<Datum = Point3D>
 {
     data(data: Datum[][]): Triangle<Datum>[] {
         return data.map((triangle) => {
-            const transformedTriangles = transform(triangle, {
-                origin: this.origin(),
-                rotateCenter: this.rotationCenter(),
-                rotateX: this.rotateX(),
-                rotateY: this.rotateY(),
-                rotateZ: this.rotateZ(),
-                scale: this.scale(),
-                x: this.x(),
-                y: this.y(),
-                z: this.z()
-            }) as Triangle<Datum>;
+            const transformedTriangles = transform(triangle, this.transformOptions()) as Triangle<Datum>;
 
             transformedTriangles.ccw = ccw(transformedTriangles);
             transformedTriangles.centroid = centroid(transformedTriangles);

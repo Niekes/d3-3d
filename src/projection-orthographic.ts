@@ -1,6 +1,6 @@
 import { Point3D, Point2D } from './types';
 
-interface OrthographicOptions {
+export interface OrthographicOptions {
     origin: Point2D;
     scale: number;
 }

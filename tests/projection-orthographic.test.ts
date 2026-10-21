@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { orthographic } from '../src/projection-orthographic';
+import { orthographic } from '../index';
 
 describe('projection-orthographic', () => {
     describe('orthographic', () => {

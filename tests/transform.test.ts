@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
-import { transform } from '../src/transform';
-import { Point3D, TransformOptions } from '../src/types';
+import { transform } from '../index';
+import { Point3D, TransformOptions } from '../index';
 
 describe('transform', () => {
     const defaultOptions: TransformOptions<Point3D> = {

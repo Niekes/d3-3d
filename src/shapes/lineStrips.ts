@@ -8,7 +8,7 @@ export type LineStrip<Datum> = TransformedPoint<Datum>[] & {
     centroid: Point3D;
 };
 
-interface LineStrips3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface LineStrips3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): LineStrip<Datum>[];
     draw(lineStrips: Datum[]): string;
 }
@@ -22,17 +22,7 @@ class LineStrips3DRenderer<Datum = Point3D>
             const midpoint = strip.length / 2;
             const truncatedMidpoint = Math.trunc(midpoint);
 
-            const transformedLineStrip = transform(strip, {
-                origin: this.origin(),
-                rotateCenter: this.rotationCenter(),
-                rotateX: this.rotateX(),
-                rotateY: this.rotateY(),
-                rotateZ: this.rotateZ(),
-                scale: this.scale(),
-                x: this.x(),
-                y: this.y(),
-                z: this.z()
-            }) as LineStrip<Datum>;
+            const transformedLineStrip = transform(strip, this.transformOptions()) as LineStrip<Datum>;
 
             transformedLineStrip.centroid =
                 truncatedMidpoint === midpoint

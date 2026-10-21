@@ -7,7 +7,7 @@ export type Point<Datum> = TransformedPoint<Datum> & {
     centroid: Point3D;
 };
 
-interface Points3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface Points3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[]): Point<Datum>[];
 }
 

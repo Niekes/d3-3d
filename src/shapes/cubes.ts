@@ -18,7 +18,7 @@ export type Cube<Datum = Point3D> = TransformedPoint<Datum>[] & {
     centroid?: Point3D;
 };
 
-interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Cube<Datum>[];
     draw(face: TransformedPoint<Datum>[]): string;
 }
@@ -40,17 +40,7 @@ class Cubes3DRenderer<Datum = Point3D>
 {
     data(data: Datum[][]): Cube<Datum>[] {
         return data.map((cube) => {
-            const transformedCube = transform(cube, {
-                origin: this.origin(),
-                rotateCenter: this.rotationCenter(),
-                rotateX: this.rotateX(),
-                rotateY: this.rotateY(),
-                rotateZ: this.rotateZ(),
-                scale: this.scale(),
-                x: this.x(),
-                y: this.y(),
-                z: this.z()
-            }) as Cube<Datum>;
+            const transformedCube = transform(cube, this.transformOptions()) as Cube<Datum>;
 
             const front = createFace(
                 [transformedCube[0], transformedCube[1], transformedCube[2], transformedCube[3]],
