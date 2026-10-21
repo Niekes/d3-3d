@@ -6,6 +6,7 @@
 
 - `.data(data)` — transform and compute properties for your data.
 - `.draw()` — draw the SVG path for a shape.
+- `.unproject(point, planePoint, planeNormal)` — the world point on a plane under a screen point, or `null` when the plane is seen edge-on.
 
 ## Configuration Methods
 

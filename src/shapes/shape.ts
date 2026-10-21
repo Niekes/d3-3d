@@ -1,5 +1,6 @@
 import { Point2D, Point3D, TransformOptions } from '../types';
 import { x as px, y as py, z as pz } from '../point';
+import { unproject } from '../unproject';
 
 export interface ShapeInstance<Datum = Point3D> {
     scale(): number;
@@ -29,6 +30,8 @@ export interface ShapeInstance<Datum = Point3D> {
     rotationCenter(): Point3D;
     rotationCenter(center: Point3D): this;
     rotationCenter(center?: Point3D): this | Point3D;
+
+    unproject(point: Point2D, planePoint: Point3D, planeNormal: Point3D): Point3D | null;
 }
 
 export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
@@ -98,6 +101,15 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     z(z: (point: Datum) => number): this;
     z(z?: (point: Datum) => number): this | ((point: Datum) => number) {
         return typeof z === 'function' ? ((this._z = z), this) : this._z;
+    }
+
+    /**
+     * The world point on the plane through `planePoint` with the normal
+     * `planeNormal` that this renderer projects to the screen point `point`,
+     * or `null` when the plane is seen edge-on.
+     */
+    unproject(point: Point2D, planePoint: Point3D, planeNormal: Point3D): Point3D | null {
+        return unproject(point, planePoint, planeNormal, this.transformOptions());
     }
 
     /**

@@ -108,6 +108,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 
 - [.data()](#data-data) - transform and compute properties for your data.
 - [.draw()](#drawshape) - draw SVG path for a shape.
+- [.unproject()](#unprojectpoint-planepoint-planenormal) - map a screen point back to a 3D point on a plane.
 
 **Configuration Methods:**
 
@@ -591,6 +592,35 @@ If _origin_ is specified, sets the 2D rendering origin to the specified point an
 **Available on:** All shapes
 
 _Default:_ `{ x: 0, y: 0 }`
+
+#### .unproject(_point_, _planePoint_, _planeNormal_)
+
+Maps a screen point back into the scene: returns the world point on the plane through _planePoint_ with the normal _planeNormal_ that the shape projects to _point_. It is the inverse of `.data()` for points on a known plane, which is what dragging along a floor or reading the coordinates under the pointer needs.
+
+**Available on:** All shapes
+
+**Parameters:**
+
+- `point: Point2D` - The screen point, in the same coordinates as `projected`
+- `planePoint: Point3D` - Any point of the plane, in world coordinates
+- `planeNormal: Point3D` - The normal of the plane, need not be normalized
+
+**Returns:**
+
+- The `Point3D` on the plane, in world coordinates (the values the `x`, `y` and `z` accessors return)
+- `null` if the plane is seen edge-on
+
+**Example:**
+
+```typescript
+const cubes = cubes3D().scale(40).origin({ x: 480, y: 250 }).rotateX(-0.5).rotateY(0.6);
+
+svg.on('pointermove', (event) => {
+    const [x, y] = d3.pointer(event);
+    // The floor: the plane y = 0.
+    const floor = cubes.unproject({ x, y }, { x: 0, y: 0, z: 0 }, { x: 0, y: 1, z: 0 });
+});
+```
 
 #### .rows(_rows_)
 
