@@ -59,12 +59,13 @@ const iso = iso3D()
 const boxes = iso.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20, r: 6 }]);
 ```
 
-| Method           | Returns                                            |
-| ---------------- | -------------------------------------------------- |
-| `.data(boxes)`   | The boxes with their `wall`, `top` and face frames |
-| `.plane(spec)`   | The affine frame of a face: `{ matrix }`           |
-| `.path(points)`  | The path of a 3D polyline                          |
-| `.frame(points)` | The `viewBox` that frames a projected scene        |
+| Method             | Returns                                            |
+| ------------------ | -------------------------------------------------- |
+| `.data(boxes)`     | The boxes with their `wall`, `top` and face frames |
+| `.plane(spec)`     | The affine frame of a face: `{ matrix }`           |
+| `.path(points)`    | The path of a 3D polyline                          |
+| `.project(points)` | The screen coordinates of 3D points                |
+| `.frame(points)`   | The `viewBox` that frames a projected scene        |
 
 A box is `{ x, y, z, w, d, h, r }`: the corner, the extent along the three
 axes and the corner radius of its plan outline. The depth of a box is the

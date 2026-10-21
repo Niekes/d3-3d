@@ -225,6 +225,16 @@ describe('iso3D', () => {
         expect(Math.abs(box.centroid.z - expected)).toBeLessThan(1e-9);
     });
 
+    test('projects a point onto the screen', () => {
+        const points = iso().project([
+            { x: 0, y: 0, z: 0 },
+            { x: 10, y: 20, z: 30 }
+        ]);
+        expect(points.length).toBe(2);
+        expectClose([points[0].x, points[0].y], reference(0, 0, 0));
+        expectClose([points[1].x, points[1].y], reference(10, 20, 30));
+    });
+
     test('projects a polyline into a path', () => {
         const path = iso().path([
             { x: 0, y: 0, z: 0 },

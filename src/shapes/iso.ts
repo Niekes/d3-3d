@@ -1,4 +1,4 @@
-import { IsoBoxSpec, IsoFrame, IsoPlaneSpec, Point3D, RotationAngles } from '../types';
+import { IsoBoxSpec, IsoFrame, IsoPlaneSpec, Point2D, Point3D, RotationAngles } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { transform } from '../transform';
 import { drawPolygon } from '../draw/drawPolygon';
@@ -32,6 +32,7 @@ export interface Iso3DInstance extends ShapeInstance<Point3D> {
     data(data: IsoBoxSpec[]): IsoBox[];
     plane(spec: IsoPlaneSpec): IsoPlane;
     path(points: Point3D[]): string;
+    project(points: Point3D[]): Point2D[];
     frame(points: Point3D[], margin?: number, aspect?: number): IsoFrame;
 }
 
@@ -54,12 +55,16 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
     }
 
     path(points: Point3D[]): string {
-        return drawPolyline(this.project(points));
+        return drawPolyline(this.apply(points));
+    }
+
+    project(points: Point3D[]): Point2D[] {
+        return this.apply(points).map((point) => point.projected);
     }
 
     frame(points: Point3D[], margin?: number, aspect?: number): IsoFrame {
         return isoFrame(
-            this.project(points).map((p) => p.projected),
+            this.apply(points).map((p) => p.projected),
             margin,
             aspect
         );
@@ -77,9 +82,9 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
         const top = box.z + box.h;
 
         return {
-            centroid: this.project([centerOf(box)])[0].rotated,
-            wall: drawPolygon(this.project(outline.wall)),
-            top: drawPolygon(this.project(outline.top)),
+            centroid: this.apply([centerOf(box)])[0].rotated,
+            wall: drawPolygon(this.apply(outline.wall)),
+            top: drawPolygon(this.apply(outline.top)),
             topPlane: this.plane({
                 origin: { x: box.x, y: box.y, z: top },
                 u: { x: 1, y: 0, z: 0 },
@@ -107,7 +112,7 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
         };
     }
 
-    private project(points: Point3D[]) {
+    private apply(points: Point3D[]) {
         return transform(points, {
             ...this.transformOptions(),
             x: (point) => point.x,

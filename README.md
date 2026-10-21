@@ -34,11 +34,11 @@ See more [examples][examples]
 
 If d3-3d saves you time, [become a sponsor](https://github.com/sponsors/niekes).
 
-| Tier        | What you get                                                                                                         |
-| ----------- | -------------------------------------------------------------------------------------------------------------------- |
-| **$5/mo**   | Your name in the [sponsors list](#sponsors) and my sincere thanks                                                   |
-| **$25/mo**  | The above, plus your logo in the README and on the docs site, and priority issue triage                             |
-| **$100/mo** | The above, plus direct email access for feature requests and a mention in the release notes                          |
+| Tier        | What you get                                                                                |
+| ----------- | ------------------------------------------------------------------------------------------- |
+| **$5/mo**   | Your name in the [sponsors list](#sponsors) and my sincere thanks                           |
+| **$25/mo**  | The above, plus your logo in the README and on the docs site, and priority issue triage     |
+| **$100/mo** | The above, plus direct email access for feature requests and a mention in the release notes |
 
 Where the money goes:
 
@@ -293,12 +293,13 @@ sorted with the same [`sort()`](#sort) utility as every other shape:
 const sorted = boxes.sort(sort);
 ```
 
-| Method           | Returns                                            |
-| ---------------- | -------------------------------------------------- |
-| `.data(boxes)`   | The boxes with their `wall`, `top` and face frames |
-| `.plane(spec)`   | The affine frame of a face: `{ matrix }`           |
-| `.path(points)`  | The path of a 3D polyline                          |
-| `.frame(points)` | The `viewBox` that frames a projected scene        |
+| Method             | Returns                                            |
+| ------------------ | -------------------------------------------------- |
+| `.data(boxes)`     | The boxes with their `wall`, `top` and face frames |
+| `.plane(spec)`     | The affine frame of a face: `{ matrix }`           |
+| `.path(points)`    | The path of a 3D polyline                          |
+| `.project(points)` | The screen coordinates of 3D points                |
+| `.frame(points)`   | The `viewBox` that frames a projected scene        |
 
 See the [iso stack example](https://niekes.github.io/d3-3d/examples/iso-stack)
 for a complete scene.
