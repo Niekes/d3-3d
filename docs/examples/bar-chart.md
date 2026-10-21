@@ -101,11 +101,29 @@ cubes.selectAll('.d3-3d').sort(sort);
 The sort runs after every draw: the drag changes the depth of every face, so
 the order has to be recomputed with every frame.
 
+## The box around the bars
+
+[`axes3D`](/api/#axes) draws the chart box from a spec of three axes, a
+domain and the ticks for each. The bars grow towards a negative `y`, so the
+height axis runs from `0` to `-8` and its labels drop the sign:
+
+```ts
+const box = axes3D().scale(20).origin({ x: 480, y: 300 });
+
+box.data(spec).filter((wall) => !wall.ccw); // the back walls, with gridlines
+box.axes(spec); // one axis per dimension, on the outline of the box
+```
+
+The walls and the axes are drawn before the bars, so the bars always sit in
+front of them, and the box turns with the same drag as the bars.
+
 ## The whole source
 
 The figure lives in
 [docs/examples/barChart.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/barChart.ts)
-in the repository. The complete file, ready to copy:
+in the repository, the drag it shares with the other rotating figures in
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+The complete file, ready to copy:
 
 <<< @/examples/barChart.ts
 
@@ -142,6 +160,44 @@ in the repository. The complete file, ready to copy:
 
 .bar-chart .bar-svg:active {
     cursor: grabbing;
+}
+
+.bar-chart .bar-svg {
+    color: var(--bc-stroke);
+}
+
+.bar-chart .bar-walls path {
+    fill: var(--bc-stroke);
+    fill-opacity: 0.04;
+    stroke: var(--bc-stroke);
+    stroke-opacity: 0.25;
+    stroke-width: 0.5;
+}
+
+.bar-chart .axis-line {
+    stroke-width: 1.5;
+}
+
+.bar-chart .tick-mark {
+    stroke: currentColor;
+    stroke-opacity: 0.6;
+}
+
+.bar-chart .tick-label,
+.bar-chart .axis-title {
+    font-family: system-ui, sans-serif;
+    dominant-baseline: central;
+}
+
+.bar-chart .tick-label {
+    font-size: 11px;
+    fill: currentColor;
+}
+
+.bar-chart .axis-title {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .bar-chart .text {

@@ -1,28 +1,39 @@
 import {
     color,
-    drag,
     interpolateNumber,
     randomUniform,
     scaleOrdinal,
     schemeDark2,
     select
 } from 'd3';
-import { cubes3D, sort } from '../../index';
-import type { Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
+import { axes3D, cubes3D, sort } from '../../index';
+import type { AxesSpec, AxisWall, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
+import { drawAxisEdges } from './axisEdges';
+import { dragRotate } from './rotatingFigure';
 
 /*
  * A bar chart: cubes3D turns the eight vertices of each bar into six named
  * faces, the drag rotates the scene, the `sort` utility orders the bars and
  * their faces by the depth of their centre and the label of every bar tweens
- * from its old height to the new one.
+ * from its old height to the new one. axes3D draws the box around the bars:
+ * the back walls with their gridlines and an axis along the outline.
  */
 
 const ORIGIN = { x: 480, y: 300 };
 const START_ANGLE = Math.PI / 6;
-const DRAG_FACTOR = Math.PI / 230;
 const SCALE = 20;
 const FIELD = 10;
 const INTRO_DURATION = 1000;
+const MAX_HEIGHT = 8;
+const AXIS_TITLES = { x: 'x', y: 'height', z: 'z' };
+
+// The box: one tick per bar along x and z, and the heights grow upwards,
+// which is towards a negative y on the screen.
+const SPEC: AxesSpec = {
+    x: { domain: [-FIELD - 1, FIELD + 1], ticks: [-10, -5, 0, 5, 10] },
+    y: { domain: [0, -MAX_HEIGHT], ticks: [0, -2, -4, -6, -8] },
+    z: { domain: [-FIELD / 2 - 1, FIELD / 2 + 1], ticks: [-5, 0, 5] }
+};
 
 /** One vertex of a bar: a point that carries the id and the height of its bar. */
 type BarVertex = Point3D & { id: string; height: number };
@@ -64,16 +75,11 @@ export function mountBarChart(host: HTMLElement): () => void {
         .rotateY(START_ANGLE)
         .rotateX(-START_ANGLE);
 
+    const box = axes3D().scale(SCALE).origin(ORIGIN).rotateY(START_ANGLE).rotateX(-START_ANGLE);
+
     const colorScale = scaleOrdinal<string>(schemeDark2);
 
     let bars: BarVertex[][] = [];
-
-    // The drag: the pointer distance becomes a rotation, and the distance of
-    // a finished drag is kept for the next one.
-    let startX = 0;
-    let startY = 0;
-    let keptX = 0;
-    let keptY = 0;
 
     host.innerHTML = `
         <svg class="bar-svg" viewBox="0 0 960 500" role="img"
@@ -82,6 +88,8 @@ export function mountBarChart(host: HTMLElement): () => void {
         <button class="bar-button" type="button">update</button>`;
 
     const svg = select(host).select<SVGSVGElement>('svg');
+    const wallGroup = svg.append('g').attr('class', 'bar-walls');
+    const axisGroup = svg.append('g').attr('class', 'bar-axes');
     const group = svg.append('g');
     const button = select(host).select<HTMLButtonElement>('button');
 
@@ -101,8 +109,27 @@ export function mountBarChart(host: HTMLElement): () => void {
         });
     }
 
+    /** Draws the walls that face away from the camera and the axes on the outline. */
+    function drawBox(): void {
+        wallGroup
+            .selectAll<SVGPathElement, AxisWall>('path')
+            .data(box.data(SPEC).filter((wall) => !wall.ccw))
+            .join('path')
+            .attr('d', box.draw);
+
+        drawAxisEdges(
+            axisGroup,
+            box.axes(SPEC),
+            (axis, value) => String(axis === 'y' ? -value : value),
+            (axis) => AXIS_TITLES[axis],
+            () => 'currentColor'
+        );
+    }
+
     /** Joins the bars, their faces and their labels, and repaints them back to front. */
     function draw(projected: BarCube[], duration: number): void {
+        drawBox();
+
         const cubeGroups = group
             .selectAll<SVGGElement, BarCube>('g.cube')
             .data(projected, (d) => d.id);
@@ -192,7 +219,7 @@ export function mountBarChart(host: HTMLElement): () => void {
         let count = 0;
         for (let z = -FIELD / 2; z <= FIELD / 2; z += 5) {
             for (let x = -FIELD; x <= FIELD; x += 5) {
-                const height = randomUniform(-7, -2)();
+                const height = randomUniform(-MAX_HEIGHT + 1, -2)();
                 bars.push(makeBar(`bar-${count}`, height, x, z));
                 count += 1;
             }
@@ -201,21 +228,11 @@ export function mountBarChart(host: HTMLElement): () => void {
     }
 
     svg.call(
-        drag<SVGSVGElement, unknown>()
-            .on('start', (event) => {
-                startX = event.x;
-                startY = event.y;
-            })
-            .on('drag', (event) => {
-                const yaw = (event.x - startX + keptX) * DRAG_FACTOR;
-                const pitch = (event.y - startY + keptY) * DRAG_FACTOR;
-                cubes.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
-                draw(project(), 0);
-            })
-            .on('end', (event) => {
-                keptX += event.x - startX;
-                keptY += event.y - startY;
-            })
+        dragRotate((yaw, pitch) => {
+            cubes.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+            box.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+            draw(project(), 0);
+        })
     );
 
     button.on('click', () => sample());
