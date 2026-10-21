@@ -5,7 +5,7 @@
 <p align="center">
   [![Build][build-badge]][build]
   [![Coverage][coverage-badge]][coverage]
-  [![fallow health](.github/badges/health.svg)](https://fallow.tools/docs/explanations/health/)
+  [![fallow health](https://raw.githubusercontent.com/niekes/d3-3d/master/.github/badges/health.svg)](https://fallow.tools/docs/explanations/health/)
   [![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
   [![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
   [![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
