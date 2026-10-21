@@ -5,10 +5,9 @@ import { rotatingFigure } from './rotatingFigure';
 import type { GridPlane, GridPlanes3DInstance, Point3D } from '../../index';
 
 /*
- * The scaffold the surface plot and the terrain plot share: gridPlanes3D cuts
- * a sampled field into a grid of quads, the drag rotates the scene, a color
- * function shades the height of each quad and the `sort` utility paints the
- * quads back to front.
+ * The scaffold of the surface plot: gridPlanes3D cuts a sampled field into a
+ * grid of quads, the drag rotates the scene, a color function shades the
+ * height of each quad and the `sort` utility paints the quads back to front.
  */
 
 const ORIGIN = { x: 480, y: 250 };

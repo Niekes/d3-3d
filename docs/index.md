@@ -24,13 +24,13 @@ features:
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue';
-import { mountTerrainPlot } from './examples/terrainPlot';
+import { mountSurfacePlot } from './examples/surfacePlot';
 
 const host = ref(null);
 let dispose;
 
 onMounted(() => {
-    if (host.value) dispose = mountTerrainPlot(host.value);
+    if (host.value) dispose = mountSurfacePlot(host.value);
 });
 
 onBeforeUnmount(() => {
@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<div ref="host" class="terrain-plot"></div>
+<div ref="host" class="surface-plot"></div>
 
-Drag the terrain to rotate it, hover a quad to read its sample.
-[How the figure is built](/examples/terrain-plot).
+Drag the surface to rotate it, hover a quad to read its sample.
+[How the figure is built](/examples/surface-plot).

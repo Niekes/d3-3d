@@ -2,8 +2,7 @@
 
 ## In the documentation
 
-- [Surface plot](/examples/surface-plot) — a radial wave drawn with `gridPlanes3D`, rotated by drag
-- [Terrain plot](/examples/terrain-plot) — the same grid as a terrain, with amplitude, frequency, color and wireframe controls
+- [Surface plot](/examples/surface-plot) — a ripple or a wave drawn with `gridPlanes3D`, with shape, amplitude, frequency, color and wireframe controls
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
