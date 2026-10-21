@@ -102,6 +102,9 @@ const pathPoints = (path: string): [number, number][] => {
     return pairs;
 };
 
+// Paths are rounded to three decimals, matrices are not.
+const PATH_TOLERANCE = 1e-3;
+
 const expectClose = (actual: number[], expected: number[], tolerance = 1e-9) => {
     expect(actual.length).toBe(expected.length);
     for (let i = 0; i < actual.length; i += 1) {
@@ -196,8 +199,8 @@ describe('iso3D', () => {
         const [box] = iso().data([{ x: 200, y: 0, z: 36, w: 180, d: 160, h: 6, r: 6 }]);
         const expected = referenceBox(200, 0, 36, 180, 160, 6, 6);
 
-        expectPointsClose(pathPoints(box.wall).reverse(), expected.wall);
-        expectPointsClose(pathPoints(box.top).reverse(), expected.top);
+        expectPointsClose(pathPoints(box.wall).reverse(), expected.wall, PATH_TOLERANCE);
+        expectPointsClose(pathPoints(box.top).reverse(), expected.top, PATH_TOLERANCE);
     });
 
     test('closes the wall of a rounded box', () => {
@@ -258,7 +261,7 @@ describe('iso3D', () => {
             .map((p) => reference(p.x, p.y, p.z))
             .reverse();
 
-        expectClose(numbers(path), expected.flat());
+        expectClose(numbers(path), expected.flat(), PATH_TOLERANCE);
     });
 
     test('frames a scene like the reference', () => {

@@ -40,6 +40,21 @@ describe('triangles3D', () => {
         expect(triangles.draw?.(result as any)).toBe('M0,0L0,1L1,0Z');
     });
 
+    test('rounds the path coordinates to three decimals', () => {
+        const data = [
+            [
+                { x: 1 / 3, y: 0, z: 0 },
+                { x: 0, y: 2 / 3, z: 0 },
+                { x: 1, y: 1e-6, z: 0 }
+            ]
+        ];
+
+        const triangles = triangles3D();
+        const result = triangles.data(data)[0];
+
+        expect(triangles.draw?.(result as any)).toBe('M0.333,0L0,0.667L1,0Z');
+    });
+
     test('accesses triangle coords via function', () => {
         type TestDatum = { x1: number; y2: number; z3: number };
         const data = [
