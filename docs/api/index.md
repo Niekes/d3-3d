@@ -36,6 +36,42 @@
 | Polygons    | `polygons3D()`   |
 | Grid planes | `gridPlanes3D()` |
 | Cubes       | `cubes3D()`      |
+| Isometric   | `iso3D()`        |
+
+## Isometric scenes
+
+`iso3D` draws an isometric scene. Where the other shapes project a polygon,
+it hands out the **affine frame of a face**: the SVG matrix that carries the
+local coordinates of the face onto the screen. Because the projection is
+orthographic, the image of a plane stays affine, so the browser rasterises
+the transform and the projection itself costs nothing at runtime.
+
+```typescript
+import { iso3D, sort } from 'd3-3d';
+
+// The isometric view: the angles that map the world axes onto the 120
+// degree screen axes.
+const iso = iso3D()
+    .rotateX(Math.atan(Math.SQRT2))
+    .rotateZ(Math.PI / 4)
+    .scale(Math.sqrt(1.5));
+
+const boxes = iso.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20, r: 6 }]);
+```
+
+| Method           | Returns                                            |
+| ---------------- | -------------------------------------------------- |
+| `.data(boxes)`   | The boxes with their `wall`, `top` and face frames |
+| `.plane(spec)`   | The affine frame of a face: `{ matrix }`           |
+| `.path(points)`  | The path of a 3D polyline                          |
+| `.frame(points)` | The `viewBox` that frames a projected scene        |
+
+A box is `{ x, y, z, w, d, h, r }`: the corner, the extent along the three
+axes and the corner radius of its plan outline. The depth of a box is the
+`z` of its rotated centre, so the boxes can be sorted with the same
+`sort()` utility as every other shape.
+
+See the [iso stack example](/examples/iso-stack) for a complete scene.
 
 ## Types
 

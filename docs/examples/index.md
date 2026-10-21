@@ -1,5 +1,11 @@
 # Examples
 
+## In the documentation
+
+- [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
+
+## On CodePen
+
 Live examples are available on [CodePen](https://codepen.io/Niekes/). A selection:
 
 - [Surface plot](https://codepen.io/Niekes/pen/YzBmYzR)
