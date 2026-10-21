@@ -145,7 +145,7 @@ the edges below the box come first, then the ones left of it. Every tick
 keeps its value under the axis key, `tick[edge.axis]`, and `normal` is the
 unit screen vector away from the box, square to the edge.
 
-See the [scatter explorer](/examples/scatter-explorer) for a complete chart.
+See the [scatter plot](/examples/scatter-plot) for a complete chart.
 
 ## Types
 

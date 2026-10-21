@@ -34,7 +34,6 @@ export default defineConfig({
                         { text: 'Terrain plot', link: '/examples/terrain-plot' },
                         { text: 'Bar chart', link: '/examples/bar-chart' },
                         { text: 'Scatter plot', link: '/examples/scatter-plot' },
-                        { text: 'Scatter explorer', link: '/examples/scatter-explorer' },
                         { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                         { text: 'Sphere', link: '/examples/sphere' },
                         { text: 'Iso stack', link: '/examples/iso-stack' },

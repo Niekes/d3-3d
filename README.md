@@ -376,7 +376,7 @@ the edges below the box come first, then the ones left of it. Every tick
 keeps its value under the axis key, `tick[edge.axis]`, and `normal` is the
 unit screen vector away from the box, square to the edge.
 
-See the [scatter explorer](https://niekes.github.io/d3-3d/examples/scatter-explorer)
+See the [scatter plot](https://niekes.github.io/d3-3d/examples/scatter-plot)
 for a complete chart.
 
 ### API Methods

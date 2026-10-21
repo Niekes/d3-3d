@@ -5,8 +5,7 @@
 - [Surface plot](/examples/surface-plot) — a radial wave drawn with `gridPlanes3D`, rotated by drag
 - [Terrain plot](/examples/terrain-plot) — the same grid as a terrain, with amplitude, frequency, color and wireframe controls
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
-- [Scatter plot](/examples/scatter-plot) — points over a checkered floor, drawn with `points3D`, `gridPlanes3D` and `lineStrips3D`
-- [Scatter explorer](/examples/scatter-explorer) — five datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
+- [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
 - [Sphere](/examples/sphere) — a sphere of 1250 triangles drawn with `triangles3D`, rotated by drag
 - [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
@@ -15,7 +14,7 @@
 The two isometric figures are inspired by
 [isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
 and cities by April Zhu.
-The scatter explorer recreates the
+The scatter plot recreates the
 [3D scatter plot of matterviz](https://matterviz.janosh.dev/plot/scatter-plot-3d)
 by Janosh Riebesell.
 

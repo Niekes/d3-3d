@@ -1,4 +1,4 @@
-.scatter-explorer {
+.scatter-plot {
     --se-ink: #1b1e21;
     --se-wall: #888888;
     --se-point-stroke: #1b1e21;
@@ -14,7 +14,7 @@
     color: var(--se-ink);
 }
 
-.dark .scatter-explorer {
+.dark .scatter-plot {
     --se-ink: #e6e8e9;
     --se-point-stroke: #0c0d0e;
     --se-button: #17181a;
@@ -22,7 +22,7 @@
     --se-bg: #0c0d0e;
 }
 
-.scatter-explorer .explorer-svg {
+.scatter-plot .scatter-svg {
     display: block;
     width: 100%;
     height: auto;
@@ -30,11 +30,11 @@
     touch-action: none;
 }
 
-.scatter-explorer .explorer-svg:active {
+.scatter-plot .scatter-svg:active {
     cursor: grabbing;
 }
 
-.scatter-explorer .explorer-walls path {
+.scatter-plot .scatter-walls path {
     fill: var(--se-wall);
     fill-opacity: 0.06;
     stroke: var(--se-wall);
@@ -42,53 +42,53 @@
     stroke-width: 0.5;
 }
 
-.scatter-explorer .axis-line {
+.scatter-plot .axis-line {
     stroke-width: 2;
 }
 
-.scatter-explorer .tick-mark {
+.scatter-plot .tick-mark {
     stroke: var(--se-ink);
     stroke-opacity: 0.6;
 }
 
-.scatter-explorer .tick-label,
-.scatter-explorer .axis-title {
+.scatter-plot .tick-label,
+.scatter-plot .axis-title {
     font-family: system-ui, sans-serif;
     dominant-baseline: central;
 }
 
-.scatter-explorer .tick-label {
+.scatter-plot .tick-label {
     font-size: 10px;
     fill: var(--se-ink);
 }
 
-.scatter-explorer .axis-title {
+.scatter-plot .axis-title {
     text-anchor: middle;
     font-size: 13px;
     font-weight: 600;
 }
 
-.scatter-explorer .explorer-data circle {
+.scatter-plot .scatter-data circle {
     stroke: var(--se-point-stroke);
     stroke-opacity: 0.35;
     stroke-width: 0.5;
 }
 
-.scatter-explorer .explorer-data line {
+.scatter-plot .scatter-data line {
     stroke-width: 1.5;
     pointer-events: none;
 }
 
-.scatter-explorer .explorer-data line.is-dashed {
+.scatter-plot .scatter-data line.is-dashed {
     stroke-dasharray: 4 3;
 }
 
-.scatter-explorer .explorer-halo {
+.scatter-plot .scatter-halo {
     fill-opacity: 0.4;
     pointer-events: none;
 }
 
-.scatter-explorer .explorer-button {
+.scatter-plot .scatter-button {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
@@ -101,11 +101,11 @@
     cursor: pointer;
 }
 
-.scatter-explorer .explorer-button:hover {
+.scatter-plot .scatter-button:hover {
     border-color: var(--se-ink);
 }
 
-.scatter-explorer .explorer-controls {
+.scatter-plot .scatter-controls {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
@@ -114,18 +114,18 @@
     font-size: 0.85rem;
 }
 
-.scatter-explorer .explorer-controls label {
+.scatter-plot .scatter-controls label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.scatter-explorer .explorer-controls output {
+.scatter-plot .scatter-controls output {
     min-width: 2em;
     font-variant-numeric: tabular-nums;
 }
 
-.scatter-explorer .explorer-controls select {
+.scatter-plot .scatter-controls select {
     padding: 0.15rem 0.4rem;
     border: 1px solid var(--se-button-line);
     border-radius: 6px;
@@ -133,7 +133,7 @@
     color: var(--se-ink);
 }
 
-.scatter-explorer .explorer-legend {
+.scatter-plot .scatter-legend {
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
@@ -143,12 +143,12 @@
     gap: 0.25rem;
 }
 
-.scatter-explorer .explorer-legend[hidden],
-.scatter-explorer .explorer-colorbar[hidden] {
+.scatter-plot .scatter-legend[hidden],
+.scatter-plot .scatter-colorbar[hidden] {
     display: none;
 }
 
-.scatter-explorer .explorer-legend button {
+.scatter-plot .scatter-legend button {
     display: flex;
     align-items: center;
     gap: 0.4rem;
@@ -161,7 +161,7 @@
     cursor: pointer;
 }
 
-.scatter-explorer .explorer-legend button::before {
+.scatter-plot .scatter-legend button::before {
     content: '';
     width: 0.6rem;
     height: 0.6rem;
@@ -169,25 +169,25 @@
     background: var(--swatch);
 }
 
-.scatter-explorer .explorer-legend button[aria-pressed='false'] {
+.scatter-plot .scatter-legend button[aria-pressed='false'] {
     opacity: 0.4;
     text-decoration: line-through;
 }
 
-.scatter-explorer .explorer-colorbar {
+.scatter-plot .scatter-colorbar {
     position: absolute;
     left: 0.75rem;
     bottom: 3.75rem;
     font-size: 0.8rem;
 }
 
-.scatter-explorer .explorer-colorbar svg {
+.scatter-plot .scatter-colorbar svg {
     display: block;
     margin-top: 0.25rem;
     color: var(--se-ink);
 }
 
-.scatter-explorer .explorer-tooltip {
+.scatter-plot .scatter-tooltip {
     position: absolute;
     transform: translate(12px, 12px);
     padding: 0.2rem 0.5rem;
@@ -200,19 +200,19 @@
     pointer-events: none;
 }
 
-.scatter-explorer .explorer-tooltip.is-left {
+.scatter-plot .scatter-tooltip.is-left {
     transform: translate(calc(-100% - 12px), 12px);
 }
 
 /* On a narrow screen the overlays would cover the box: they join the flow under it. */
 @media (max-width: 640px) {
-    .scatter-explorer .explorer-legend,
-    .scatter-explorer .explorer-colorbar {
+    .scatter-plot .scatter-legend,
+    .scatter-plot .scatter-colorbar {
         position: static;
         padding: 0 0.75rem 0.75rem;
     }
 
-    .scatter-explorer .explorer-legend {
+    .scatter-plot .scatter-legend {
         flex-direction: row;
         flex-wrap: wrap;
     }
