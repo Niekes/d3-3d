@@ -1,0 +1,23 @@
+---
+layout: home
+hero:
+    name: d3-3d
+    text: 3D visualizations for the web
+    tagline: A D3.js plugin for projecting 3D data onto the screen — with first-class TypeScript support.
+    actions:
+        - theme: brand
+          text: Get Started
+          link: /guide/getting-started
+        - theme: alt
+          text: View on GitHub
+          link: https://github.com/niekes/d3-3d
+features:
+    - title: First-class TypeScript
+      details: Full type definitions ship with the package. No @types needed.
+    - title: Automatic centroids
+      details: Every transformed shape includes centroid, ccw, rotated and projected properties.
+    - title: Orthographic projection
+      details: Projects 3D data onto 2D SVG using orthographic projection.
+    - title: Sorting utilities
+      details: Built-in sort for correct z-ordering (painter's algorithm).
+---
