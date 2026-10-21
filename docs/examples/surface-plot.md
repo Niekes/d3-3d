@@ -102,6 +102,14 @@ quads
     .attr('d', surface.draw);
 ```
 
+## The whole source
+
+The figure lives in
+[docs/examples/surfacePlot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfacePlot.ts)
+in the repository. The complete file, ready to copy:
+
+<<< @/examples/surfacePlot.ts
+
 <style>
 .surface-plot {
     --sp-stroke: #1b1e21;
