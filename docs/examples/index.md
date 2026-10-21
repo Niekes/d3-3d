@@ -3,6 +3,7 @@
 ## In the documentation
 
 - [Surface plot](/examples/surface-plot) — a radial wave drawn with `gridPlanes3D`, rotated by drag
+- [Terrain plot](/examples/terrain-plot) — the same grid as a terrain, with amplitude, frequency, color and wireframe controls
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Scatter plot](/examples/scatter-plot) — points over a checkered floor, drawn with `points3D`, `gridPlanes3D` and `lineStrips3D`
 - [Sphere](/examples/sphere) — a sphere of 1250 triangles drawn with `triangles3D`, rotated by drag

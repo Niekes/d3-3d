@@ -21,3 +21,24 @@ features:
     - title: Sorting utilities
       details: Built-in sort for correct z-ordering (painter's algorithm).
 ---
+
+<script setup>
+import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { mountTerrainPlot } from './examples/terrainPlot';
+
+const host = ref(null);
+let dispose;
+
+onMounted(() => {
+    if (host.value) dispose = mountTerrainPlot(host.value);
+});
+
+onBeforeUnmount(() => {
+    if (dispose) dispose();
+});
+</script>
+
+<div ref="host" class="terrain-plot"></div>
+
+Drag the terrain to rotate it, hover a quad to read its sample.
+[How the figure is built](/examples/terrain-plot).

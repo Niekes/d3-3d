@@ -2,7 +2,7 @@ import { drag, select } from 'd3';
 import type { DragBehavior, Selection } from 'd3';
 
 /*
- * The scaffold both rotating figures share: an SVG that turns on drag and an
+ * The scaffold the rotating figures share: an SVG that turns on drag and an
  * update button. The pointer distance becomes a yaw and a pitch, and the
  * distance of a finished drag is kept for the next one.
  */

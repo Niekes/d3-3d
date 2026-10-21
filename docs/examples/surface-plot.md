@@ -56,10 +56,16 @@ same color, so the two sides of the surface are told apart at a glance:
 ```ts
 function colorize(d) {
     const height = (d[0].y + d[1].y + d[2].y + d[3].y) / 4;
-    const base = interpolateSpectral(colorScale(height));
+    const base = color(height);
     return d.ccw ? base : rgb(base).darker(2.5).formatHex();
 }
 ```
+
+The `color` function is the one part of the shading the surface plot brings
+itself: the spectral ramp, scaled to the range of the current wave, as
+`(height) => interpolateSpectral(colorScale(height))`. The
+[terrain plot](/examples/terrain-plot) draws through the same figure and
+brings ramps of its own.
 
 The height is read from the transformed points themselves. A transformed
 point keeps the properties of its input, so `d[0].y` is still the height of
@@ -106,9 +112,18 @@ quads
 
 The figure lives in
 [docs/examples/surfacePlot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfacePlot.ts)
-in the repository, the SVG and the drag it shares with the sphere in
+in the repository. It shares the grid of quads, the shading and the join
+with the [terrain plot](/examples/terrain-plot), that part lives in
+[docs/examples/surfaceFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfaceFigure.ts),
+and the SVG and the drag with the sphere in
 [docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
-The complete file, ready to copy:
+Both files, ready to copy:
+
+The shared parts:
+
+<<< @/examples/surfaceFigure.ts
+
+The figure itself:
 
 <<< @/examples/surfacePlot.ts
 

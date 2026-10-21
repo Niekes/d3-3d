@@ -31,6 +31,7 @@ export default defineConfig({
                     items: [
                         { text: 'Overview', link: '/examples/' },
                         { text: 'Surface plot', link: '/examples/surface-plot' },
+                        { text: 'Terrain plot', link: '/examples/terrain-plot' },
                         { text: 'Bar chart', link: '/examples/bar-chart' },
                         { text: 'Scatter plot', link: '/examples/scatter-plot' },
                         { text: 'Sphere', link: '/examples/sphere' },
