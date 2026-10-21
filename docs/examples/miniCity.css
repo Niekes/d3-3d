@@ -1,0 +1,184 @@
+.mini-city {
+    --mc-ink: #1b1e21;
+    --mc-muted: #5f6468;
+    --mc-line: #c4c7c9;
+    --mc-bg: #ffffff;
+    --mc-street: #d3d6d9;
+    --mc-lot: #eceeef;
+    /* One hue per kind of building, and one per part on top of it. */
+    --mc-house: #e9c98f;
+    --mc-roof: #c75b3c;
+    --mc-office: #6e9fd6;
+    --mc-crown: #a9bccf;
+    --mc-tower: #8c90b8;
+    --mc-spire: #e3b341;
+    /* The color of a low sun. */
+    --mc-sunset: #ff8a3d;
+    --mc-shadow: 0.3;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--mc-line);
+    border-radius: 12px;
+    background: var(--mc-bg);
+}
+
+.dark .mini-city {
+    --mc-ink: #e6e8e9;
+    --mc-muted: #a3a8ab;
+    --mc-line: #3d4144;
+    --mc-bg: #0c0d0e;
+    --mc-street: #2a2d30;
+    --mc-lot: #3a3e42;
+    --mc-house: #d2b277;
+    --mc-roof: #b24e31;
+    --mc-office: #4f86c6;
+    --mc-crown: #8296ab;
+    --mc-tower: #7478a3;
+    --mc-spire: #c9992c;
+    --mc-sunset: #e0742a;
+    --mc-shadow: 0.5;
+}
+
+.mini-city .city-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.mini-city .city-svg:active {
+    cursor: grabbing;
+}
+
+/* The browser rings a focused SVG on every click: keep the ring for the keyboard. */
+.mini-city .city-svg:focus {
+    outline: none;
+}
+
+.mini-city .city-svg:focus-visible {
+    outline: 2px solid var(--mc-ink);
+    outline-offset: -4px;
+}
+
+/*
+ * The sunlight: a low sun warms every color by `--mc-warm`, and
+ * `--mc-shade`, which the figure sets from the angle between a surface and
+ * the sun, darkens it.
+ */
+.mini-city .street,
+.mini-city .lot,
+.mini-city .face {
+    --mc-lit: color-mix(in srgb, var(--mc-base), var(--mc-sunset) var(--mc-warm, 0%));
+    --mc-fill: color-mix(in srgb, var(--mc-lit) var(--mc-shade, 100%), black);
+    fill: var(--mc-fill);
+}
+
+.mini-city .street {
+    --mc-base: var(--mc-street);
+}
+
+.mini-city .lot {
+    --mc-base: var(--mc-lot);
+}
+
+/* The shadows are drawn opaque and faded as one, so where two overlap they are no darker. */
+.mini-city .shadows {
+    fill: black;
+    opacity: var(--mc-shadow);
+}
+
+/* The kind picks the hue and the part may change it. */
+.mini-city .kind-house {
+    --mc-base: var(--mc-house);
+}
+
+.mini-city .kind-office {
+    --mc-base: var(--mc-office);
+}
+
+.mini-city .kind-tower {
+    --mc-base: var(--mc-tower);
+}
+
+.mini-city .part-roof {
+    --mc-base: var(--mc-roof);
+}
+
+.mini-city .part-crown {
+    --mc-base: var(--mc-crown);
+}
+
+.mini-city .part-spire {
+    --mc-base: var(--mc-spire);
+}
+
+/* The glow is set on the building, so all of its faces light up together. */
+.mini-city .face {
+    --mc-lit: color-mix(
+        in srgb,
+        color-mix(in srgb, var(--mc-base), white var(--mc-glow, 0%)),
+        var(--mc-sunset) var(--mc-warm, 0%)
+    );
+    stroke: color-mix(in srgb, var(--mc-fill) 60%, black);
+    stroke-width: 0.75;
+    stroke-linejoin: round;
+}
+
+.mini-city .building.is-selected .face {
+    stroke: var(--mc-ink);
+    stroke-width: 1.5;
+}
+
+/* The building under the pointer lights up, but not during a drag, while the city turns under it. */
+@media (hover: hover) {
+    .mini-city .city-svg:not(:active) .building:hover {
+        --mc-glow: 25%;
+    }
+}
+
+.mini-city .city-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--mc-line);
+    color: var(--mc-ink);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+
+.mini-city .city-controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mini-city .city-controls output {
+    min-width: 3em;
+}
+
+/* Room for the stats, so a selection does not push the page down. */
+.mini-city .city-stats {
+    flex: 1 1 20rem;
+    min-height: 4.4em;
+}
+
+.mini-city .city-stats dl {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+    margin: 0;
+}
+
+.mini-city .city-stats dt {
+    color: var(--mc-muted);
+    font-size: 0.75rem;
+}
+
+.mini-city .city-stats dd {
+    margin: 0;
+}
