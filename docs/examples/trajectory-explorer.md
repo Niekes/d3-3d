@@ -152,7 +152,7 @@ The figure lives in
 [docs/examples/trajectoryExplorer.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/trajectoryExplorer.ts)
 in the repository, its styles in
 [docs/examples/trajectoryExplorer.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/trajectoryExplorer.css),
-and the SVG and the drag in
+and the SVG, the drag and the play button in
 [docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 

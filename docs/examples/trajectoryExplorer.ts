@@ -1,8 +1,7 @@
-import { extent, format, interpolateObject, range, scaleLinear, timer } from 'd3';
-import type { Timer } from 'd3';
+import { extent, format, interpolateObject, range, scaleLinear } from 'd3';
 import { axes3D, lineStrips3D, points3D, sort } from '../../index';
 import type { AxesSpec, HasCentroid, Point, Point3D, ShapeInstance } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { playback, rotatingFigure } from './rotatingFigure';
 import './trajectoryExplorer.css';
 
 /*
@@ -106,8 +105,6 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
     let selected = '';
     let dragYaw = 0;
     let dragPitch = 0;
-    let loop: Timer | undefined;
-    let lastFrame = 0;
 
     const { group, button } = rotatingFigure(
         host,
@@ -230,26 +227,15 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
             : '';
     }
 
-    /** One frame of the playback: the playhead moves on and wraps around at the end. */
-    function frame(): void {
-        const now = performance.now();
+    // One frame of the playback: the playhead moves on and wraps around at the end.
+    const play = playback(button, (elapsed) => {
         // The playhead waits while the reader holds the scrubber.
         if (!scrub.matches(':active')) {
-            t = (t + (now - lastFrame) * RATE) % (SAMPLES - 1);
+            t = (t + elapsed * RATE) % (SAMPLES - 1);
         }
-        lastFrame = now;
         drawScene();
-    }
+    });
 
-    /** Starts or stops the playback, the button names what a click does next. */
-    function play(on: boolean): void {
-        loop?.stop();
-        loop = on ? timer(frame) : undefined;
-        lastFrame = performance.now();
-        button.text(on ? 'pause' : 'play');
-    }
-
-    button.on('click', () => play(!loop));
     scrub.addEventListener('input', () => {
         t = scrub.valueAsNumber;
         drawScene();
@@ -265,7 +251,7 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
     play(!reducedMotion);
 
     return () => {
-        loop?.stop();
+        play(false);
         host.innerHTML = '';
     };
 }
