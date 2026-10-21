@@ -74,7 +74,7 @@ axes and the corner radius of its plan outline. The depth of a box is the
 `z` of its rotated centre, so the boxes can be sorted with the same
 `sort()` utility as every other shape.
 
-See the [iso stack example](/examples/iso-stack) for a complete scene.
+See the [office tower example](/examples/iso-tower) for a complete scene.
 
 ## Axes
 

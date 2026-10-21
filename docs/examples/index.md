@@ -7,10 +7,9 @@
 - [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer
-- [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
 
-The two isometric figures are inspired by
+The office tower is inspired by
 [isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
 and cities by April Zhu.
 The scatter plot recreates the

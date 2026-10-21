@@ -304,7 +304,7 @@ const sorted = boxes.sort(sort);
 | `.project(points)` | The screen coordinates of 3D points                |
 | `.frame(points)`   | The `viewBox` that frames a projected scene        |
 
-See the [iso stack example](https://niekes.github.io/d3-3d/examples/iso-stack)
+See the [office tower example](https://niekes.github.io/d3-3d/examples/iso-tower)
 for a complete scene.
 
 ### Axes

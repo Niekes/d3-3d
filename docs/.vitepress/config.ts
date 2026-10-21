@@ -35,7 +35,6 @@ export default defineConfig({
                         { text: 'Scatter plot', link: '/examples/scatter-plot' },
                         { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                         { text: 'Solar system', link: '/examples/solar-system' },
-                        { text: 'Iso stack', link: '/examples/iso-stack' },
                         { text: 'Office tower', link: '/examples/iso-tower' }
                     ]
                 }
