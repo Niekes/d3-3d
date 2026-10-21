@@ -61,7 +61,7 @@ export function mountSurfacePlot(host: HTMLElement): () => void {
         <svg class="surface-svg" viewBox="0 0 960 500" role="img"
           aria-label="A surface plot of a radial wave. Drag the figure to rotate it.">
         </svg>
-        <button class="surface-button" type="button">New surface</button>`;
+        <button class="surface-button" type="button">update</button>`;
 
     const svg = select(host).select<SVGSVGElement>('svg');
     const group = svg.append('g');
