@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or idea
+    url: https://github.com/Niekes/d3-3d/discussions
+    about: Ask a question or discuss an idea before opening an issue.
+  - name: Sponsor d3-3d
+    url: https://github.com/sponsors/niekes
+    about: d3-3d is maintained by one person in spare time. Sponsorship keeps it healthy.

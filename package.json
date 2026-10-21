@@ -11,12 +11,19 @@
         "typescript",
         "visualization"
     ],
-    "homepage": "https://github.com/niekes/d3-3d",
+    "homepage": "https://niekes.github.io/d3-3d/",
+    "bugs": {
+        "url": "https://github.com/Niekes/d3-3d/issues"
+    },
     "license": "BSD-3-Clause",
     "author": "Niekes (https://niekes.com)",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/niekes/d3-3d.git"
+    },
+    "funding": {
+        "type": "github",
+        "url": "https://github.com/sponsors/niekes"
     },
     "files": [
         "build/d3-3d.js",

@@ -9,6 +9,7 @@ export default defineConfig({
             { text: 'Guide', link: '/guide/getting-started' },
             { text: 'API', link: '/api/' },
             { text: 'Examples', link: '/examples/' },
+            { text: 'Support', link: '/support' },
             { text: 'GitHub', link: 'https://github.com/niekes/d3-3d' }
         ],
         sidebar: {
@@ -32,9 +33,20 @@ export default defineConfig({
                         { text: 'Iso stack', link: '/examples/iso-stack' }
                     ]
                 }
+            ],
+            '/support': [
+                {
+                    text: 'Support',
+                    items: [{ text: 'Sponsor d3-3d', link: '/support' }]
+                }
             ]
         },
         socialLinks: [{ icon: 'github', link: 'https://github.com/niekes/d3-3d' }],
-        search: { provider: 'local' }
+        search: { provider: 'local' },
+        footer: {
+            message:
+                'Released under the BSD-3-Clause License. <a href="https://github.com/sponsors/niekes">Sponsor d3-3d</a> on GitHub Sponsors.',
+            copyright: 'Copyright © 2017-present Stefan Nieke'
+        }
     }
 });
