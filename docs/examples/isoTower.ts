@@ -214,8 +214,7 @@ export function mountIsoTower(host: HTMLElement): () => void {
       aria-label="Isometric modernist office tower with 24 floors on a city block.">
       ${isoFilters()}
       ${svg}
-    </svg>
-    <p class="iso-readout" id="iso-tower-readout"></p>`;
+    </svg>`;
 
     return wire(host);
 }
@@ -225,12 +224,11 @@ export function mountIsoTower(host: HTMLElement): () => void {
  * night shift lights the tower from the lobby to the spire.
  */
 function wire(host: HTMLElement): () => void {
-    const state = { lit: new Array(NF + 1).fill(false), cursor: 1, mode: '' };
+    const state = { lit: new Array(NF + 1).fill(false), cursor: 1 };
     const stage = isoStage();
     const query = <T extends Element>(selector: string) => host.querySelector<T>(selector);
     const floors = Array.from({ length: NF }, (_, i) => query(`#floor-${i + 1}`));
     const lobbyHalo = query('.lobby-halo');
-    const readout = query('#iso-tower-readout');
 
     const { after } = stage;
 
@@ -243,16 +241,10 @@ function wire(host: HTMLElement): () => void {
         }
         host.classList.toggle('lit', n > 0);
         lobbyHalo?.classList.toggle('hot', n > 0);
-        if (readout) {
-            readout.textContent = `${n}/${NF} floors lit · cursor ${state.cursor}F${
-                state.mode ? ` · ${state.mode}` : ''
-            }`;
-        }
     };
 
     const stopCascade = () => {
         stage.dispose();
-        state.mode = '';
     };
 
     const toggle = (i: number) => {
@@ -269,14 +261,12 @@ function wire(host: HTMLElement): () => void {
     // Lights cascade lobby to crown, or crown to lobby.
     const cascade = (on: boolean, upto = NF, step = 80) => {
         stopCascade();
-        state.mode = on ? 'night shift' : 'lights out';
         const order = [];
         for (let i = 1; i <= upto; i++) order.push(i);
         if (!on) order.reverse();
         order.forEach((f, k) =>
             after(k * step, () => {
                 state.lit[f] = on;
-                if (k === order.length - 1) state.mode = '';
                 render();
             })
         );

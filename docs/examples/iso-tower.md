@@ -123,14 +123,6 @@ The figure itself:
     height: auto;
 }
 
-.iso-tower .iso-readout {
-    margin: 0.75rem 0 0;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--iso-ink);
-}
-
 .iso-tower .face {
     fill: var(--iso-body);
     stroke: var(--iso-line);
