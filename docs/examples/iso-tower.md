@@ -97,7 +97,8 @@ The figure itself:
     --iso-panel: #f6f6f5;
     --iso-bg: #e9eaea;
     margin: 1.5rem 0;
-    padding: 1.25rem;
+    position: relative;
+    overflow: hidden;
     border: 1px solid var(--iso-line);
     border-radius: 12px;
     background: var(--iso-bg);

@@ -118,7 +118,8 @@ in the repository. The complete file, ready to copy:
     --sp-button-line: #c4c7c9;
     --sp-bg: #ffffff;
     margin: 1.5rem 0;
-    padding: 1.25rem 1.25rem 1rem;
+    position: relative;
+    overflow: hidden;
     border: 1px solid var(--sp-button-line);
     border-radius: 12px;
     background: var(--sp-bg);
@@ -151,7 +152,9 @@ in the repository. The complete file, ready to copy:
 }
 
 .surface-plot .surface-button {
-    margin-top: 0.75rem;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
     padding: 0.35rem 0.9rem;
     border: 1px solid var(--sp-button-line);
     border-radius: 8px;
