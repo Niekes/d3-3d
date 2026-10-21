@@ -40,6 +40,7 @@ export default defineConfig({
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Network explorer', link: '/examples/network-explorer' },
+                            { text: 'Projection playground', link: '/examples/projection-playground' },
                             { text: 'Solar system', link: '/examples/solar-system' },
                             { text: 'Office tower', link: '/examples/iso-tower' }
                         ].sort((a, b) => a.text.localeCompare(b.text))
