@@ -67,5 +67,10 @@
                 }
             ]
         }
+    },
+    // Test files have large `describe()` blocks which are not a code
+    // quality concern. Ignore them from the unit-size penalty.
+    "health": {
+        "ignore": ["tests/**"]
     }
 }
