@@ -81,7 +81,7 @@ jobs:
             - name: Update fallow health badge
               if: github.ref == 'refs/heads/master' && github.event_name == 'push'
               run: |
-                  fallow health --format badge > .github/badges/health.svg
+                  npx fallow health --format badge > .github/badges/health.svg
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
                   git add .github/badges/health.svg
