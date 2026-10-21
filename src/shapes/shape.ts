@@ -47,37 +47,39 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     scale(): number;
     scale(scale: number): this;
     scale(scale?: number): this | number {
-        return scale ? ((this._scale = scale), this) : this._scale;
+        return scale === undefined ? this._scale : ((this._scale = scale), this);
     }
 
     origin(): Point2D;
     origin(origin: Point2D): this;
     origin(origin?: Point2D): this | Point2D {
-        return origin ? ((this._origin = origin), this) : this._origin;
+        return origin === undefined ? this._origin : ((this._origin = origin), this);
     }
 
     rotationCenter(): Point3D;
     rotationCenter(center: Point3D): this;
     rotationCenter(center?: Point3D): this | Point3D {
-        return center ? ((this._rotationCenter = center), this) : this._rotationCenter;
+        return center === undefined
+            ? this._rotationCenter
+            : ((this._rotationCenter = center), this);
     }
 
     rotateX(): number;
     rotateX(angle: number): this;
     rotateX(angle?: number): this | number {
-        return angle ? ((this._rotateX = angle), this) : this._rotateX;
+        return angle === undefined ? this._rotateX : ((this._rotateX = angle), this);
     }
 
     rotateY(): number;
     rotateY(angle: number): this;
     rotateY(angle?: number): this | number {
-        return angle ? ((this._rotateY = angle), this) : this._rotateY;
+        return angle === undefined ? this._rotateY : ((this._rotateY = angle), this);
     }
 
     rotateZ(): number;
     rotateZ(angle: number): this;
     rotateZ(angle?: number): this | number {
-        return angle ? ((this._rotateZ = angle), this) : this._rotateZ;
+        return angle === undefined ? this._rotateZ : ((this._rotateZ = angle), this);
     }
 
     x(): (point: Datum) => number;
