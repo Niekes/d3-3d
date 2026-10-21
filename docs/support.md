@@ -10,11 +10,11 @@ If d3-3d saves you time, [become a sponsor](https://github.com/sponsors/niekes).
 
 ## What sponsorship buys
 
-| Tier        | What you get                                                                                            |
-| ----------- | ------------------------------------------------------------------------------------------------------- |
-| **$5/mo**   | Your name in the [sponsors list](https://github.com/Niekes/d3-3d#sponsors) and my sincere thanks       |
-| **$25/mo**  | The above, plus your logo in the README and on this site, and priority issue triage                    |
-| **$100/mo** | The above, plus direct email access for feature requests and a mention in the release notes            |
+| Tier        | What you get                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------------ |
+| **$5/mo**   | Your name in the [sponsors list](https://github.com/Niekes/d3-3d#sponsors) and my sincere thanks |
+| **$25/mo**  | The above, plus your logo in the README and on this site, and priority issue triage              |
+| **$100/mo** | The above, plus direct email access for feature requests and a mention in the release notes      |
 
 ## Where the money goes
 

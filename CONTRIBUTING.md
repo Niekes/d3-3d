@@ -34,15 +34,15 @@ round trip.
 
 ## Repository layout
 
-| Path             | Zone         | What lives there                                       |
-| ---------------- | ------------ | ------------------------------------------------------ |
-| `index.ts`       | `public-api` | The public API. The only entry point of the package.   |
-| `src/shapes/**`  | `shapes`     | One module per shape.                                  |
-| `src/draw/**`    | `draw`       | The SVG path builders.                                 |
-| `src/*.ts`       | `core`       | The maths: transform, rotation, centroid, projection.  |
-| `tests/**`       | `tests`      | The test suite.                                        |
-| `docs/**`        | `docs`       | The VitePress documentation site.                      |
-| `scripts/**`     | `tooling`    | Repository tooling. Imports nothing from the library.  |
+| Path            | Zone         | What lives there                                      |
+| --------------- | ------------ | ----------------------------------------------------- |
+| `index.ts`      | `public-api` | The public API. The only entry point of the package.  |
+| `src/shapes/**` | `shapes`     | One module per shape.                                 |
+| `src/draw/**`   | `draw`       | The SVG path builders.                                |
+| `src/*.ts`      | `core`       | The maths: transform, rotation, centroid, projection. |
+| `tests/**`      | `tests`      | The test suite.                                       |
+| `docs/**`       | `docs`       | The VitePress documentation site.                     |
+| `scripts/**`    | `tooling`    | Repository tooling. Imports nothing from the library. |
 
 Dependencies point inwards only. `core` never imports from `shapes` or `draw`,
 and the test suite goes through `index.ts` so the public export stays covered.
