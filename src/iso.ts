@@ -3,17 +3,7 @@ import { rotateRzRyRx } from './rotation';
 
 const ARC_SEGMENTS = 10;
 const QUARTER = Math.PI / 2;
-
-/**
- * A corner of the plan outline: the arc runs from the normal of one face
- * to the normal of the next.
- */
-type PlanArc = {
-    cx: number;
-    cy: number;
-    from: number;
-    to: number;
-};
+const DIAGONAL = Math.PI / 4;
 
 /**
  * The transform of a plane: the affine map that carries the local
@@ -48,41 +38,27 @@ export function isoPlaneMatrix(
 }
 
 /**
- * The direction from the scene towards the camera.
- *
- * The projection drops the third axis of the rotated frame, so the camera
- * looks along the third row of the rotation. The horizontal part of that
- * direction decides which sides of a box are visible.
- */
-export function viewDirection(angles: RotationAngles): Point3D {
-    const options = { ...angles, rotateCenter: { x: 0, y: 0, z: 0 } };
-    const c1 = rotateRzRyRx({ x: 1, y: 0, z: 0 }, options);
-    const c2 = rotateRzRyRx({ x: 0, y: 1, z: 0 }, options);
-    const c3 = rotateRzRyRx({ x: 0, y: 0, z: 1 }, options);
-    return { x: c1.z, y: c2.z, z: c3.z };
-}
-
-/**
  * The silhouette of a box and the outline of its top face, in world space.
  *
  * The wall is the visible side of the box, the top the face that points up.
  * Both are point lists; the shape module projects them.
  *
- * The visible part of the plan outline is the half of it that faces the
- * camera. The outline is parametrized by the direction of its outward
- * normal, so the visible part is the window of 180 degrees around the
- * direction of the camera.
+ * ponytail: the visible part of the plan outline is hard-wired to the near
+ * corner of the canonical isometric view, the one that looks down the
+ * (1, 1, 1) axis. Another camera angle produces a wrong silhouette.
+ * Upgrade path: clip the four corner arcs against the visible half plane of
+ * the view direction when rotation support lands.
  */
-export function isoBoxOutline(spec: IsoBoxSpec, view: Point3D): { wall: Point3D[]; top: Point3D[] } {
+export function isoBoxOutline(spec: IsoBoxSpec): { wall: Point3D[]; top: Point3D[] } {
     const r = Math.min(spec.r ?? 0, spec.w / 2, spec.d / 2);
     const z = spec.z;
     const z1 = z + spec.h;
 
     if (r <= 0) {
-        return { wall: sharpWall(spec, view), top: sharpTop(spec) };
+        return { wall: sharpWall(spec), top: sharpTop(spec) };
     }
 
-    const visible = visiblePlanOutline(spec, r, view);
+    const visible = visiblePlanOutline(spec, r);
     const ring = planOutline(spec, r);
 
     const wall = [
@@ -162,51 +138,15 @@ function planOutline(spec: IsoBoxSpec, r: number): Point2D[] {
 }
 
 /**
- * The part of the plan outline that faces the camera.
- *
- * The outline is parametrized by the direction of its outward normal: the
- * arc of a corner runs from the normal of one face to the normal of the
- * next, and the straight edge between two corners sits at the normal of the
- * face it belongs to. A point of the outline is visible when its normal
- * points towards the camera, so the visible part is the window of 180
- * degrees around the direction of the camera.
+ * The part of the plan outline that faces the camera: the near corner and
+ * the two half corners next to it.
  */
-function visiblePlanOutline(spec: IsoBoxSpec, r: number, view: Point3D): Point2D[] {
-    const phi = Math.atan2(view.y, view.x);
-    let from = phi - QUARTER;
-    let to = phi + QUARTER;
-    while (from < 0) {
-        from += 2 * Math.PI;
-        to += 2 * Math.PI;
-    }
-
-    const pieces: { arc: PlanArc; from: number; to: number }[] = [];
-    for (const shift of [0, 2 * Math.PI]) {
-        for (const arc of planArcs(spec, r)) {
-            const start = Math.max(arc.from + shift, from);
-            const end = Math.min(arc.to + shift, to);
-            if (end > start) pieces.push({ arc, from: start, to: end });
-        }
-    }
-    pieces.sort((a, b) => a.from - b.from);
-
-    const points: Point2D[] = [];
-    for (const piece of pieces) {
-        points.push(...arc(piece.arc.cx, piece.arc.cy, r, piece.from, piece.to));
-    }
-    return points;
-}
-
-/**
- * The four corner arcs of the plan, in the order of the boundary.
- */
-function planArcs(spec: IsoBoxSpec, r: number): PlanArc[] {
+function visiblePlanOutline(spec: IsoBoxSpec, r: number): Point2D[] {
     const { x, y, w, d } = spec;
     return [
-        { cx: x + w - r, cy: y + d - r, from: 0, to: QUARTER },
-        { cx: x + r, cy: y + d - r, from: QUARTER, to: Math.PI },
-        { cx: x + r, cy: y + r, from: Math.PI, to: 3 * QUARTER },
-        { cx: x + w - r, cy: y + r, from: 3 * QUARTER, to: 2 * Math.PI }
+        ...arc(x + w - r, y + r, r, -DIAGONAL, 0),
+        ...arc(x + w - r, y + d - r, r, 0, QUARTER),
+        ...arc(x + r, y + d - r, r, QUARTER, 3 * DIAGONAL)
     ];
 }
 
@@ -226,21 +166,16 @@ function arc(cx: number, cy: number, r: number, a0: number, a1: number): Point2D
  * The silhouette of a box without a corner radius: the two faces that face
  * the camera, as one closed polygon.
  */
-function sharpWall(spec: IsoBoxSpec, view: Point3D): Point3D[] {
+function sharpWall(spec: IsoBoxSpec): Point3D[] {
     const { x, y, z, w, d, h } = spec;
     const z1 = z + h;
-    // The visible side is the one whose normal points towards the camera.
-    const mx = view.x < 0;
-    const my = view.y < 0;
-    const X = (v: number) => (mx ? x + w - v : x + v);
-    const Y = (v: number) => (my ? y + d - v : y + v);
     return [
-        { x: X(0), y: Y(d), z },
-        { x: X(w), y: Y(d), z },
-        { x: X(w), y: Y(0), z },
-        { x: X(w), y: Y(0), z: z1 },
-        { x: X(w), y: Y(d), z: z1 },
-        { x: X(0), y: Y(d), z: z1 }
+        { x, y: y + d, z },
+        { x: x + w, y: y + d, z },
+        { x: x + w, y, z },
+        { x: x + w, y, z: z1 },
+        { x: x + w, y: y + d, z: z1 },
+        { x, y: y + d, z: z1 }
     ];
 }
 

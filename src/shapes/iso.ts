@@ -3,7 +3,7 @@ import { ShapeInstance, ShapeRenderer } from './shape';
 import { transform } from '../transform';
 import { drawPolygon } from '../draw/drawPolygon';
 import { drawPolyline } from '../draw/drawPolyline';
-import { isoBoxOutline, isoFrame, isoPlaneMatrix, viewDirection } from '../iso';
+import { isoBoxOutline, isoFrame, isoPlaneMatrix } from '../iso';
 
 /**
  * The affine frame of a face: the transform that carries the local
@@ -38,8 +38,7 @@ export interface Iso3DInstance extends ShapeInstance<Point3D> {
 
 class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
     data(data: IsoBoxSpec[]): IsoBox[] {
-        const view = viewDirection(this.angles());
-        return data.map((spec) => this.box(spec, view));
+        return data.map((spec) => this.box(spec));
     }
 
     plane(spec: IsoPlaneSpec): IsoPlane {
@@ -71,7 +70,7 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
         );
     }
 
-    private box(spec: IsoBoxSpec, view: Point3D): IsoBox {
+    private box(spec: IsoBoxSpec): IsoBox {
         const box: IsoBoxSpec = {
             ...spec,
             x: this.x()(spec),
@@ -79,7 +78,7 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
             z: this.z()(spec)
         };
 
-        const outline = isoBoxOutline(box, view);
+        const outline = isoBoxOutline(box);
         const top = box.z + box.h;
 
         return {

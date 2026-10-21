@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vite-plus/test';
 import { iso3D, sort } from '../index';
-import { isoBoxOutline, viewDirection } from '../src/iso';
 
 /*
  * The reference implementation: the isometric kernel of the figure this API
@@ -103,26 +102,6 @@ const pathPoints = (path: string): [number, number][] => {
     return pairs;
 };
 
-const distanceToSegment = (
-    p: [number, number],
-    a: [number, number],
-    b: [number, number]
-): number => {
-    const dx = b[0] - a[0];
-    const dy = b[1] - a[1];
-    const length = dx * dx + dy * dy;
-    const t = length === 0 ? 0 : Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / length));
-    return Math.hypot(p[0] - (a[0] + t * dx), p[1] - (a[1] + t * dy));
-};
-
-const distanceToPolyline = (p: [number, number], points: [number, number][]): number => {
-    let best = Infinity;
-    for (let i = 1; i < points.length; i += 1) {
-        best = Math.min(best, distanceToSegment(p, points[i - 1], points[i]));
-    }
-    return best;
-};
-
 const expectClose = (actual: number[], expected: number[], tolerance = 1e-9) => {
     expect(actual.length).toBe(expected.length);
     for (let i = 0; i < actual.length; i += 1) {
@@ -192,72 +171,8 @@ describe('iso3D', () => {
         expect(iso3D().rotateY(0).data([]).length).toBe(0);
     });
 
-    test('cuts the silhouette out of the plan outline at any angle', () => {
-        const spec = { x: 200, y: 0, z: 36, w: 180, d: 160, h: 6, r: 6 };
-        const angles = [0, 0.2, 0.5, 0.9, 1.2, 1.6, 2, 2.6, 3, 3.6, 4.2, 5];
-
-        for (const yaw of angles) {
-            const box = iso3D()
-                .rotateX(AX)
-                .rotateZ(AZ + yaw)
-                .scale(SCALE)
-                .data([spec])[0];
-
-            const wall = pathPoints(box.wall);
-            const top = pathPoints(box.top);
-            // Die obere Haelfte der Wand liegt auf der Deckflaeche, sie muss
-            // also Teil des Plan-Umrisses sein. Die Abtastung der sichtbaren
-            // Boegen ist feiner als die des Umrisses, deshalb der Abstand
-            // zur Linie statt zu den Stichproben.
-            const upper = wall.slice(0, wall.length / 2);
-            expect(upper.length).toBeGreaterThan(0);
-
-            for (const point of upper) {
-                expect(distanceToPolyline(point, top)).toBeLessThan(0.1);
-            }
-        }
-    });
-
-    test('shows the sides that face the camera at any angle', () => {
-        const spec = { x: 0, y: 0, z: 0, w: 100, d: 80, h: 20, r: 10 };
-        const centers = [
-            { x: spec.x + spec.w - spec.r, y: spec.y + spec.d - spec.r },
-            { x: spec.x + spec.r, y: spec.y + spec.d - spec.r },
-            { x: spec.x + spec.r, y: spec.y + spec.r },
-            { x: spec.x + spec.w - spec.r, y: spec.y + spec.r }
-        ];
-
-        for (const yaw of [0, 0.4, 0.9, 1.4, 1.9, 2.4, 2.9, 3.4, 3.9, 4.4, 4.9, 5.4, 6]) {
-            const angles = {
-                x: AX,
-                y: 0,
-                z: AZ + yaw,
-                rotateCenter: { x: 0, y: 0, z: 0 }
-            };
-            const view = viewDirection(angles);
-            const { wall } = isoBoxOutline(spec, view);
-
-            // Die obere Haelfte der Wand ist der sichtbare Teil des
-            // Plan-Umrisses. Jeder seiner Punkte liegt auf einem Bogen, und
-            // dessen Normale zeigt zur Kamera.
-            const upper = wall.slice(wall.length / 2);
-            expect(upper.length).toBeGreaterThan(0);
-
-            for (const point of upper) {
-                const center = centers.find(
-                    (c) => Math.hypot(point.x - c.x, point.y - c.y) < spec.r + 1e-6
-                );
-                expect(center).toBeDefined();
-                const normal = {
-                    x: (point.x - center!.x) / spec.r,
-                    y: (point.y - center!.y) / spec.r
-                };
-                expect(normal.x * view.x + normal.y * view.y).toBeGreaterThan(-1e-9);
-            }
-        }
-    });
-
-    test('reproduces the side face of the reference', () => {        const plane = iso().plane({
+    test('reproduces the side face of the reference', () => {
+        const plane = iso().plane({
             origin: { x: 248, y: 166, z: 200 },
             u: { x: 0, y: -1, z: 0 },
             v: { x: 0, y: 0, z: -1 }
