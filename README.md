@@ -15,14 +15,14 @@
 
 <table>
     <tr style="background-color: #f6f8fa">
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/YzBmYzR"><img src="assets/surfaceplot.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMpLw"><img src="assets/scatterplot.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/poGMKXY"><img src="assets/barchart.gif"> </a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/surface-plot"><img src="assets/examples/surface-plot.gif" alt="Surface plot"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/mini-city"><img src="assets/examples/mini-city.gif" alt="Mini city"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/exploded-cubes"><img src="assets/examples/exploded-cubes.gif" alt="Exploded cube assembly"></a></td>
     </tr>
     <tr style="background-color: #f6f8fa">
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/KKEPBVb"><img src="assets/sphere.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/wvbzGMG"><img src="assets/cone.gif"></a></td>
-        <td><a target="_blank" href="https://codepen.io/Niekes/pen/eYadJVg"><img src="assets/cylinder.gif"> </a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/trajectory-explorer"><img src="assets/examples/trajectory-explorer.gif" alt="Trajectory explorer"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/mesh-inspector"><img src="assets/examples/mesh-inspector.gif" alt="Mesh inspector"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/iso-tower"><img src="assets/examples/iso-tower.gif" alt="Office tower"></a></td>
     </tr>
 </table>
 
