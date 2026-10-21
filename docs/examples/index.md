@@ -10,6 +10,7 @@
 - [Floor-plan explorer](/examples/floor-plan) — four floors drawn with `planes3D`, their rooms with `polygons3D` and labels with `points3D`, colored by occupancy; spread the floors on a slider and select a floor or a room
 - [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
+- [Network explorer](/examples/network-explorer) — 45 nodes in three clusters, drawn with `points3D` and `lines3D`; click a node to highlight its neighbors, filter the clusters
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
 
