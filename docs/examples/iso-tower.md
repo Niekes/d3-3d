@@ -27,6 +27,11 @@ onBeforeUnmount(() => {
 cursor, <kbd>n</kbd> starts the night shift from the lobby to the spire and
 <kbd>o</kbd> switches everything off from the top down.
 
+> The style of this figure is inspired by
+> [isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
+> and cities by April Zhu. The figure here is an original implementation with
+> the `iso3D` renderer of this library.
+
 ## A building is not an exploded diagram
 
 The [iso stack](/examples/iso-stack) sorts its slabs with the `sort` utility

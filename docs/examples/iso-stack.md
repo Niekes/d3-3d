@@ -26,6 +26,11 @@ onBeforeUnmount(() => {
 through the stack: it runs down the wire, the interpreter picks it up, a
 worker lights while it works and the service answers.
 
+> The style of this figure is inspired by
+> [isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
+> and cities by April Zhu. The figure here is an original implementation with
+> the `iso3D` renderer of this library.
+
 ## How the layering works
 
 The figure is a single SVG that is built once. The depth of every slab comes

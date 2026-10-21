@@ -6,6 +6,10 @@
 - [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
 
+The two isometric figures are inspired by
+[isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
+and cities by April Zhu.
+
 ## On CodePen
 
 Live examples are available on [CodePen](https://codepen.io/Niekes/). A selection:
