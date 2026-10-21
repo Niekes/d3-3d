@@ -31,6 +31,7 @@
     },
     "files": [
         "build/d3-3d.js",
+        "build/d3-3d.es.js",
         "build/index.d.ts",
         "build/**/*.d.ts"
     ],
