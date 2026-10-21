@@ -85,4 +85,28 @@ describe('cubes3D', () => {
 
         expect(result[0]?.[0]?.id).toBe('0');
     });
+
+    test('draw function draws correctly', () => {
+        const cubes = cubes3D()
+            .x((d) => d.x)
+            .y((d) => d.y)
+            .z((d) => d.z);
+
+        const data: Point3D[][] = [
+            [
+                { x: 0, y: 0, z: 0 },
+                { x: 0, y: 1, z: 0 },
+                { x: 1, y: 1, z: 0 },
+                { x: 1, y: 0, z: 0 },
+                { x: 0, y: 0, z: 1 },
+                { x: 0, y: 1, z: 1 },
+                { x: 1, y: 1, z: 1 },
+                { x: 1, y: 0, z: 1 }
+            ]
+        ];
+
+        const result = cubes.data(data);
+
+        expect(cubes.draw?.(result[0].faces![0])).toBe('M0,0L0,1L1,1L1,0Z');
+    });
 });
