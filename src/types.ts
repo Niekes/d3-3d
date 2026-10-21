@@ -40,3 +40,38 @@ export interface TransformOptions<Datum> {
     y: (point: Datum) => number;
     z: (point: Datum) => number;
 }
+
+/**
+ * An axis aligned box in world space.
+ *
+ * `x`, `y` and `z` are the corner of the box, `w`, `d` and `h` its extent
+ * along the three axes and `r` the corner radius of its plan outline.
+ */
+export interface IsoBoxSpec {
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+    d: number;
+    h: number;
+    r?: number;
+}
+
+/**
+ * A rectangle in world space, described by its corner and the two vectors
+ * that span it.
+ */
+export interface IsoPlaneSpec {
+    origin: Point3D;
+    u: Point3D;
+    v: Point3D;
+}
+
+/**
+ * The viewport that frames a projected scene.
+ */
+export interface IsoFrame {
+    viewBox: string;
+    width: number;
+    height: number;
+}
