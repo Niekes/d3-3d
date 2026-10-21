@@ -68,6 +68,24 @@ export interface IsoPlaneSpec {
 }
 
 /**
+ * One axis of a chart box in data units: its extent, from the first to the
+ * last value of `domain`, and the values of its ticks.
+ */
+export interface AxisSpec {
+    domain: number[];
+    ticks: number[];
+}
+
+/**
+ * The three axes of a chart box.
+ */
+export interface AxesSpec {
+    x: AxisSpec;
+    y: AxisSpec;
+    z: AxisSpec;
+}
+
+/**
  * The viewport that frames a projected scene.
  */
 export interface IsoFrame {

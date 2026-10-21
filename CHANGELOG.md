@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet. See the [open issues](https://github.com/Niekes/d3-3d/issues) for
-what is being worked on.
+### Added
+
+- `axes3D`: the box of a 3D chart. `.data(spec)` returns the six walls with
+  their gridlines and `ccw`, `.draw(wall)` their paths, and `.axes(spec)` the
+  three axes on the outline of the box, with their ticks and the direction
+  that points away from the box.
 
 ## [2.1.0] - 2026-10-21
 

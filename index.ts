@@ -4,6 +4,7 @@
  */
 
 // Shape factories - one per shape module under src/shapes.
+export { axes3D } from './src/shapes/axes';
 export { cubes3D } from './src/shapes/cubes';
 export { gridPlanes3D } from './src/shapes/gridPlanes';
 export { iso3D } from './src/shapes/iso';
@@ -30,6 +31,7 @@ export type { OrthographicOptions } from './src/projection-orthographic';
 export type { ShapeInstance } from './src/shapes/shape';
 
 // Shape result types - one per shape module under src/shapes.
+export type { AxisEdge, AxisWall } from './src/shapes/axes';
 export type { Cube, CubeFace, CubeFaceName } from './src/shapes/cubes';
 export type { GridPlane } from './src/shapes/gridPlanes';
 export type { IsoBox, IsoPlane } from './src/shapes/iso';
@@ -41,6 +43,7 @@ export type { Polygon } from './src/shapes/polygons';
 export type { Triangle } from './src/shapes/triangles';
 
 // Shape instance types - one per shape module under src/shapes.
+export type { Axes3DInstance } from './src/shapes/axes';
 export type { Cubes3DInstance } from './src/shapes/cubes';
 export type { GridPlanes3DInstance } from './src/shapes/gridPlanes';
 export type { Iso3DInstance } from './src/shapes/iso';

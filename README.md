@@ -234,6 +234,7 @@ All shapes share the same API for configuration, but differ in their input data 
 | **gridPlanes3D** | `<path>`    | `Datum[]` - Grid of points\*           | ✅        | ✅             |
 | **cubes3D**      | `<path>`    | `Datum[][]` - Array of 8-vertex arrays | ✅        | ✅ (per face)  |
 | **iso3D**        | `<path>`    | `IsoBoxSpec[]` - Array of boxes        | ❌        | ❌             |
+| **axes3D**       | `<path>`    | `AxesSpec` - Domain and ticks per axis | ✅        | ✅ (per wall)  |
 
 **Notes:**
 
@@ -250,6 +251,7 @@ All shapes share the same API for configuration, but differ in their input data 
 - **planes3D**: Each plane requires exactly 4 points in counter-clockwise order
 - **polygons3D**: Each polygon can have any number of points (≥3) in counter-clockwise order
 - **gridPlanes3D**: Input is a flat array of points that forms a grid. **Important:** You must specify the number of points per row using [.rows()](#rowsrows) so the library can correctly reconstruct the faces. All rows must have the same length.
+- **axes3D**: One `{ domain, ticks }` per axis, see [Axes](#axes)
 - **cubes3D**: Each cube requires exactly 8 vertices ordered as shown below:
 
 ![cube](assets/cube.png 'Cube')
@@ -303,6 +305,78 @@ const sorted = boxes.sort(sort);
 
 See the [iso stack example](https://niekes.github.io/d3-3d/examples/iso-stack)
 for a complete scene.
+
+### Axes
+
+`axes3D` draws the box of a 3D chart: six walls with gridlines and three
+axes with their ticks. It works in data units: hand it the domain and the
+ticks of every axis, and give it the same accessors as the shapes it
+frames, so the box and the data turn as one.
+
+```typescript
+import { axes3D } from 'd3-3d';
+import { scaleLinear } from 'd3';
+
+// Every axis spans the box from -1 to 1.
+const x = scaleLinear().domain([0, 10]).range([-1, 1]).nice();
+const y = scaleLinear().domain([0, 4]).range([-1, 1]).nice();
+const z = scaleLinear().domain([-2, 2]).range([-1, 1]).nice();
+
+const box = axes3D()
+    .scale(100)
+    .origin({ x: 480, y: 250 })
+    .x((d) => x(d.x))
+    .y((d) => -z(d.z)) // data z is up, the screen y grows downwards
+    .z((d) => y(d.y));
+
+const spec = {
+    x: { domain: x.domain(), ticks: x.ticks(5) },
+    y: { domain: y.domain(), ticks: y.ticks(5) },
+    z: { domain: z.domain(), ticks: z.ticks(5) }
+};
+
+// The walls behind the data, with their gridlines.
+svg.selectAll('path.wall')
+    .data(box.data(spec).filter((wall) => !wall.ccw))
+    .join('path')
+    .attr('class', 'wall')
+    .attr('d', box.draw);
+
+// The tick labels of the three axes, pushed away from the box.
+const ticks = box.axes(spec).flatMap((edge) => edge.map((tick) => ({ tick, edge })));
+
+svg.selectAll('text.tick')
+    .data(ticks)
+    .join('text')
+    .attr('class', 'tick')
+    .attr('x', (d) => d.tick.projected.x + d.edge.normal.x * 10)
+    .attr('y', (d) => d.tick.projected.y + d.edge.normal.y * 10)
+    .attr('text-anchor', (d) =>
+        d.edge.normal.x > 0.3 ? 'start' : d.edge.normal.x < -0.3 ? 'end' : 'middle'
+    )
+    .text((d) => d.tick[d.edge.axis]);
+```
+
+| Method        | Returns                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| `.data(spec)` | The six walls, `x` lo and hi, `y` lo and hi, `z` lo and hi, with `ccw`, `centroid`, `grid` |
+| `.draw(wall)` | The path of a wall: its outline and its gridlines                                          |
+| `.axes(spec)` | The three axes `x`, `y`, `z`, each a list of ticks with its `axis` and `normal`            |
+
+A spec holds one `{ domain, ticks }` per axis. A wall is the list of its
+four corners. It has `ccw` set when it faces the camera, so the walls
+behind the data are the ones without it. `axes3D` winds the corners for the
+accessors, so this holds whatever the accessors and the domains: a negated
+axis or a reversed domain mirrors the box, and the winding follows.
+
+An axis lies on an edge between a wall that faces the camera and one that
+does not, so it runs along the outline of the box, outside the data, and
+the edges below the box come first, then the ones left of it. Every tick
+keeps its value under the axis key, `tick[edge.axis]`, and `normal` is the
+unit screen vector away from the box, square to the edge.
+
+See the [scatter explorer](https://niekes.github.io/d3-3d/examples/scatter-explorer)
+for a complete chart.
 
 ### API Methods
 
