@@ -106,7 +106,9 @@ quads
 
 The figure lives in
 [docs/examples/surfacePlot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfacePlot.ts)
-in the repository. The complete file, ready to copy:
+in the repository, the SVG and the drag it shares with the sphere in
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+The complete file, ready to copy:
 
 <<< @/examples/surfacePlot.ts
 

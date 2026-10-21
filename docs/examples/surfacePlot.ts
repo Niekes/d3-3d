@@ -1,5 +1,6 @@
-import { drag, extent, interpolateSpectral, randomUniform, rgb, scaleLinear, select } from 'd3';
+import { extent, interpolateSpectral, randomUniform, rgb, scaleLinear } from 'd3';
 import { gridPlanes3D, sort } from '../../index';
+import { rotatingFigure } from './rotatingFigure';
 import type { GridPlane, GridPlanes3DInstance, Point3D } from '../../index';
 
 /*
@@ -12,7 +13,6 @@ const ORIGIN = { x: 480, y: 250 };
 const GRID = 16;
 const POINTS_PER_ROW = GRID * 2;
 const START_ANGLE = Math.PI / 4;
-const DRAG_FACTOR = Math.PI / 230;
 const INTRO_DURATION = 750;
 
 /** Samples a function over the field, from -GRID to GRID on both axes. */
@@ -47,25 +47,15 @@ export function mountSurfacePlot(host: HTMLElement): () => void {
 
     let points: Point3D[] = [];
 
-    // The drag: the pointer distance becomes a rotation, and the distance of
-    // a finished drag is kept for the next one.
-    let startX = 0;
-    let startY = 0;
-    let keptX = 0;
-    let keptY = 0;
-
-    const yaw = (x: number) => (x - startX + keptX) * DRAG_FACTOR;
-    const pitch = (y: number) => (y - startY + keptY) * DRAG_FACTOR;
-
-    host.innerHTML = `
-        <svg class="surface-svg" viewBox="0 0 960 500" role="img"
-          aria-label="A surface plot of a radial wave. Drag the figure to rotate it.">
-        </svg>
-        <button class="surface-button" type="button">update</button>`;
-
-    const svg = select(host).select<SVGSVGElement>('svg');
-    const group = svg.append('g');
-    const button = select(host).select<HTMLButtonElement>('button');
+    const { group, button } = rotatingFigure(
+        host,
+        'surface',
+        'A surface plot of a radial wave. Drag the figure to rotate it.',
+        (yaw, pitch) => {
+            surface.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+            draw(surface.data(points), 0);
+        }
+    );
 
     /**
      * One quad: the spectral ramp at its mean height, and a darker tint
@@ -107,22 +97,6 @@ export function mountSurfacePlot(host: HTMLElement): () => void {
         colorScale.domain(extent(points, (d) => d.y) as [number, number]);
         draw(surface.data(points), INTRO_DURATION);
     }
-
-    svg.call(
-        drag<SVGSVGElement, unknown>()
-            .on('start', (event) => {
-                startX = event.x;
-                startY = event.y;
-            })
-            .on('drag', (event) => {
-                surface.rotateY(yaw(event.x) + START_ANGLE).rotateX(-pitch(event.y) - START_ANGLE);
-                draw(surface.data(points), 0);
-            })
-            .on('end', (event) => {
-                keptX += event.x - startX;
-                keptY += event.y - startY;
-            })
-    );
 
     button.on('click', () => show(randomWave()));
 
