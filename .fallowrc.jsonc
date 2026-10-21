@@ -1,0 +1,71 @@
+{
+    "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
+
+    // The public entry point of the package.
+    "entry": ["index.ts"],
+
+    // The library template. Every rule that can catch a violation of the
+    // documented architecture is an error, so the gates fail the build.
+    "rules": {
+        "unused-files": "error",
+        "unused-exports": "error",
+        "unused-types": "error",
+        "unused-class-members": "error",
+        "private-type-leaks": "error",
+        "unresolved-imports": "error",
+        "unlisted-dependencies": "error",
+        "duplicate-exports": "error",
+        "circular-dependencies": "error",
+        "re-export-cycle": "error",
+        "boundary-violation": "error",
+        "coverage-gaps": "error",
+        "stale-suppressions": "warn"
+    },
+
+    // The architecture:
+    //
+    //   index.ts       public-api  ->  shapes, core
+    //   src/shapes/*   shapes      ->  shapes, draw, core
+    //   src/draw/*     draw        ->  draw, core
+    //   src/*          core        ->  core
+    //   tests/*        tests       ->  public-api, shapes, core
+    //   scripts/*      tooling     ->  (nothing)
+    //
+    // Dependencies point inwards only. `core` never imports from `shapes` or
+    // `draw`; `draw` never imports from `shapes`; the tooling never imports
+    // from the library at all; and the test suite never reaches past the
+    // public API into the `draw` helpers.
+    "boundaries": {
+        "zones": [
+            { "name": "public-api", "patterns": ["index.ts"] },
+            { "name": "shapes", "patterns": ["src/shapes/**"] },
+            { "name": "draw", "patterns": ["src/draw/**"] },
+            { "name": "core", "patterns": ["src/**/*.ts"] },
+            { "name": "tests", "patterns": ["tests/**"] },
+            { "name": "tooling", "patterns": ["scripts/**"] }
+        ],
+        "rules": [
+            { "from": "public-api", "allow": ["shapes", "core"] },
+            { "from": "shapes", "allow": ["shapes", "draw", "core"] },
+            { "from": "draw", "allow": ["draw", "core"] },
+            { "from": "core", "allow": ["core"] },
+            { "from": "tests", "allow": ["public-api", "shapes", "core"] },
+            { "from": "tooling", "allow": [] }
+        ],
+        // Every analysed file has to belong to a zone, so a new module cannot
+        // be dropped into src/ without being placed in the architecture.
+        "coverage": {
+            "requireAllFiles": true,
+            "allowUnmatched": ["vite.config.ts"]
+        },
+        // House rules for the library core.
+        "calls": {
+            "forbidden": [
+                {
+                    "from": "core",
+                    "callee": ["console.*", "debugger"]
+                }
+            ]
+        }
+    }
+}

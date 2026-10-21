@@ -53,6 +53,10 @@
         "test:watch": "vitest",
         "test:ui": "vitest --ui",
         "coverage": "vitest run --coverage",
+        "lint:template": "node scripts/check-template.mjs",
+        "lint:fallow": "fallow dead-code --ci --format ${FALLOW_FORMAT:-human} && fallow health --ci --coverage-gaps --format ${FALLOW_FORMAT:-human} && fallow dupes --ci --format ${FALLOW_FORMAT:-human}",
+        "lint": "npm run lint:template && npm run lint:fallow",
+        "hooks:install": "fallow hooks install --target git && fallow hooks install --target agent --agent claude && fallow hooks install --target agent --agent codex",
         "prepack": "npm run build",
         "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.es.js build/d3-3d.cjs"
     },
@@ -60,6 +64,7 @@
         "@types/node": "^26.6.5",
         "@vitest/coverage-v8": "5.0.5",
         "@vitest/ui": "5.0.5",
+        "fallow": "3.34.1",
         "typescript": "^7.0.2",
         "vite": "^8.3.5",
         "vitest": "5.0.5"
