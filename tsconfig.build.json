@@ -4,5 +4,7 @@
         "declaration": true,
         "emitDeclarationOnly": true,
         "outDir": "./build"
-    }
+    },
+    "include": ["index.ts", "src/**/*"],
+    "exclude": ["node_modules", "build"]
 }

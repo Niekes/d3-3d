@@ -2,10 +2,10 @@ import { TransformedPoint, Point3D, TransformOptions } from './types';
 import { rotateRzRyRx } from './rotation';
 import { orthographic } from './projection-orthographic';
 
-export const transform = <Datum = Point3D>(
+export function transform<Datum = Point3D>(
     data: Datum[],
     options: TransformOptions<Datum>
-): TransformedPoint<Datum>[] => {
+): TransformedPoint<Datum>[] {
     return data.map((point) => {
         const startPoint: Point3D = {
             x: options.x(point),
@@ -31,4 +31,4 @@ export const transform = <Datum = Point3D>(
             projected
         };
     });
-};
+}

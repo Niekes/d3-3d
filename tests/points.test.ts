@@ -4,7 +4,7 @@ import { points3D } from '../index';
 describe('points3D', () => {
     test("doesn't have draw function", () => {
         const points = points3D();
-        // @ts-ignore
+        // @ts-expect-error
         expect(points.draw).toBeUndefined();
     });
 

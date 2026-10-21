@@ -1,20 +1,21 @@
 import { defineConfig } from 'vitest/config';
-import { resolve } from 'path';
+import { resolve } from 'node:path';
 
 export default defineConfig({
     // Library build configuration
     build: {
         lib: {
-            entry: resolve(__dirname, 'index.ts'),
+            entry: resolve(import.meta.dirname, 'index.ts'),
             name: 'd33d',
-            fileName: (format) => `d3-3d.${format === 'umd' ? 'js' : `${format}.js`}`,
-            formats: ['es', 'umd']
+            fileName: (format) => {
+                if (format === 'umd') return 'd3-3d.js';
+                if (format === 'es') return 'd3-3d.es.js';
+                return 'd3-3d.cjs';
+            },
+            formats: ['es', 'umd', 'cjs']
         },
-        rollupOptions: {
-            external: [],
-            output: {
-                globals: {}
-            }
+        rolldownOptions: {
+            external: []
         },
         sourcemap: true,
         outDir: 'build',
@@ -24,7 +25,7 @@ export default defineConfig({
     // Test configuration
     test: {
         globals: true,
-        environment: 'jsdom',
+        environment: 'node',
         include: ['tests/**/*.test.ts'],
         coverage: {
             provider: 'v8',

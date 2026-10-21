@@ -1,6 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { cubes3D } from '../index';
-import { Point3D } from '../src/types';
+import { cubes3D, Point3D } from '../index';
 
 describe('cubes3D', () => {
     test('cube naming is correct', () => {

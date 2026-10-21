@@ -10,7 +10,7 @@ export type Polygon<Datum> = TransformedPoint<Datum>[] & {
     centroid: Point3D;
 };
 
-interface Polygons3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface Polygons3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Polygon<Datum>[];
     draw(polygons: Datum[]): string;
 }
@@ -21,17 +21,7 @@ class Polygons3DRenderer<Datum = Point3D>
 {
     data(data: Datum[][]): Polygon<Datum>[] {
         return data.map((polygon) => {
-            const transformedPolygon = transform(polygon, {
-                origin: this.origin(),
-                rotateCenter: this.rotationCenter(),
-                rotateX: this.rotateX(),
-                rotateY: this.rotateY(),
-                rotateZ: this.rotateZ(),
-                scale: this.scale(),
-                x: this.x(),
-                y: this.y(),
-                z: this.z()
-            }) as Polygon<Datum>;
+            const transformedPolygon = transform(polygon, this.transformOptions()) as Polygon<Datum>;
 
             transformedPolygon.ccw = ccw(transformedPolygon);
             transformedPolygon.centroid = centroid(transformedPolygon);

@@ -11,7 +11,7 @@ export type GridPlane<Datum> = TransformedPoint<Datum>[] & {
     plane: string;
 };
 
-interface GridPlanes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
+export interface GridPlanes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     rows(): number;
     rows(rows: number): this;
 
@@ -33,17 +33,7 @@ class GridPlanes3DRenderer<Datum = Point3D>
 
     data(data: Datum[]): GridPlane<Datum>[] {
         const numPts = this._rows;
-        const transformedPoints = transform(data, {
-            origin: this.origin(),
-            rotateCenter: this.rotationCenter(),
-            rotateX: this.rotateX(),
-            rotateY: this.rotateY(),
-            rotateZ: this.rotateZ(),
-            scale: this.scale(),
-            x: this.x(),
-            y: this.y(),
-            z: this.z()
-        });
+        const transformedPoints = transform(data, this.transformOptions());
 
         const numRows = transformedPoints.length / numPts;
         const faces: GridPlane<Datum>[] = [];

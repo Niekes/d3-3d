@@ -19,26 +19,33 @@
         "url": "git+https://github.com/niekes/d3-3d.git"
     },
     "type": "module",
-    "main": "build/d3-3d.js",
+    "main": "build/d3-3d.cjs",
     "module": "build/d3-3d.es.js",
     "types": "build/index.d.ts",
     "exports": {
         ".": {
             "types": "./build/index.d.ts",
             "import": "./build/d3-3d.es.js",
-            "require": "./build/d3-3d.js"
+            "require": "./build/d3-3d.cjs"
         }
     },
     "files": [
         "build/d3-3d.js",
         "build/d3-3d.es.js",
+        "build/d3-3d.cjs",
         "build/index.d.ts",
         "build/**/*.d.ts"
     ],
+    "devEngines": {
+        "runtime": {
+            "name": "node",
+            "version": "^22.12.0 || ^24.0.0 || >=26.0.0"
+        }
+    },
     "scripts": {
         "clean": "rm -rf build",
         "typecheck": "tsc --noEmit",
-        "build:types": "tsc --emitDeclarationOnly --outDir build",
+        "build:types": "tsc -p tsconfig.build.json",
         "build:js": "vite build",
         "build": "npm run clean && npm run typecheck && npm run build:types && npm run build:js",
         "pretest": "npm run typecheck",
@@ -46,17 +53,20 @@
         "test:watch": "vitest",
         "test:ui": "vitest --ui",
         "coverage": "vitest run --coverage",
+        "lint:template": "node scripts/check-template.mjs",
+        "lint:fallow": "fallow dead-code --ci --format ${FALLOW_FORMAT:-human} && fallow health --ci --coverage-gaps --format ${FALLOW_FORMAT:-human} && fallow dupes --ci --format ${FALLOW_FORMAT:-human}",
+        "lint": "npm run lint:template && npm run lint:fallow",
+        "hooks:install": "fallow hooks install --target git && fallow hooks install --target agent --agent claude && fallow hooks install --target agent --agent codex",
         "prepack": "npm run build",
-        "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.min.js"
+        "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.es.js build/d3-3d.cjs"
     },
     "devDependencies": {
-        "@types/node": "^25.0.6",
-        "@vitest/coverage-v8": "^4.0.17",
-        "@vitest/ui": "^4.0.17",
-        "jsdom": "^27.4.0",
-        "typescript": "^5.9.3",
-        "uglify-js": "^3.19.3",
-        "vite": "^7.3.1",
-        "vitest": "^4.0.17"
+        "@types/node": "^26.6.5",
+        "@vitest/coverage-v8": "5.0.5",
+        "@vitest/ui": "5.0.5",
+        "fallow": "3.34.1",
+        "typescript": "^7.0.2",
+        "vite": "^8.3.5",
+        "vitest": "5.0.5"
     }
 }
