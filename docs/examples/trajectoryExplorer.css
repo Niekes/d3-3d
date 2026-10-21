@@ -1,0 +1,154 @@
+.trajectory-explorer {
+    --te-ink: #1b1e21;
+    --te-wall: #888888;
+    --te-a: #2a78d6;
+    --te-b: #eb6834;
+    --te-c: #1baf7a;
+    --te-button: #f0f1f1;
+    --te-button-line: #c4c7c9;
+    --te-bg: #ffffff;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--te-button-line);
+    border-radius: 12px;
+    background: var(--te-bg);
+    color: var(--te-ink);
+}
+
+/* The dark mode steps the same three hues for its own surface. */
+.dark .trajectory-explorer {
+    --te-ink: #e6e8e9;
+    --te-a: #3987e5;
+    --te-b: #d95926;
+    --te-c: #199e70;
+    --te-button: #17181a;
+    --te-button-line: #3d4144;
+    --te-bg: #0c0d0e;
+}
+
+.trajectory-explorer .trajectory-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.trajectory-explorer .trajectory-svg:active {
+    cursor: grabbing;
+}
+
+.trajectory-explorer .trajectory-walls path {
+    fill: var(--te-wall);
+    fill-opacity: 0.06;
+    stroke: var(--te-wall);
+    stroke-opacity: 0.4;
+    stroke-width: 0.5;
+}
+
+.trajectory-explorer .trajectory-paths path {
+    fill: none;
+    stroke-width: 1;
+    stroke-opacity: 0.25;
+}
+
+.trajectory-explorer .trajectory-paths path.is-selected {
+    stroke-opacity: 0.6;
+}
+
+.trajectory-explorer .trajectory-data path {
+    fill: none;
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.trajectory-explorer .trajectory-data path.is-selected {
+    stroke-width: 3;
+}
+
+.trajectory-explorer .trajectory-data circle {
+    stroke: var(--te-bg);
+    stroke-width: 2;
+}
+
+.trajectory-explorer .trajectory-labels text {
+    font-family: system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--te-ink);
+    dominant-baseline: central;
+}
+
+.trajectory-explorer .is-dimmed {
+    opacity: 0.25;
+}
+
+.trajectory-explorer .trajectory-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--te-button-line);
+    border-radius: 8px;
+    background: var(--te-button);
+    color: var(--te-ink);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.trajectory-explorer .trajectory-button:hover {
+    border-color: var(--te-ink);
+}
+
+.trajectory-explorer .trajectory-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--te-button-line);
+    font-size: 0.85rem;
+}
+
+.trajectory-explorer .trajectory-controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* The scrubber takes the room the other controls leave. */
+.trajectory-explorer .trajectory-controls > label {
+    flex: 1 1 16rem;
+}
+
+.trajectory-explorer .trajectory-controls input[type='range'] {
+    flex: 1;
+}
+
+.trajectory-explorer .trajectory-controls output {
+    min-width: 2.5em;
+    font-variant-numeric: tabular-nums;
+    white-space: pre;
+}
+
+.trajectory-explorer fieldset {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+/* A floated legend leaves the border of the fieldset and lines up with the radios. */
+.trajectory-explorer legend {
+    float: left;
+    padding: 0;
+}
+
+.trajectory-explorer .swatch {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+}

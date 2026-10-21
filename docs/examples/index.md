@@ -7,6 +7,7 @@
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Scatter plot](/examples/scatter-plot) — points over a checkered floor, drawn with `points3D`, `gridPlanes3D` and `lineStrips3D`
 - [Scatter explorer](/examples/scatter-explorer) — five datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
+- [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
 - [Sphere](/examples/sphere) — a sphere of 1250 triangles drawn with `triangles3D`, rotated by drag
 - [Iso stack](/examples/iso-stack) — an exploded isometric architecture, drawn with `iso3D`
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
