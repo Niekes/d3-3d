@@ -21,7 +21,10 @@ class Polygons3DRenderer<Datum = Point3D>
 {
     data(data: Datum[][]): Polygon<Datum>[] {
         return data.map((polygon) => {
-            const transformedPolygon = transform(polygon, this.transformOptions()) as Polygon<Datum>;
+            const transformedPolygon = transform(
+                polygon,
+                this.transformOptions()
+            ) as Polygon<Datum>;
 
             transformedPolygon.ccw = ccw(transformedPolygon);
             transformedPolygon.centroid = centroid(transformedPolygon);

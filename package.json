@@ -1,23 +1,30 @@
 {
     "name": "d3-3d",
-    "version": "2.0.2",
+    "version": "2.1.0",
     "description": "D3.js plugin for 3d visualization written in Typescript",
     "keywords": [
-        "d3",
-        "d3-module",
         "3D",
+        "d3",
         "d3-3d",
+        "d3-module",
         "projection",
         "typescript",
         "visualization"
     ],
-    "author": "Niekes (https://niekes.com)",
-    "license": "BSD-3-Clause",
     "homepage": "https://github.com/niekes/d3-3d",
+    "license": "BSD-3-Clause",
+    "author": "Niekes (https://niekes.com)",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/niekes/d3-3d.git"
     },
+    "files": [
+        "build/d3-3d.js",
+        "build/d3-3d.es.js",
+        "build/d3-3d.cjs",
+        "build/index.d.ts",
+        "build/**/*.d.ts"
+    ],
     "type": "module",
     "main": "build/d3-3d.cjs",
     "module": "build/d3-3d.es.js",
@@ -29,30 +36,16 @@
             "require": "./build/d3-3d.cjs"
         }
     },
-    "files": [
-        "build/d3-3d.js",
-        "build/d3-3d.es.js",
-        "build/d3-3d.cjs",
-        "build/index.d.ts",
-        "build/**/*.d.ts"
-    ],
-    "devEngines": {
-        "runtime": {
-            "name": "node",
-            "version": "^22.12.0 || ^24.0.0 || >=26.0.0"
-        }
-    },
     "scripts": {
         "clean": "rm -rf build",
         "typecheck": "tsc --noEmit",
-        "build:types": "tsc -p tsconfig.build.json",
-        "build:js": "vite build",
-        "build": "npm run clean && npm run typecheck && npm run build:types && npm run build:js",
+        "build:js": "vp pack",
+        "build": "npm run clean && npm run typecheck && npm run build:js",
         "pretest": "npm run typecheck",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:ui": "vitest --ui",
-        "coverage": "vitest run --coverage",
+        "test": "vp test run",
+        "test:watch": "vp test",
+        "test:ui": "vp test --ui",
+        "coverage": "vp test run --coverage",
         "lint:template": "node scripts/check-template.mjs",
         "lint:fallow": "fallow dead-code --ci --format ${FALLOW_FORMAT:-human} && fallow health --ci --coverage-gaps --format ${FALLOW_FORMAT:-human} && fallow dupes --ci --format ${FALLOW_FORMAT:-human}",
         "lint": "npm run lint:template && npm run lint:fallow",
@@ -66,7 +59,18 @@
         "@vitest/ui": "5.0.5",
         "fallow": "3.34.1",
         "typescript": "^7.0.2",
-        "vite": "^8.3.5",
+        "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
+        "vite-plus": "1.3.0",
         "vitest": "5.0.5"
+    },
+    "overrides": {
+        "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
+        "vitest": "5.0.5"
+    },
+    "devEngines": {
+        "runtime": {
+            "name": "node",
+            "version": "^22.18.0 || ^24.11.0 || >=26.0.0"
+        }
     }
 }

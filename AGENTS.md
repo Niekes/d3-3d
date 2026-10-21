@@ -1,4 +1,5 @@
 <!-- fallow:setup-hooks:start -->
+
 ## Fallow checks
 
 Use fallow for code-quality, cleanup, and setup tasks in this repository. Fallow checks the changed code before each `git commit` and `git push`. In Claude Code and Codex, a PreToolUse hook from `fallow agent install` runs this check and blocks the command when the verdict is `fail`. Other agents run the check themselves: `fallow audit --format json --quiet --explain --gate-marker agent`. If the verdict is `fail`, fix the reported findings before you try again. A JSON runtime error such as `{ "error": true, ... }` does not block.
@@ -9,25 +10,26 @@ For non-skill agents, treat the task map below as the local onboarding source: r
 
 ## Fallow task map
 
-| When the agent is about to... | Run |
-|---|---|
-| delete an "unused" export or file | `fallow dead-code --trace <file>:<export>` |
-| prove a TypeScript symbol's exact consumers before refactoring | `fallow dead-code --type-aware --symbol-impact <file>:<export-or-class.method>` |
-| find how one module reaches another | `fallow trace --path <from> <to>` (Reports `reachable: false` instead of failing when no import path exists; type-only hops are reported, not skipped.) |
-| delete an "unused" dependency | `fallow dead-code --trace-dependency <name>` |
-| migrate a dependency | `fallow trace --dependency <name> --sites` (Counts each imported name, follows one hop through project wrappers, and counts each use that it cannot resolve.) |
-| commit or open a PR | `fallow audit --base <ref>` |
-| read a diff before approving it | `fallow review --base <ref> --brief` (orientation, never gates: deterministic and always exit 0, unlike the audit row) |
-| prioritize refactoring | `fallow health --hotspots --targets` |
-| ask who owns code | `fallow health --ownership` |
-| check untested-but-reachable code | `fallow health --coverage-gaps` |
-| consolidate duplication | `fallow dupes --trace dup:<fingerprint>` |
-| find feature flags | `fallow flags` |
-| check which architecture rules apply to a file before changing it | `fallow guard <files>` |
-| check import cycles, boundaries and policy rules after changing code | `fallow architecture` |
-| surface security candidates | `fallow security` |
-| understand a finding | `fallow explain <issue-type>` |
-| scope a monorepo | `--workspace <glob> / --changed-workspaces <ref>` (global flags, prefix any command) |
+| When the agent is about to...                                        | Run                                                                                                                                                           |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| delete an "unused" export or file                                    | `fallow dead-code --trace <file>:<export>`                                                                                                                    |
+| prove a TypeScript symbol's exact consumers before refactoring       | `fallow dead-code --type-aware --symbol-impact <file>:<export-or-class.method>`                                                                               |
+| find how one module reaches another                                  | `fallow trace --path <from> <to>` (Reports `reachable: false` instead of failing when no import path exists; type-only hops are reported, not skipped.)       |
+| delete an "unused" dependency                                        | `fallow dead-code --trace-dependency <name>`                                                                                                                  |
+| migrate a dependency                                                 | `fallow trace --dependency <name> --sites` (Counts each imported name, follows one hop through project wrappers, and counts each use that it cannot resolve.) |
+| commit or open a PR                                                  | `fallow audit --base <ref>`                                                                                                                                   |
+| read a diff before approving it                                      | `fallow review --base <ref> --brief` (orientation, never gates: deterministic and always exit 0, unlike the audit row)                                        |
+| prioritize refactoring                                               | `fallow health --hotspots --targets`                                                                                                                          |
+| ask who owns code                                                    | `fallow health --ownership`                                                                                                                                   |
+| check untested-but-reachable code                                    | `fallow health --coverage-gaps`                                                                                                                               |
+| consolidate duplication                                              | `fallow dupes --trace dup:<fingerprint>`                                                                                                                      |
+| find feature flags                                                   | `fallow flags`                                                                                                                                                |
+| check which architecture rules apply to a file before changing it    | `fallow guard <files>`                                                                                                                                        |
+| check import cycles, boundaries and policy rules after changing code | `fallow architecture`                                                                                                                                         |
+| surface security candidates                                          | `fallow security`                                                                                                                                             |
+| understand a finding                                                 | `fallow explain <issue-type>`                                                                                                                                 |
+| scope a monorepo                                                     | `--workspace <glob> / --changed-workspaces <ref>` (global flags, prefix any command)                                                                          |
+
 <!-- fallow:setup-hooks:end -->
 
 ## The library template
@@ -47,14 +49,14 @@ npm run lint:fallow    # layering, dead code, test coverage, duplication
 Dependencies point inwards only. The zones are declared in `.fallowrc.jsonc`
 and a violation fails the build.
 
-| Zone         | Files            | May import                     |
-| ------------ | ---------------- | ------------------------------ |
-| `public-api` | `index.ts`       | `shapes`, `core`               |
-| `shapes`     | `src/shapes/**`  | `shapes`, `draw`, `core`       |
-| `draw`       | `src/draw/**`    | `draw`, `core`                 |
-| `core`       | `src/**/*.ts`    | `core`                         |
-| `tests`      | `tests/**`       | `public-api`, `shapes`, `core` |
-| `tooling`    | `scripts/**`     | nothing                        |
+| Zone         | Files           | May import                     |
+| ------------ | --------------- | ------------------------------ |
+| `public-api` | `index.ts`      | `shapes`, `core`               |
+| `shapes`     | `src/shapes/**` | `shapes`, `draw`, `core`       |
+| `draw`       | `src/draw/**`   | `draw`, `core`                 |
+| `core`       | `src/**/*.ts`   | `core`                         |
+| `tests`      | `tests/**`      | `public-api`, `shapes`, `core` |
+| `tooling`    | `scripts/**`    | nothing                        |
 
 Two consequences worth remembering:
 
@@ -143,4 +145,3 @@ rules keep it honest:
 `src/<name>.ts` holds one export, declared with `export function`, and may
 not import from `shapes` or `draw`. If the helper is part of the public API,
 re-export it from `index.ts` and cover it with a test.
-

@@ -1,25 +1,45 @@
-import { defineConfig } from 'vitest/config';
-import { resolve } from 'node:path';
+import { defineConfig } from 'vite-plus';
+import type { UserConfig } from 'vite-plus';
 
-export default defineConfig({
-    // Library build configuration
-    build: {
-        lib: {
-            entry: resolve(import.meta.dirname, 'index.ts'),
-            name: 'd33d',
-            fileName: (format) => {
-                if (format === 'umd') return 'd3-3d.js';
-                if (format === 'es') return 'd3-3d.es.js';
-                return 'd3-3d.cjs';
-            },
-            formats: ['es', 'umd', 'cjs']
-        },
-        rolldownOptions: {
-            external: []
-        },
-        sourcemap: true,
+function entryFileName(chunk: { name?: string }, format: string, dtsName: string): string {
+    const name = chunk.name ? String(chunk.name) : '';
+    const isDts = name.endsWith('.d');
+    if (isDts) return dtsName;
+    const names: Record<string, string> = { umd: 'd3-3d.js', cjs: 'd3-3d.cjs' };
+    return names[format] ?? 'd3-3d.es.js';
+}
+
+const config: UserConfig = {
+    fmt: {
+        semi: true,
+        singleQuote: true,
+        printWidth: 100,
+        trailingComma: 'none',
+        tabWidth: 4
+    },
+    lint: {
+        jsPlugins: [{ name: 'vite-plus', specifier: 'vite-plus/oxlint-plugin' }],
+        rules: { 'vite-plus/prefer-vite-plus-imports': 'error' },
+        options: { typeAware: true, typeCheck: true }
+    },
+    check: {},
+    // Library build configuration (tsdown via `vp pack`)
+    pack: {
+        entry: ['index.ts'],
+        format: ['esm', 'cjs', 'umd'],
+        globalName: 'd33d',
         outDir: 'build',
-        emptyOutDir: false
+        sourcemap: true,
+        minify: true,
+        target: 'es2020',
+        platform: 'browser',
+        dts: { generator: 'oxc' },
+        outputOptions: (options, format, ctx) => {
+            const cjsDts = Boolean(ctx && ctx.cjsDts);
+            const dtsName = cjsDts ? 'index.d.cts' : 'index.d.ts';
+            options.entryFileNames = (chunk) => entryFileName(chunk, String(format), dtsName);
+            return options;
+        }
     },
 
     // Test configuration
@@ -34,4 +54,6 @@ export default defineConfig({
             exclude: ['tests/**', 'build/**', '**/*.d.ts']
         }
     }
-});
+};
+
+export default defineConfig(config) as UserConfig;

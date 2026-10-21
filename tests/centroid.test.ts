@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect } from 'vite-plus/test';
 import { centroid, Point3D, TransformedPoint } from '../index';
 
 function point(x: number, y: number, z: number): TransformedPoint<Point3D> {

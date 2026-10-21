@@ -68,15 +68,27 @@ for (const file of shapeModules) {
         fail(`${file}: must export the interface '${contract}'`);
     }
 
-    if (!matches(source, new RegExp(`export\\s+interface\\s+${contract}\\b[\\s\\S]*?extends\\s+ShapeInstance\\b`))) {
+    if (
+        !matches(
+            source,
+            new RegExp(`export\\s+interface\\s+${contract}\\b[\\s\\S]*?extends\\s+ShapeInstance\\b`)
+        )
+    ) {
         fail(`${file}: '${contract}' must extend 'ShapeInstance'`);
     }
 
-    if (!matches(source, new RegExp(`class\\s+${renderer}\\b[\\s\\S]*?extends\\s+ShapeRenderer\\b`))) {
+    if (
+        !matches(source, new RegExp(`class\\s+${renderer}\\b[\\s\\S]*?extends\\s+ShapeRenderer\\b`))
+    ) {
         fail(`${file}: must declare a class '${renderer}' extending 'ShapeRenderer'`);
     }
 
-    if (!matches(source, new RegExp(`class\\s+${renderer}\\b[\\s\\S]*?implements\\s+${contract}\\b`))) {
+    if (
+        !matches(
+            source,
+            new RegExp(`class\\s+${renderer}\\b[\\s\\S]*?implements\\s+${contract}\\b`)
+        )
+    ) {
         fail(`${file}: '${renderer}' must implement '${contract}'`);
     }
 
@@ -110,11 +122,21 @@ for (const file of shapeModules) {
     const factory = `${camelCase(stem)}3D`;
     const contract = `${pascalCase(stem)}3DInstance`;
 
-    if (!matches(barrel, new RegExp(`export\\s*\\{[^}]*\\b${factory}\\b[^}]*\\}\\s*from\\s*'${module}'`))) {
+    if (
+        !matches(
+            barrel,
+            new RegExp(`export\\s*\\{[^}]*\\b${factory}\\b[^}]*\\}\\s*from\\s*'${module}'`)
+        )
+    ) {
         fail(`index.ts: must re-export '${factory}' from '${module}'`);
     }
 
-    if (!matches(barrel, new RegExp(`export\\s+type\\s*\\{[^}]*\\b${contract}\\b[^}]*\\}\\s*from\\s*'${module}'`))) {
+    if (
+        !matches(
+            barrel,
+            new RegExp(`export\\s+type\\s*\\{[^}]*\\b${contract}\\b[^}]*\\}\\s*from\\s*'${module}'`)
+        )
+    ) {
         fail(`index.ts: must re-export the type '${contract}' from '${module}'`);
     }
 }
@@ -142,7 +164,11 @@ for (const file of listModules('src')) {
  * `export const` arrow functions. A named declaration keeps the hoisting,
  * the stack traces and the generated `.d.ts` predictable.
  */
-for (const file of [...listModules('src'), ...listModules('src/shapes'), ...listModules('src/draw')]) {
+for (const file of [
+    ...listModules('src'),
+    ...listModules('src/shapes'),
+    ...listModules('src/draw')
+]) {
     const source = read(file);
 
     if (matches(source, /^export\s+const\s+\w+\s*=\s*</m)) {

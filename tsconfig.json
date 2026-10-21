@@ -10,6 +10,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "moduleResolution": "bundler",
+        "isolatedDeclarations": true,
         "resolveJsonModule": true,
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,

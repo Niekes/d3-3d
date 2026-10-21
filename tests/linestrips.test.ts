@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect } from 'vite-plus/test';
 import { lineStrips3D } from '../index';
 
 describe('lineStrips3D', () => {

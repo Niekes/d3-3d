@@ -1,4 +1,4 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect } from 'vite-plus/test';
 import { cubes3D, Point3D } from '../index';
 
 describe('cubes3D', () => {

@@ -8,7 +8,6 @@
 [![npm](https://img.shields.io/npm/dt/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/dw/d3-3d)](https://www.npmjs.com/package/d3-3d)
 [![npm](https://img.shields.io/npm/l/d3-3d)](https://github.com/Niekes/d3-3d/blob/master/LICENSE)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/d3-3d)](https://bundlephobia.com/result?p=d3-3d)
 [![npm](https://img.shields.io/npm/v/d3-3d)](https://www.npmjs.com/package/d3-3d)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
 <a href="https://github.com/niekes/d3-3d"><img src="https://img.shields.io/github/stars/niekes/d3-3d" alt="stars" /></a>
@@ -61,14 +60,14 @@ ES6 / TypeScript:
 
 ```typescript
 import {
-  triangles3D,
-  cubes3D,
-  gridPlanes3D,
-  points3D,
-  lineStrips3D,
-  polygons3D,
-  planes3D,
-  lines3D
+    triangles3D,
+    cubes3D,
+    gridPlanes3D,
+    points3D,
+    lineStrips3D,
+    polygons3D,
+    planes3D,
+    lines3D
 } from 'd3-3d';
 
 // Import utility function for sorting
@@ -116,18 +115,18 @@ With **d3-3d** you can easily visualize your 3d data with full TypeScript suppor
 import { triangles3D, sort } from 'd3-3d';
 
 const data3D = [
-  [
-    { x: 0, y: -1, z: 0 },
-    { x: -1, y: 1, z: 0 },
-    { x: 1, y: 1, z: 0 }
-  ]
+    [
+        { x: 0, y: -1, z: 0 },
+        { x: -1, y: 1, z: 0 },
+        { x: 1, y: 1, z: 0 }
+    ]
 ];
 
 // Create renderer with default Point3D type
 const renderer = triangles3D()
-  .scale(100)
-  .origin({ x: 480, y: 250 })
-  .rotateY(Math.PI / 4);
+    .scale(100)
+    .origin({ x: 480, y: 250 })
+    .rotateY(Math.PI / 4);
 
 // Transform data - returns array with computed properties
 const transformedData = renderer.data(data3D);
@@ -141,12 +140,11 @@ const transformedData = renderer.data(data3D);
 // Render with D3
 const svg = d3.select('svg');
 
-svg
-  .selectAll('path')
-  .data(transformedData)
-  .join('path')
-  .attr('d', renderer.draw)
-  .attr('fill', 'steelblue');
+svg.selectAll('path')
+    .data(transformedData)
+    .join('path')
+    .attr('d', renderer.draw)
+    .attr('fill', 'steelblue');
 ```
 
 **TypeScript with Custom Data Types:**
@@ -156,27 +154,27 @@ import { cubes3D, sort, type Point3D } from 'd3-3d';
 
 // Define your domain-specific data type
 interface Building {
-  lat: number;
-  lng: number;
-  height: number;
-  name: string;
-  color: string;
+    lat: number;
+    lng: number;
+    height: number;
+    name: string;
+    color: string;
 }
 
 // Use generic type for full type safety
 const renderer = cubes3D<Building>()
-  .x((d) => d.lng)
-  .y((d) => d.height)
-  .z((d) => d.lat)
-  .scale(50)
-  .origin({ x: 400, y: 300 });
+    .x((d) => d.lng)
+    .y((d) => d.height)
+    .z((d) => d.lat)
+    .scale(50)
+    .origin({ x: 400, y: 300 });
 
 const buildings: Building[][] = [
-  [
-    { lat: 0, lng: 0, height: 10, name: 'Building A', color: '#ff6b6b' },
-    { lat: 1, lng: 0, height: 15, name: 'Building B', color: '#4ecdc4' },
-    { lat: 0.5, lng: 1, height: 20, name: 'Building C', color: '#45b7d1' }
-  ]
+    [
+        { lat: 0, lng: 0, height: 10, name: 'Building A', color: '#ff6b6b' },
+        { lat: 1, lng: 0, height: 15, name: 'Building B', color: '#4ecdc4' },
+        { lat: 0.5, lng: 1, height: 20, name: 'Building C', color: '#45b7d1' }
+    ]
 ];
 
 const transformed = renderer.data(buildings);
@@ -190,13 +188,12 @@ transformed[0].ccw; // ✓ boolean
 // Sort by depth for proper rendering (back-to-front)
 const sorted = transformed.sort(sort);
 
-svg
-  .selectAll('path')
-  .data(sorted)
-  .join('path')
-  .attr('d', renderer.draw)
-  .attr('fill', (d) => d[0].color)
-  .attr('stroke', 'black');
+svg.selectAll('path')
+    .data(sorted)
+    .join('path')
+    .attr('d', renderer.draw)
+    .attr('fill', (d) => d[0].color)
+    .attr('stroke', 'black');
 ```
 
 ### Shapes
@@ -259,15 +256,15 @@ Transformed shapes with the following properties:
 
 ```typescript
 const renderer = triangles3D()
-  .scale(100)
-  .rotateY(Math.PI / 4);
+    .scale(100)
+    .rotateY(Math.PI / 4);
 
 const data = [
-  [
-    { x: 0, y: 0, z: 0 },
-    { x: 1, y: 0, z: 0 },
-    { x: 0, y: 1, z: 0 }
-  ]
+    [
+        { x: 0, y: 0, z: 0 },
+        { x: 1, y: 0, z: 0 },
+        { x: 0, y: 1, z: 0 }
+    ]
 ];
 
 const result = renderer.data(data);
@@ -340,7 +337,7 @@ If _x_ is specified, sets the _x_ accessor to the specified function or number a
 
 ```js
 function x(p) {
-  return p.x;
+    return p.x;
 }
 ```
 
@@ -354,7 +351,7 @@ If _y_ is specified, sets the _y_ accessor to the specified function or number a
 
 ```js
 function y(p) {
-  return p.y;
+    return p.y;
 }
 ```
 
@@ -368,7 +365,7 @@ If _z_ is specified, sets the _z_ accessor to the specified function or number a
 
 ```js
 function z(p) {
-  return p.z;
+    return p.z;
 }
 ```
 
@@ -433,8 +430,8 @@ _Default:_ `{ x: 0, y: 0, z: 0 }`
 
 ```typescript
 const renderer = triangles3D()
-  .rotationCenter({ x: 50, y: 50, z: 0 }) // Rotate around point (50,50,0)
-  .rotateY(Math.PI / 2);
+    .rotationCenter({ x: 50, y: 50, z: 0 }) // Rotate around point (50,50,0)
+    .rotateY(Math.PI / 2);
 
 // The rotation will pivot around (50,50,0) instead of (0,0,0)
 ```
@@ -468,17 +465,17 @@ _Default:_ `1`
 
 ```typescript
 const points = [
-  { x: 0, y: 0, z: 0 },
-  { x: 1, y: 0, z: 0 },
-  { x: 2, y: 0, z: 0 }, // Row 0
-  { x: 0, y: 0, z: 1 },
-  { x: 1, y: 0, z: 1 },
-  { x: 2, y: 0, z: 1 } // Row 1
+    { x: 0, y: 0, z: 0 },
+    { x: 1, y: 0, z: 0 },
+    { x: 2, y: 0, z: 0 }, // Row 0
+    { x: 0, y: 0, z: 1 },
+    { x: 1, y: 0, z: 1 },
+    { x: 2, y: 0, z: 1 } // Row 1
 ];
 
 const grid = gridPlanes3D()
-  .rows(3) // 3 points per row
-  .data(points);
+    .rows(3) // 3 points per row
+    .data(points);
 ```
 
 ## Utility Functions
@@ -507,7 +504,7 @@ svg.selectAll('path').data(sorted).join('path').attr('d', renderer.draw);
 function sort<T extends HasCentroid>(a: T, b: T): number;
 
 interface HasCentroid {
-  centroid: { z: number };
+    centroid: { z: number };
 }
 ```
 
@@ -537,9 +534,9 @@ Boolean indicating whether the polygon is oriented counter-clockwise when viewed
 ```typescript
 const data = triangles3D().data(myTriangles);
 if (data[0].ccw) {
-  // Front-facing triangle - render normally
+    // Front-facing triangle - render normally
 } else {
-  // Back-facing triangle - optionally skip or render differently
+    // Back-facing triangle - optionally skip or render differently
 }
 ```
 
