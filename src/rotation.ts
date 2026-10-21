@@ -1,54 +1,46 @@
 import { Point3D, RotationAngles } from './types';
 
 export function rotateRzRyRx(point: Point3D, angles: RotationAngles): Point3D {
-    const rc = angles.rotateCenter;
-
-    const translated: Point3D = {
-        x: point.x - rc.x,
-        y: point.y - rc.y,
-        z: point.z - rc.z
-    };
-
-    const rz = rotateZ(translated, angles.z);
-    const ry = rotateY(rz, angles.y);
-    const rx = rotateX(ry, angles.x);
-
-    return {
-        x: rx.x + rc.x,
-        y: rx.y + rc.y,
-        z: rx.z + rc.z
-    };
+    return rotate(rotationMatrix(angles), point, angles.rotateCenter);
 }
 
-function rotateX(p: Point3D, angle: number): Point3D {
-    const sinA = Math.sin(angle);
-    const cosA = Math.cos(angle);
+/**
+ * The rotation `R = Rx · Ry · Rz` as nine numbers, row by row: a point is
+ * turned around z first, then around y, then around x.
+ *
+ * Building the matrix costs the six sines and cosines once, so a shape pays
+ * for them once per `data()` call instead of once per point.
+ */
+export function rotationMatrix(angles: RotationAngles): number[] {
+    const sx = Math.sin(angles.x);
+    const cx = Math.cos(angles.x);
+    const sy = Math.sin(angles.y);
+    const cy = Math.cos(angles.y);
+    const sz = Math.sin(angles.z);
+    const cz = Math.cos(angles.z);
 
-    return {
-        x: p.x,
-        y: p.y * cosA - p.z * sinA,
-        z: p.y * sinA + p.z * cosA
-    };
+    return [
+        cy * cz,
+        -cy * sz,
+        sy,
+        sx * sy * cz + cx * sz,
+        cx * cz - sx * sy * sz,
+        -sx * cy,
+        sx * sz - cx * sy * cz,
+        cx * sy * sz + sx * cz,
+        cx * cy
+    ];
 }
 
-function rotateY(p: Point3D, angle: number): Point3D {
-    const sinA = Math.sin(angle);
-    const cosA = Math.cos(angle);
+/** Applies the rotation `m` to `point` around `center`. */
+export function rotate(m: number[], point: Point3D, center: Point3D): Point3D {
+    const x = point.x - center.x;
+    const y = point.y - center.y;
+    const z = point.z - center.z;
 
     return {
-        x: p.z * sinA + p.x * cosA,
-        y: p.y,
-        z: p.z * cosA - p.x * sinA
-    };
-}
-
-function rotateZ(p: Point3D, angle: number): Point3D {
-    const sinA = Math.sin(angle);
-    const cosA = Math.cos(angle);
-
-    return {
-        x: p.x * cosA - p.y * sinA,
-        y: p.x * sinA + p.y * cosA,
-        z: p.z
+        x: m[0] * x + m[1] * y + m[2] * z + center.x,
+        y: m[3] * x + m[4] * y + m[5] * z + center.y,
+        z: m[6] * x + m[7] * y + m[8] * z + center.z
     };
 }
