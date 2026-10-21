@@ -30,12 +30,14 @@ export default defineConfig({
                     text: 'Examples',
                     items: [
                         { text: 'Overview', link: '/examples/' },
-                        { text: 'Surface plot', link: '/examples/surface-plot' },
-                        { text: 'Bar chart', link: '/examples/bar-chart' },
-                        { text: 'Scatter plot', link: '/examples/scatter-plot' },
-                        { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
-                        { text: 'Solar system', link: '/examples/solar-system' },
-                        { text: 'Office tower', link: '/examples/iso-tower' }
+                        ...[
+                            { text: 'Surface plot', link: '/examples/surface-plot' },
+                            { text: 'Bar chart', link: '/examples/bar-chart' },
+                            { text: 'Scatter plot', link: '/examples/scatter-plot' },
+                            { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
+                            { text: 'Solar system', link: '/examples/solar-system' },
+                            { text: 'Office tower', link: '/examples/iso-tower' }
+                        ].sort((a, b) => a.text.localeCompare(b.text))
                     ]
                 }
             ],
