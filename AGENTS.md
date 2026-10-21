@@ -57,6 +57,7 @@ and a violation fails the build.
 | `core`       | `src/**/*.ts`   | `core`                         |
 | `tests`      | `tests/**`      | `public-api`, `shapes`, `core` |
 | `tooling`    | `scripts/**`    | nothing                        |
+| `docs`       | `docs/**`       | `public-api`, `shapes`, `core` |
 
 Two consequences worth remembering:
 
@@ -142,6 +143,8 @@ rules keep it honest:
 
 ### Adding a core helper
 
-`src/<name>.ts` holds one export, declared with `export function`, and may
-not import from `shapes` or `draw`. If the helper is part of the public API,
-re-export it from `index.ts` and cover it with a test.
+`src/<name>.ts` holds one cohesive unit, declared with `export function`, and
+may not import from `shapes` or `draw`. A unit is a single export in most
+cases; `src/point.ts` groups three related accessors and `src/iso.ts` three
+functions that only one shape module consumes. If the helper is part of the
+public API, re-export it from `index.ts` and cover it with a test.
