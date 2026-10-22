@@ -22,6 +22,13 @@ export type TransformedPoint<T> = T & {
     projected: Point2D;
 };
 
+/**
+ * The fields a shape carries on its array besides its points, such as a
+ * `color` set with `Object.assign(points, { color })`. `.data` keeps them.
+ * The indices of a tuple are string keys, so `${number}` leaves them out.
+ */
+export type ShapeFields<Shape extends unknown[]> = Omit<Shape, keyof unknown[] | `${number}`>;
+
 export interface RotationAngles {
     x: number;
     y: number;

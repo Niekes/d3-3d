@@ -56,4 +56,18 @@ describe('lineStrips3D', () => {
         // @ts-expect-error draw reads the projected points that data() adds
         expect(() => lineStrips3D().draw(raw)).toThrow(TypeError);
     });
+
+    test('keeps the fields of a line strip array (#44)', () => {
+        const path = [
+            { x: 0, y: 0, z: 0 },
+            { x: 1, y: 2, z: 0 },
+            { x: 2, y: 0, z: 0 }
+        ];
+
+        const [strip] = lineStrips3D().data([Object.assign(path, { label: 'route' })]);
+        const label: string = strip.label;
+
+        expect(label).toBe('route');
+        expect(strip.centroid).toEqual({ x: 1, y: 2, z: 0 });
+    });
 });

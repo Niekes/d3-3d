@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vite-plus/test';
-import { triangles3D } from '../index';
+import { sort, triangles3D } from '../index';
 
 describe('triangles3D', () => {
     test('is exported correctly', () => {
@@ -204,5 +204,46 @@ describe('triangles3D', () => {
 
         // @ts-expect-error draw reads the projected points that data() adds
         expect(() => triangles3D().draw(raw)).toThrow(TypeError);
+    });
+
+    test('keeps the fields of a triangle array, as in #44', () => {
+        const shapes = [
+            {
+                color: 'blue',
+                vertices: [
+                    { x: 0, y: -1, z: 0 },
+                    { x: -1, y: 1, z: 0 },
+                    { x: 1, y: 1, z: 0 }
+                ]
+            },
+            {
+                color: 'red',
+                vertices: [
+                    { x: 0, y: -1, z: 5 },
+                    { x: -1, y: 1, z: 5 },
+                    { x: 1, y: 1, z: 5 }
+                ]
+            }
+        ];
+
+        const triangles = triangles3D()
+            .data(shapes.map((shape) => Object.assign(shape.vertices, { color: shape.color })))
+            .sort(sort);
+        const colors: string[] = triangles.map((triangle) => triangle.color);
+
+        expect(colors).toEqual(['blue', 'red']);
+        expect(triangles[0][0].rotated).toEqual({ x: 0, y: -1, z: 0 });
+    });
+
+    test('lets its own fields win over input fields of the same name', () => {
+        const vertices = [
+            { x: 0, y: 0, z: 0 },
+            { x: 3, y: 0, z: 0 },
+            { x: 0, y: 3, z: 0 }
+        ];
+
+        const [triangle] = triangles3D().data([Object.assign(vertices, { centroid: 'mine' })]);
+
+        expect(triangle.centroid).toEqual({ x: 1, y: 1, z: 0 });
     });
 });

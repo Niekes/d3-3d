@@ -54,4 +54,18 @@ describe('polygons3D', () => {
         // @ts-expect-error draw reads the projected points that data() adds
         expect(() => polygons3D().draw(raw)).toThrow(TypeError);
     });
+
+    test('keeps the fields of a polygon array (#44)', () => {
+        const pentagon = [0, 1, 2, 3, 4].map((i) => ({
+            x: Math.cos((i * 2 * Math.PI) / 5),
+            y: Math.sin((i * 2 * Math.PI) / 5),
+            z: 0
+        }));
+
+        const [polygon] = polygons3D().data([Object.assign(pentagon, { sides: 5 })]);
+        const sides: number = polygon.sides;
+
+        expect(sides).toBe(5);
+        expect(polygon).toHaveLength(5);
+    });
 });

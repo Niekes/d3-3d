@@ -1,15 +1,15 @@
-import { TransformedPoint, Point3D } from '../types';
+import { ShapeFields, TransformedPoint, Point3D } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { centroid } from '../centroid';
-import { transform } from '../transform';
 import { drawLineStrip } from '../draw/drawLineStrip';
 
-export type LineStrip<Datum> = TransformedPoint<Datum>[] & {
-    centroid: Point3D;
-};
+export type LineStrip<Datum, Shape extends Datum[] = Datum[]> = TransformedPoint<Datum>[] &
+    ShapeFields<Shape> & {
+        centroid: Point3D;
+    };
 
 export interface LineStrips3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): LineStrip<Datum>[];
+    data<Shape extends Datum[]>(data: Shape[]): LineStrip<Datum, Shape>[];
     draw(lineStrip: TransformedPoint<Datum>[]): string;
 }
 
@@ -17,15 +17,12 @@ class LineStrips3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements LineStrips3DInstance<Datum>
 {
-    data(data: Datum[][]): LineStrip<Datum>[] {
+    data<Shape extends Datum[]>(data: Shape[]): LineStrip<Datum, Shape>[] {
         return data.map((strip) => {
             const midpoint = strip.length / 2;
             const truncatedMidpoint = Math.trunc(midpoint);
 
-            const transformedLineStrip = transform(
-                strip,
-                this.transformOptions()
-            ) as LineStrip<Datum>;
+            const transformedLineStrip = this.transformShape(strip) as LineStrip<Datum, Shape>;
 
             transformedLineStrip.centroid =
                 truncatedMidpoint === midpoint

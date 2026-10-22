@@ -1,9 +1,8 @@
-import { TransformedPoint, Point3D } from '../types';
+import { ShapeFields, TransformedPoint, Point3D } from '../types';
 import { drawPlane } from '../draw/drawPlane';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { ccw } from '../counter-clockwise';
 import { centroid } from '../centroid';
-import { transform } from '../transform';
 
 export type CubeFaceName = 'front' | 'back' | 'left' | 'right' | 'top' | 'bottom';
 
@@ -13,13 +12,14 @@ export type CubeFace<Datum = Point3D> = TransformedPoint<Datum>[] & {
     face: CubeFaceName;
 };
 
-export type Cube<Datum = Point3D> = TransformedPoint<Datum>[] & {
-    faces: CubeFace<Datum>[];
-    centroid: Point3D;
-};
+export type Cube<Datum = Point3D, Shape extends Datum[] = Datum[]> = TransformedPoint<Datum>[] &
+    ShapeFields<Shape> & {
+        faces: CubeFace<Datum>[];
+        centroid: Point3D;
+    };
 
 export interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): Cube<Datum>[];
+    data<Shape extends Datum[]>(data: Shape[]): Cube<Datum, Shape>[];
     draw(face: TransformedPoint<Datum>[]): string;
 }
 
@@ -38,9 +38,9 @@ class Cubes3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Cubes3DInstance<Datum>
 {
-    data(data: Datum[][]): Cube<Datum>[] {
+    data<Shape extends Datum[]>(data: Shape[]): Cube<Datum, Shape>[] {
         return data.map((cube) => {
-            const transformedCube = transform(cube, this.transformOptions()) as Cube<Datum>;
+            const transformedCube = this.transformShape(cube) as Cube<Datum, Shape>;
 
             const front = createFace(
                 [transformedCube[0], transformedCube[1], transformedCube[2], transformedCube[3]],

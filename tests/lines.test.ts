@@ -41,4 +41,17 @@ describe('lines3D', () => {
         expect(result[1].centroid).toEqual({ x: 2, y: 2, z: 2 });
         expect(result[2].centroid).toEqual({ x: 22.15, y: 10.35, z: 18 });
     });
+
+    test('keeps the fields of a line array (#44)', () => {
+        const ends = [
+            { x: 0, y: 0, z: 0 },
+            { x: 2, y: 2, z: 2 }
+        ];
+
+        const [line] = lines3D().data([Object.assign(ends, { weight: 3 })]);
+        const weight: number = line.weight;
+
+        expect(weight).toBe(3);
+        expect(line.centroid).toEqual({ x: 1, y: 1, z: 1 });
+    });
 });

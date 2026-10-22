@@ -1,5 +1,6 @@
-import { Point2D, Point3D, TransformOptions } from '../types';
+import { Point2D, Point3D, ShapeFields, TransformedPoint, TransformOptions } from '../types';
 import { x as px, y as py, z as pz } from '../point';
+import { transform } from '../transform';
 import { unproject } from '../unproject';
 import { projectionMatrix } from '../projection-matrix';
 import { rotationMatrix } from '../rotation';
@@ -195,6 +196,25 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
      */
     protected transformOptions(): TransformOptions<Datum> {
         return { ...this.view, x: this.x(), y: this.y(), z: this.z() };
+    }
+
+    /**
+     * Transforms the points of one shape and keeps the fields its array
+     * carries besides them, such as a `color` (#44). The indices exist on
+     * the result already, so only those fields are copied.
+     */
+    protected transformShape<Shape extends Datum[]>(
+        shape: Shape
+    ): TransformedPoint<Datum>[] & ShapeFields<Shape> {
+        const points = transform(shape, this.transformOptions());
+
+        for (const key of Object.keys(shape)) {
+            if (!(key in points)) {
+                Reflect.set(points, key, Reflect.get(shape, key));
+            }
+        }
+
+        return points as TransformedPoint<Datum>[] & ShapeFields<Shape>;
     }
 }
 

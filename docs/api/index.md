@@ -111,7 +111,9 @@ gl.uniformMatrix4fv(
 ### `.data(data)` {#data}
 
 Transform and compute properties for your data: rotate and project every
-point. Your fields stay on every point, and the result gains:
+point. Your fields stay on every point, the fields of a shape's array stay
+on the shape (see [Data on a shape](/guide/getting-started#data-on-a-shape)),
+and the result gains:
 
 - `rotated: Point3D`, the rotated point, on every point;
 - `projected: Point2D`, the point on the screen, on every point;

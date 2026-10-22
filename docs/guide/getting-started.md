@@ -126,4 +126,32 @@ svg
   .attr("fill", (d) => d[0].color);
 ```
 
+### Data on a shape
+
+A field that belongs to the whole shape, not to one of its points, goes on
+the array of the shape. `.data` keeps it, typed, on the shape it returns:
+
+```typescript
+const shapes = [
+  { color: "steelblue", vertices: [/* three points */] },
+  { color: "tomato", vertices: [/* three points */] },
+];
+
+const renderer = triangles3D();
+const triangles = renderer.data(
+  shapes.map((shape) => Object.assign(shape.vertices, { color: shape.color })),
+);
+
+svg
+  .selectAll("path")
+  .data(triangles.sort(sort))
+  .join("path")
+  .attr("d", renderer.draw)
+  .attr("fill", (d) => d.color); // ✓ string
+```
+
+This works for `lines3D`, `lineStrips3D`, `triangles3D`, `planes3D`,
+`polygons3D` and `cubes3D`. A field with the name of a computed one, such as
+`centroid` or `ccw`, is overwritten by the shape.
+
 Next: the [API reference](/api/) and the [examples](/examples/).

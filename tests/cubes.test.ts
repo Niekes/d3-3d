@@ -112,4 +112,23 @@ describe('cubes3D', () => {
 
         expect(cubes.draw?.(result[0].faces[0])).toBe('M0,0L0,1L1,1L1,0Z');
     });
+
+    test('keeps the fields of a cube array (#44)', () => {
+        const corners: Point3D[] = [
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 },
+            { x: 1, y: 1, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 0, z: 1 },
+            { x: 0, y: 1, z: 1 },
+            { x: 1, y: 1, z: 1 },
+            { x: 1, y: 0, z: 1 }
+        ];
+
+        const [cube] = cubes3D().data([Object.assign(corners, { height: 42 })]);
+        const height: number = cube.height;
+
+        expect(height).toBe(42);
+        expect(cube.faces).toHaveLength(6);
+    });
 });
