@@ -20,9 +20,9 @@ const GLIDE_REST = 50;
  * The drag that turns a figure: hands `onRotate` the yaw and the pitch in
  * radians, during the drag and during the glide after a flick.
  */
-export function dragRotate(
+export function dragRotate<E extends Element = SVGSVGElement>(
     onRotate: (yaw: number, pitch: number) => void
-): DragBehavior<SVGSVGElement, unknown, unknown> {
+): DragBehavior<E, unknown, unknown> {
     let startX = 0;
     let startY = 0;
     let keptX = 0;
@@ -35,7 +35,7 @@ export function dragRotate(
     let speedX = 0;
     let speedY = 0;
     let glide: Timer | undefined;
-    let figure: SVGSVGElement | undefined;
+    let figure: E | undefined;
 
     function glideFrom(release: number): void {
         const still =
@@ -71,7 +71,7 @@ export function dragRotate(
 
     // A press that wanders a few pixels is still a click, not a drag, so a
     // shaky hand can still select what it points at.
-    return drag<SVGSVGElement, unknown>()
+    return drag<E, unknown>()
         .clickDistance(4)
         .on('start', function (event) {
             figure = this;

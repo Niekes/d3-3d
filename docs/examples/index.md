@@ -10,6 +10,7 @@
 - [Mini city](/examples/mini-city) — sixteen low-poly buildings drawn with `cubes3D`, each piece a box, a tapered shaft, a gable roof or a spire, lit by a sun that a slider moves across the sky; click a building to see its stats
 - [Floor-plan explorer](/examples/floor-plan) — four floors drawn with `planes3D`, their rooms with `polygons3D` and labels with `points3D`, colored by occupancy; spread the floors on a slider and select a floor or a room
 - [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
+- [Point cloud](/examples/point-cloud) — a spiral galaxy of up to a million stars, projected by `.matrix()` and drawn on a 2D canvas with `projectPositions` or with WebGL
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
 - [Network explorer](/examples/network-explorer) — 45 nodes in three clusters, drawn with `points3D` and `lines3D`; click a node to highlight its neighbors, filter the clusters
 - [Projection playground](/examples/projection-playground) — rotation, scale, origin and rotation center of one cube, with the renderer call and its vertices beside the SVG and twelve presets from isometric to a corner pivot
