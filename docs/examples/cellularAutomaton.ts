@@ -1,7 +1,7 @@
 import { randomLcg, range, select } from 'd3';
-import { box, camera3D, cubes3D } from '../../index';
+import { camera3D, cubes3D } from '../../index';
 import type { CubeFaceName, Point3D } from '../../index';
-import { joinCells, keyOf, neighborOf } from './cubeFaces';
+import { cellBox, joinCells, keyOf, neighborOf } from './cubeFaces';
 import type { Cell } from './cubeFaces';
 import { floorGrid, pose } from './floorView';
 import { playback, rotatingFigure } from './rotatingFigure';
@@ -122,16 +122,12 @@ function step(
 /** The eight vertices of the cube in a cell, in the order cubes3D expects. */
 function makeCube(cell: Cell, age: number): CellVertex[] {
     const key = keyOf(cell);
-    // A cell spans one unit from its corner; the screen y grows downwards,
-    // so the layers rise towards a negative y.
-    return box({
-        x: cell.column - HALF + 0.5,
-        y: -cell.layer,
-        z: cell.row - HALF + 0.5,
-        width: 1,
-        height: 1,
-        depth: 1
-    }).map((corner) => ({ ...cell, ...corner, key, bucket: bucketOf(age) }));
+    return cellBox(cell, { x: -HALF, y: 0, z: -HALF }).map((corner) => ({
+        ...cell,
+        ...corner,
+        key,
+        bucket: bucketOf(age)
+    }));
 }
 
 /**

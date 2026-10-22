@@ -369,8 +369,8 @@ export function mountMiniCity(host: HTMLElement): () => void {
             const pieces = cubes.data(building.pieces);
             return {
                 building,
-                faces: pieces.flatMap((p) => p.faces!),
-                centroid: pieces[0].faces!.find((f) => f.face === 'bottom')!.centroid
+                faces: pieces.flatMap((p) => p.faces),
+                centroid: pieces[0].faces.find((f) => f.face === 'bottom')!.centroid
             };
         });
 

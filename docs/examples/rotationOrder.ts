@@ -1,6 +1,6 @@
 import { easeCubicInOut, select, timer } from 'd3';
 import type { Selection, Timer } from 'd3';
-import { box, camera3D, cubes3D, lines3D, sort, transform } from '../../index';
+import { camera3D, cubes3D, lines3D, sort, transform } from '../../index';
 import type {
     Camera3DInstance,
     Cube,
@@ -14,7 +14,8 @@ import type {
     TransformedPoint,
     TransformOptions
 } from '../../index';
-import { joinFaces } from './cubeFaces';
+import { cellBox, joinFaces, keyOf, neighborOf } from './cubeFaces';
+import type { Cell } from './cubeFaces';
 import { placeSegments } from './segments';
 
 /*
@@ -31,17 +32,11 @@ type Axis = 'x' | 'y' | 'z';
 /** The three angles, in radians. */
 type Angles = Record<Axis, number>;
 
-/** A place in the block: the column along x, the layer up and the row along z. */
-type Cell = { column: number; layer: number; row: number };
-
 /** One vertex of a cube: a point that carries its cell, so the cell survives every turn. */
 type Vertex = Point3D & Cell;
 
 /** A vertex after the chain: `rotated` holds the pose after the last turn. */
 type Turned = TransformedPoint<Vertex>;
-
-/** One cube after the projection: cubes3D always sets its faces and its centroid. */
-type BlockCube<Datum> = Cube<Datum> & { faces: CubeFace<Datum>[]; centroid: Point3D };
 
 /** The parts of a panel that change: the cubes, the own axes, the heading and the code. */
 type Panel = {
@@ -115,40 +110,18 @@ const CELLS: Cell[] = [
     { column: 0, layer: 1, row: 1 }
 ];
 
-/** The neighbor behind every face, as a step in column, layer and row. */
-const STEPS: Record<CubeFaceName, [number, number, number]> = {
-    front: [0, 0, 1],
-    back: [0, 0, -1],
-    left: [-1, 0, 0],
-    right: [1, 0, 0],
-    top: [0, 1, 0],
-    bottom: [0, -1, 0]
-};
-
-const keyOf = (cell: Cell) => `${cell.column},${cell.layer},${cell.row}`;
-
 const FILLED = new Set(CELLS.map(keyOf));
 
 /** Whether the face of a cell in this direction shows: no cube behind it. */
 function isOpen(cell: Cell, face: CubeFaceName): boolean {
-    const [dc, dl, dr] = STEPS[face];
-    return !FILLED.has(
-        keyOf({ column: cell.column + dc, layer: cell.layer + dl, row: cell.row + dr })
-    );
+    return !FILLED.has(keyOf(neighborOf(cell, face)));
 }
 
 // The eight vertices of every cube, in the order cubes3D expects. The
 // middle cube of the column sits on the rotation center, and the layers
 // rise towards a negative y, as on the screen.
 const BLOCK: Vertex[][] = CELLS.map((cell) =>
-    box({
-        x: cell.column,
-        y: 1.5 - cell.layer,
-        z: cell.row,
-        width: 1,
-        height: 1,
-        depth: 1
-    }).map((corner) => ({ ...cell, ...corner }))
+    cellBox(cell, { x: -0.5, y: 1.5, z: -0.5 }).map((corner) => ({ ...cell, ...corner }))
 );
 
 /** The copy's own axes: three segments from the middle of the block, 2.5 long. */
@@ -259,17 +232,17 @@ function drawCopy<C extends Vertex, A extends Point3D>(
     axes: Lines3DInstance<A>,
     block: C[][],
     ownAxes: A[][]
-): BlockCube<C>[] {
+): Cube<C>[] {
     // A face against another cube is dropped, so only the surface of the
     // block reaches the DOM.
-    const turned = cubes.data(block) as BlockCube<C>[];
+    const turned = cubes.data(block) as Cube<C>[];
     for (const cube of turned) {
         cube.faces = cube.faces.filter((face) => isOpen(cube[0], face.face));
     }
 
     // The cubes paint back to front, and a face that turns away is hidden.
     const groups = panel.block
-        .selectAll<SVGGElement, BlockCube<C>>('g')
+        .selectAll<SVGGElement, Cube<C>>('g')
         .data(turned)
         .join('g')
         .sort(sort);

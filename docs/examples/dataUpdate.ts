@@ -44,9 +44,7 @@ type BlockVertex = Point3D & Block;
 type Keyed = { id: string; index: number };
 
 /** One cube after the projection, sorted by the centroid of its bottom face. */
-type BlockCube = Cube<BlockVertex> &
-    Block &
-    Keyed & { faces: CubeFace<BlockVertex>[]; centroid: Point3D };
+type BlockCube = Cube<BlockVertex> & Block & Keyed;
 
 /** One label after the projection. */
 type Label = Point<BlockVertex> & Keyed;
@@ -282,7 +280,7 @@ export function mountDataUpdate(host: HTMLElement): () => void {
         // high up and would paint over a short cube in front of it.
         const projected = cubes3d.data(blocks.map(makeCube)).map((cube, index) => {
             const { id, column, row, height } = cube[0];
-            const bottom = cube.faces!.find((face) => face.face === 'bottom')!;
+            const bottom = cube.faces.find((face) => face.face === 'bottom')!;
             return Object.assign(cube, {
                 id,
                 column,

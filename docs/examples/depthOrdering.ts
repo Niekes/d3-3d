@@ -234,7 +234,7 @@ function project(scene: Scene, planes: Planes3DInstance, cubes: Cubes3DInstance)
         return quads;
     }
     const { color, spec } = scene.cube;
-    const faces = cubes.data([box(spec)])[0].faces!.filter((face) => face.ccw);
+    const faces = cubes.data([box(spec)])[0].faces.filter((face) => face.ccw);
     return [
         ...quads,
         ...faces.map((face) =>

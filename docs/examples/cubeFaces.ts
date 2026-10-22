@@ -1,12 +1,9 @@
 import type { BaseType, Selection } from 'd3';
-import { sort } from '../../index';
+import { box, sort } from '../../index';
 import type { Cube, CubeFace, CubeFaceName, Cubes3DInstance, Point3D } from '../../index';
 
 /** A place in the grid: the column along x, the layer up from the floor and the row along z. */
 export type Cell = { column: number; layer: number; row: number };
-
-/** A cube of the grid after the projection: cubes3D always sets its faces and its centroid. */
-export type CellCube<Datum> = Cube<Datum> & { faces: CubeFace<Datum>[]; centroid: Point3D };
 
 /** The neighbor behind every face, as a step in column, layer and row. */
 export const STEPS: Record<CubeFaceName, [number, number, number]> = {
@@ -21,6 +18,23 @@ export const STEPS: Record<CubeFaceName, [number, number, number]> = {
 /** The key of a cell, to join its cube by. */
 export function keyOf(cell: Cell): string {
     return `${cell.column},${cell.layer},${cell.row}`;
+}
+
+/**
+ * The eight corners of the unit cube in `cell`, in the order cubes3D
+ * expects. A cell spans one unit from its corner, and the corner of the cell
+ * 0, 0, 0 lies at `origin`; the screen y grows downwards, so the layers rise
+ * towards a negative y.
+ */
+export function cellBox(cell: Cell, origin: Point3D): Point3D[] {
+    return box({
+        x: origin.x + cell.column + 0.5,
+        y: origin.y - cell.layer,
+        z: origin.z + cell.row + 0.5,
+        width: 1,
+        height: 1,
+        depth: 1
+    });
 }
 
 /** The cell behind a face of the cube in `cell`. */
@@ -59,10 +73,10 @@ export function joinCells<Datum extends Point3D & Cell & { key: string }>(
     cubes: Cubes3DInstance<Datum>,
     data: Datum[][],
     isOpen: (cell: Cell, face: CubeFaceName) => boolean
-): Selection<SVGGElement, CellCube<Datum>, SVGGElement, unknown> {
+): Selection<SVGGElement, Cube<Datum>, SVGGElement, unknown> {
     const cubeGroups = group
-        .selectAll<SVGGElement, CellCube<Datum>>('g')
-        .data((cubes.data(data) as CellCube<Datum>[]).sort(sort), (d) => d[0].key)
+        .selectAll<SVGGElement, Cube<Datum>>('g')
+        .data(cubes.data(data).sort(sort), (d) => d[0].key)
         .join('g');
 
     joinFaces(

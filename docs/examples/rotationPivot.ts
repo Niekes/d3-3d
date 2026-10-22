@@ -158,7 +158,7 @@ export function mountRotationPivot(host: HTMLElement): () => void {
         joinFaces(
             boxGroup
                 .selectAll<SVGPathElement, CubeFace<Corner>>('path')
-                .data(cube.faces!, (d) => d.face),
+                .data(cube.faces, (d) => d.face),
             cubes.draw
         );
 

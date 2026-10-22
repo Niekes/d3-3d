@@ -1,7 +1,7 @@
 import { pointer, select } from 'd3';
-import { box, camera3D, cubes3D } from '../../index';
+import { camera3D, cubes3D } from '../../index';
 import type { CubeFace, CubeFaceName, Point3D } from '../../index';
-import { joinCells, keyOf, neighborOf, STEPS } from './cubeFaces';
+import { cellBox, joinCells, keyOf, neighborOf, STEPS } from './cubeFaces';
 import type { Cell } from './cubeFaces';
 import { floorGrid, followPointer, pose } from './floorView';
 import type { Pointer } from './floorView';
@@ -177,16 +177,12 @@ function readBuild(text: string): Voxel[] | string {
 /** The eight vertices of the cube in a cell, in the order cubes3D expects. */
 function makeCube(voxel: Voxel, ghost = false): VoxelVertex[] {
     const key = ghost ? 'ghost' : keyOf(voxel);
-    // A cell spans one unit from its corner; the screen y grows downwards,
-    // so the layers rise towards a negative y.
-    return box({
-        x: voxel.column - HALF + 0.5,
-        y: -voxel.layer,
-        z: voxel.row - HALF + 0.5,
-        width: 1,
-        height: 1,
-        depth: 1
-    }).map((corner) => ({ ...voxel, ...corner, key, ghost }));
+    return cellBox(voxel, { x: -HALF, y: 0, z: -HALF }).map((corner) => ({
+        ...voxel,
+        ...corner,
+        key,
+        ghost
+    }));
 }
 
 /**

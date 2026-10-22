@@ -1,8 +1,8 @@
 import { drag, pointer, range, select } from 'd3';
 import { box, camera3D, cubes3D, lines3D } from '../../index';
-import type { CubeFace, CubeFaceName, Line, Point3D } from '../../index';
-import { joinCells, joinFaces, keyOf, neighborOf } from './cubeFaces';
-import type { Cell, CellCube } from './cubeFaces';
+import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
+import { cellBox, joinCells, joinFaces, keyOf, neighborOf } from './cubeFaces';
+import type { Cell } from './cubeFaces';
 import { FLOOR_MOVES, floorGrid, followPointer, pose } from './floorView';
 import type { Pointer } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
@@ -138,16 +138,13 @@ function dropLayer(cells: Map<string, number[]>, b: Box, from: number, self = GH
 
 /** The eight vertices of the unit cube in a cell, in the order cubes3D expects. */
 function unitCube(cell: Cell, key: string, owners: number[], color: number): UnitVertex[] {
-    // A cell spans one unit from its corner; the screen y grows downwards,
-    // so the layers rise towards a negative y.
-    return box({
-        x: cell.column - W / 2 + 0.5,
-        y: -cell.layer,
-        z: cell.row - D / 2 + 0.5,
-        width: 1,
-        height: 1,
-        depth: 1
-    }).map((corner) => ({ ...cell, ...corner, key, owners, color }));
+    return cellBox(cell, { x: -W / 2, y: 0, z: -D / 2 }).map((corner) => ({
+        ...cell,
+        ...corner,
+        key,
+        owners,
+        color
+    }));
 }
 
 /**
@@ -229,7 +226,7 @@ export function mountPackingPlayground(host: HTMLElement): () => void {
      * walls; it lies in front once one of them turns towards the camera.
      */
     function drawShell(): void {
-        const faces = shell.data([SHELL])[0].faces!;
+        const faces = shell.data([SHELL])[0].faces;
         joinFaces(
             backGroup
                 .selectAll<SVGPathElement, CubeFace<Point3D>>('path')
@@ -393,7 +390,7 @@ export function mountPackingPlayground(host: HTMLElement): () => void {
         if (!hit) {
             return undefined;
         }
-        const { owners } = select<Element, CellCube<UnitVertex>>(hit).datum()[0];
+        const { owners } = select<Element, Cube<UnitVertex>>(hit).datum()[0];
         const id =
             selected !== undefined && owners.includes(selected)
                 ? selected

@@ -89,7 +89,7 @@ export function mountBarChart(host: HTMLElement): () => void {
             return Object.assign(cube, {
                 id: first.id,
                 height: first.height,
-                centroid: cube.faces!.find((face) => face.face === 'bottom')!.centroid
+                centroid: cube.faces.find((face) => face.face === 'bottom')!.centroid
             });
         });
     }

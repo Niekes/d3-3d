@@ -107,7 +107,7 @@ function describeEye(camera: Camera3DInstance): string {
 /** How the two face tests differ, in words. */
 function describeFaces(houses: House[], camera: Camera3DInstance): string {
     const v = camera.viewDirection();
-    const faces = houses.flatMap((house) => house.faces!);
+    const faces = houses.flatMap((house) => house.faces);
     const hidden = faces.filter((face) => face.ccw && !shows(face, 'viewDirection', v)).length;
     const extra = faces.filter((face) => !face.ccw && shows(face, 'viewDirection', v)).length;
     return `Against the view direction, ${hidden} faces the eye sees would be hidden and ${extra} that turn away would be drawn.`;
@@ -164,7 +164,7 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
     function project(): House[] {
         return cubes.data(HOUSES).map((cube) =>
             Object.assign(cube, {
-                centroid: cube.faces!.find((face) => face.face === 'bottom')!.centroid
+                centroid: cube.faces.find((face) => face.face === 'bottom')!.centroid
             })
         );
     }
@@ -195,7 +195,7 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
                 .select('g')
                 .selectAll<SVGPathElement, CubeFace<HouseVertex>>('path')
                 .data(
-                    (d) => d.faces!,
+                    (d) => d.faces,
                     (d) => d.face
                 ),
             cubes.draw,
@@ -211,7 +211,7 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
             distance: camera.perspective()
         };
         groups.select('text').each(function (d) {
-            const roof = d.faces!.find((face) => face.face === 'top')!;
+            const roof = d.faces.find((face) => face.face === 'top')!;
             const at = perspective(roof.centroid, view);
             select(this)
                 .attr('x', at.x)

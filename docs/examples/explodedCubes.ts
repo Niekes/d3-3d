@@ -29,9 +29,6 @@ const KINDS = ['core', 'face', 'edge', 'corner'];
 /** One vertex of a cube: a point that carries the id and the grid position of its cube. */
 type CubeVertex = Point3D & { id: string; layer: number; row: number; column: number };
 
-/** One cube after the projection: cubes3D always sets its faces and its centroid. */
-type AssemblyCube = Cube<CubeVertex> & { faces: CubeFace<CubeVertex>[]; centroid: Point3D };
-
 /** The eight vertices of the unit cube at a grid position, in the order cubes3D expects. */
 function makeCube(layer: number, row: number, column: number): CubeVertex[] {
     const id = `cube-${layer}-${row}-${column}`;
@@ -129,8 +126,8 @@ export function mountExplodedCubes(host: HTMLElement): () => void {
         turnCamera(cubes, yaw, pitch, { yaw: START_ANGLE, tilt: START_ANGLE });
 
         const cubeGroups = group
-            .selectAll<SVGGElement, AssemblyCube>('g.cube')
-            .data(cubes.data(ASSEMBLY) as AssemblyCube[], (d) => d[0].id)
+            .selectAll<SVGGElement, Cube<CubeVertex>>('g.cube')
+            .data(cubes.data(ASSEMBLY) as Cube<CubeVertex>[], (d) => d[0].id)
             .join((enter) => enter.append('g').attr('class', (d) => `cube layer-${d[0].layer}`))
             .classed('is-selected', (d) => d[0].id === selected?.id)
             .sort(sort);

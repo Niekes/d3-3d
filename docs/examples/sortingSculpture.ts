@@ -50,7 +50,7 @@ type Step = Move | { kind: 'settle'; i: number };
 type ColumnVertex = Point3D & { id: string; value: number; slot: number };
 
 /** One column after the projection, with the centroid of its footprint to sort by. */
-type Column = Cube<ColumnVertex> & { faces: CubeFace<ColumnVertex>[]; centroid: Point3D };
+type Column = Cube<ColumnVertex>;
 
 const slotAngle = (slot: number) => (2 * Math.PI * slot) / N;
 
@@ -237,7 +237,7 @@ export function mountSortingSculpture(host: HTMLElement): () => void {
         // front of it.
         const columns = cubes.data(items.map(makeColumn)).map((cube) =>
             Object.assign(cube as Column, {
-                centroid: cube.faces!.find((face) => face.face === 'bottom')!.centroid
+                centroid: cube.faces.find((face) => face.face === 'bottom')!.centroid
             })
         );
 
