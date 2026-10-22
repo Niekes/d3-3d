@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2026-10-22
+
 ### Added
 
 - `camera3D`: a camera without data. Shapes share its view with
@@ -41,6 +43,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.matrix()`, `projectPositions` and `.unproject()` follow it, and
   `perspective(point, options)` is the projection itself. `iso3D` stays
   orthographic.
+- `iso3D`: isometric scenes of boxes. `.data(boxes)` returns the wall, the
+  top and the frames of the faces of every box, with a `centroid` for
+  `sort`; `.plane`, `.path`, `.project` and `.frame` place faces, paths and
+  the view box of a scene.
+- `.unproject(point, planePoint, planeNormal)` on every shape and camera:
+  the world point on a plane under a screen point, or `null` when the plane
+  is seen edge-on or lies behind the eye. It is what dragging along a floor
+  needs.
+- The documentation site, deployed to GitHub Pages: the guide, the API
+  reference, a migration guide and 34 interactive examples. The README
+  points to it.
 
 ### Changed
 
@@ -50,12 +63,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Cube`: `faces` and `centroid` are no longer optional, since `cubes3D`
   always sets both. Code that reads them needs no `!` or `?.` any more; code
   that builds a `Cube` by hand has to set them.
+- Path strings are rounded to three decimals, as `d3.pathRound` does. The
+  difference is invisible and the paths get much shorter, but tests that
+  compare paths character by character need updating.
+- The rotation matrix is built once per `.data()` call instead of once per
+  point.
 
 ### Fixed
 
 - `draw` of `planes3D`, `polygons3D`, `triangles3D` and `lineStrips3D` is
   typed to take the transformed points that `.data()` returns, not raw
   points.
+- Shapes keep the fields of their input arrays again, as in 1.x, and their
+  types carry them (#44): `Object.assign(vertices, { color })` gives the
+  triangle its `color`. This holds for `cubes3D`, `lines3D`,
+  `lineStrips3D`, `planes3D`, `polygons3D` and `triangles3D`.
 
 ## [2.1.0] - 2026-10-21
 
@@ -63,7 +85,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Migrated the build to Vite+ 1.3.0 and `vp pack`.
 - Moved the toolchain to TypeScript 7, Vite 8 and Vitest 5.
-- Added the VitePress documentation site, deployed to GitHub Pages.
 
 ### Added
 
@@ -158,7 +179,8 @@ Initial releases. The first public version of d3-3d with points, lines, line
 strips, triangles, planes, polygons and cubes, plus grid planes, centroid and
 counter-clockwise detection and the `sort` utility.
 
-[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/Niekes/d3-3d/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Niekes/d3-3d/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/Niekes/d3-3d/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Niekes/d3-3d/compare/v2.0.0...v2.0.1
