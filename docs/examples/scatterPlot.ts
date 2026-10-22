@@ -238,10 +238,11 @@ export function mountScatterPlot(host: HTMLElement): () => void {
     const box3d = axes3D();
     const points3d = points3D<ShownPoint>();
     const segments3d = lines3D<ShownPoint>();
+    const probe3d = lines3D();
 
     // Data x runs across the screen, data z up and data y into the depth,
     // as in matterviz. The screen y grows downwards, so z is negated.
-    const renderers: ShapeInstance<any>[] = [box3d, points3d, segments3d];
+    const renderers: ShapeInstance<any>[] = [box3d, points3d, segments3d, probe3d];
     for (const renderer of renderers) {
         renderer
             .scale(SCALE)
@@ -259,6 +260,11 @@ export function mountScatterPlot(host: HTMLElement): () => void {
     let spec: AxesSpec;
     let hoveredId: string | undefined;
     const hidden = new Set<string>();
+
+    // The probe: the pointer in the group while no button is down, and the
+    // data z of the horizontal wall that is drawn, the floor it reads.
+    let resting: [number, number] | undefined;
+    let floorZ: number | undefined;
 
     // The motion: the drag angles from the scaffold, the auto-rotation and
     // the tween of the samples, all advanced by one render loop.
@@ -284,6 +290,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
 
     const wallGroup = group.append('g').attr('class', 'scatter-walls');
     const axisGroup = group.append('g').attr('class', 'scatter-axes');
+    const probeGroup = group.append('g').attr('class', 'scatter-probe');
     const dataGroup = group.append('g').attr('class', 'scatter-data');
     const halo = group.append('circle').attr('class', 'scatter-halo');
 
@@ -296,6 +303,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
                 (d, i) => `<option value="${i}">${d.name}</option>`
             ).join('')}</select></label>
             <label>auto-rotate <input name="spin" type="range" min="0" max="5" step="0.1" value="0"><output></output></label>
+            <span class="scatter-readout"></span>
         </div>
         <div class="scatter-legend" hidden></div>
         <div class="scatter-colorbar" hidden><span></span><svg width="220" height="34"></svg></div>
@@ -307,19 +315,27 @@ export function mountScatterPlot(host: HTMLElement): () => void {
     const legend = host.querySelector('.scatter-legend') as HTMLElement;
     const colorbar = host.querySelector('.scatter-colorbar') as HTMLElement;
     const tooltip = host.querySelector('.scatter-tooltip') as HTMLElement;
+    const readout = host.querySelector('.scatter-readout') as HTMLElement;
+    const svg = select(host).select<SVGSVGElement>('svg');
 
     const seriesColor = (name: string) => dataset.series.find((s) => s.name === name)!.color;
     const fill = (d: ShownPoint) =>
         d.value === undefined ? seriesColor(d.series) : dataset.ramp!(valueScale(d.value));
     const radius = (d: ShownPoint) => (d.size === undefined ? POINT_RADIUS : sizeScale(d.size));
 
-    /** Draws the walls that face away from the camera, with their gridlines. */
+    /** Draws the walls that face away from the camera, with their gridlines; keeps the floor. */
     function drawWalls(): void {
+        const walls = box3d.data(spec).filter((wall) => !wall.ccw);
         wallGroup
             .selectAll<SVGPathElement, AxisWall>('path')
-            .data(box3d.data(spec).filter((wall) => !wall.ccw))
+            .data(walls)
             .join('path')
             .attr('d', box3d.draw);
+
+        // The floor is the drawn wall whose corners share one data z. A level
+        // view sees both horizontal walls edge-on and has no floor.
+        const floors = walls.filter((wall) => wall.every((corner) => corner.z === wall[0].z));
+        floorZ = floors.length === 1 ? floors[0][0].z : undefined;
     }
 
     /** Consecutive samples of every series that is drawn as a line. */
@@ -380,6 +396,63 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             .attr('fill', rgb(fill(hovered)).brighter(0.8).formatHex());
     }
 
+    /** The point of the floor at data z `z` under the pointer, in data units, inside the box. */
+    function floorAt([x, y]: [number, number], z: number): Point3D | undefined {
+        const world = box3d.unproject(
+            { x, y },
+            { x: 0, y: -scales.z(z), z: 0 },
+            { x: 0, y: 1, z: 0 }
+        );
+        // Every scale maps its domain onto -1 to 1, so beyond that the
+        // inverted scales would read values outside the domains.
+        if (!world || Math.abs(world.x) > 1 || Math.abs(world.z) > 1) {
+            return undefined;
+        }
+        return { x: scales.x.invert(world.x), y: scales.y.invert(world.z), z };
+    }
+
+    /**
+     * Draws the crosshair on the floor through the foot of the hovered
+     * sample, or through the floor under the pointer, the drop line from
+     * the hovered sample and the readout.
+     */
+    function drawProbe(): void {
+        const hovered = shown.find((d) => d.id === hoveredId);
+        const z = floorZ;
+        const at =
+            z === undefined || !resting
+                ? undefined
+                : hovered
+                  ? { x: hovered.x, y: hovered.y, z }
+                  : floorAt(resting, z);
+        const [x0, x1] = scales.x.domain();
+        const [y0, y1] = scales.y.domain();
+        const lines: Point3D[][] = at
+            ? [
+                  [
+                      { ...at, x: x0 },
+                      { ...at, x: x1 }
+                  ],
+                  [
+                      { ...at, y: y0 },
+                      { ...at, y: y1 }
+                  ],
+                  ...(hovered ? [[hovered, at]] : [])
+              ]
+            : [];
+
+        probeGroup
+            .style('--drop', hovered ? seriesColor(hovered.series) : '')
+            .selectAll<SVGLineElement, Line<Point3D>>('line')
+            .data(probe3d.data(lines))
+            .join('line')
+            .call(placeSegments)
+            .classed('is-drop', (d) => d[0].z !== d[1].z);
+
+        readout.textContent = at ? `x ${fmt(at.x)} · y ${fmt(at.y)}` : '';
+        svg.classed('is-probing', !!at);
+    }
+
     /** Turns the scene by the drag and the auto-rotation and draws it. */
     function drawScene(): void {
         for (const renderer of renderers) {
@@ -394,6 +467,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             (axis) => AXIS_COLORS[axis]
         );
         drawData();
+        drawProbe();
     }
 
     /** Moves the shown samples one frame further towards the target of the tween. */
@@ -485,9 +559,10 @@ export function mountScatterPlot(host: HTMLElement): () => void {
 
         const width = 200;
         const bar = scaleLinear().domain(valueScale.domain()).range([0, width]);
-        const svg = select(colorbar).select('svg');
-        svg.selectAll('*').remove();
-        svg.append('g')
+        const barSvg = select(colorbar).select('svg');
+        barSvg.selectAll('*').remove();
+        barSvg
+            .append('g')
             .attr('transform', 'translate(10, 0)')
             .selectAll('rect')
             .data(range(0, 1, 1 / 40))
@@ -496,7 +571,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             .attr('width', width / 40 + 0.5)
             .attr('height', 14)
             .attr('fill', (t) => ramp(t));
-        svg.append('g').attr('transform', 'translate(10, 14)').call(axisBottom(bar).ticks(4));
+        barSvg.append('g').attr('transform', 'translate(10, 14)').call(axisBottom(bar).ticks(4));
     }
 
     /** Switches to a dataset: new domains, axes, legend and color bar. */
@@ -556,6 +631,15 @@ export function mountScatterPlot(host: HTMLElement): () => void {
     dataGroup.on('pointermove', showTooltip).on('pointerleave', () => {
         hoveredId = undefined;
         drawHalo();
+    });
+    // The pointer is kept while no button is down, so the probe follows the
+    // scene through a glide and the auto-rotation; a drag hides it.
+    svg.on('pointerdown pointermove pointerup', (event: PointerEvent) => {
+        resting = event.buttons ? undefined : pointer(event, group.node());
+        drawProbe();
+    }).on('pointerleave', () => {
+        resting = undefined;
+        drawProbe();
     });
     button.on('click', () => {
         all = dataset.points();

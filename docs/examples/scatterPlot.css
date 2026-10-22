@@ -30,6 +30,10 @@
     touch-action: none;
 }
 
+.scatter-plot .scatter-svg.is-probing {
+    cursor: crosshair;
+}
+
 .scatter-plot .scatter-svg:active {
     cursor: grabbing;
 }
@@ -83,6 +87,24 @@
     stroke-dasharray: 4 3;
 }
 
+.scatter-plot .scatter-probe {
+    pointer-events: none;
+}
+
+.scatter-plot .scatter-probe line {
+    stroke: var(--se-ink);
+    stroke-opacity: 0.5;
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+}
+
+.scatter-plot .scatter-probe line.is-drop {
+    stroke: var(--drop);
+    stroke-opacity: 1;
+    stroke-width: 1.5;
+    stroke-dasharray: none;
+}
+
 .scatter-plot .scatter-halo {
     fill-opacity: 0.4;
     pointer-events: none;
@@ -122,6 +144,10 @@
 
 .scatter-plot .scatter-controls output {
     min-width: 2em;
+    font-variant-numeric: tabular-nums;
+}
+
+.scatter-plot .scatter-readout {
     font-variant-numeric: tabular-nums;
 }
 

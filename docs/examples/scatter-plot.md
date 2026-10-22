@@ -22,7 +22,8 @@ onBeforeUnmount(() => {
 
 <div ref="host" class="scatter-plot"></div>
 
-**Drag the figure** to rotate it, **hover a point** to read its values. The
+**Drag the figure** to rotate it, **hover a point** to read its values and
+**rest the pointer over the box** to read x and y off its floor. The
 picker switches the dataset, the legend toggles a series, the slider sets
 the auto-rotation and the button samples the dataset again and glides the
 points to their new positions.
@@ -151,6 +152,55 @@ A transformed point keeps the properties of its input next to its `rotated`
 and `projected` coordinates. The tooltip reads the series, the position and
 the value straight off the circle under the pointer, and a halo rings the
 point while the rotation carries it along.
+
+## Reading the floor
+
+A point on the screen has no data value of its own. The projection drops
+the depth, so the pointer stands for a whole line of points behind the
+screen, each with a different x, y and z. A plane picks one of them: the
+line behind the pointer meets it in exactly one place.
+
+A chart has such a plane at hand, its floor. The floor is the horizontal
+wall that is drawn, the one of the walls facing away whose four corners
+share one data z. Seen from above that is the bottom of the box; turned
+upside down, it is the top. A view that is exactly level sees both
+horizontal walls edge-on, and there is no floor to read.
+
+```ts
+const floors = walls.filter((wall) => wall.every((corner) => corner.z === wall[0].z));
+floorZ = floors.length === 1 ? floors[0][0].z : undefined;
+```
+
+[`unproject`](https://github.com/niekes/d3-3d#unprojectpoint-planepoint-planenormal)
+returns the point of the floor under the pointer. It works in world units,
+the values the accessors return, so the floor sits at the negated
+`scales.z` of its data z, and its normal points along y. The accessors put
+data x on world x and data y on world z, and the inverted scales read the
+data values back:
+
+```ts
+const world = box3d.unproject({ x, y }, { x: 0, y: -scales.z(z), z: 0 }, { x: 0, y: 1, z: 0 });
+if (!world || Math.abs(world.x) > 1 || Math.abs(world.z) > 1) {
+    return undefined;
+}
+return { x: scales.x.invert(world.x), y: scales.y.invert(world.z), z };
+```
+
+Every scale maps its domain onto -1 to 1, so a world point beyond that lies
+outside the box, where the inverted scales would read values past the axes.
+
+The crosshair is drawn by a fourth renderer, a `lines3D` in the same list
+as the others: two segments in data units through the probed point, each
+across the full domain of the other axis. It shares the accessors and the
+rotation, so it turns with the box. The figure keeps the pointer while no
+button is down and probes again in every draw, so with the pointer at rest
+the floor turns beneath it during a glide or the auto-rotation, and the
+readout changes with it.
+
+Over a sample, the probe needs no plane: the foot of the sample is its own
+x and y at the floor's z. A drop line runs from the sample down to the
+foot and shows which point of the floor the sample sits above, which the
+projection alone does not tell.
 
 ## The whole source
 
