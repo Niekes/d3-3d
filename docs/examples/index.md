@@ -7,6 +7,7 @@
 - [Area chart](/examples/area-chart) — two series as hatched ribbons in a box, drawn with `polygons3D` and `axes3D`, that morph into new samples; the faces are painted in an exact order that follows from the planes separating them
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Data-update stress test](/examples/data-update) — up to 36 labelled cubes drawn with `cubes3D` and labels with `points3D`, added, removed, shuffled and moved through a keyed join; the enter, update and exit sets flash in their own colors, and a toggle keys the join by id or by index
+- [Sorting sculpture](/examples/sorting-sculpture) — 24 columns in a ring, built with `box` and drawn with `cubes3D`, that bubble sort, insertion sort or quick sort put in order one comparison or swap at a time; the columns are keyed by their value and painted by their footprint with `sort`
 - [Bar field](/examples/bar-field) — a height map of up to 40,000 bars, projected by `.matrix()` and drawn on a 2D canvas in grid order or with WebGL instances and a depth buffer
 - [Exploded cube assembly](/examples/exploded-cubes) — a block of 64 cubes drawn with `cubes3D`, whose layers part on a slider; click a cube to inspect it
 - [Voxel builder](/examples/voxel-builder) — an 8 × 8 floor to build on with `cubes3D`, drawn with `planes3D` and `lines3D`; the cell under the pointer comes from `unproject`, and the faces that touch are never drawn

@@ -38,15 +38,16 @@ export function pose(
 /**
  * Puts a floor of `n` × `n` unit cells around the origin, at y = 0, behind
  * everything else in `svg`: one plane of the class `floor` and a grid line
- * along every cell edge, in a group of the class `<prefix>-floor`. Its
- * renderers hang on `camera`. Returns the function that draws it, which
- * the figure calls after every turn.
+ * along every cell edge, or the segments of `marks` instead, in a group of
+ * the class `<prefix>-floor`. Its renderers hang on `camera`. Returns the
+ * function that draws it, which the figure calls after every turn.
  */
 export function floorGrid(
     svg: Selection<SVGSVGElement, unknown, null, undefined>,
     prefix: string,
     camera: Camera3DInstance,
-    n: number
+    n: number,
+    marks?: Point3D[][]
 ): () => void {
     const half = n / 2;
     const plane = planes3D().camera(camera);
@@ -59,16 +60,18 @@ export function floorGrid(
             { x: -half, y: 0, z: half }
         ]
     ];
-    const grid: Point3D[][] = range(n + 1).flatMap((i) => [
-        [
-            { x: i - half, y: 0, z: -half },
-            { x: i - half, y: 0, z: half }
-        ],
-        [
-            { x: -half, y: 0, z: i - half },
-            { x: half, y: 0, z: i - half }
-        ]
-    ]);
+    const grid: Point3D[][] =
+        marks ??
+        range(n + 1).flatMap((i) => [
+            [
+                { x: i - half, y: 0, z: -half },
+                { x: i - half, y: 0, z: half }
+            ],
+            [
+                { x: -half, y: 0, z: i - half },
+                { x: half, y: 0, z: i - half }
+            ]
+        ]);
     const group = svg.insert('g', 'g').attr('class', `${prefix}-floor`);
 
     return () => {
