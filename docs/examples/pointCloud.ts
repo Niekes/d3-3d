@@ -54,7 +54,6 @@ function alpha(count: number): number {
 
 const VERTEX_SHADER = `
 uniform mat4 u_matrix;
-uniform vec2 u_size;
 uniform float u_pointSize;
 uniform vec3 u_palette[${PALETTE.length}];
 attribute vec3 a_position;
@@ -62,9 +61,8 @@ attribute float a_ring;
 varying vec3 v_color;
 
 void main() {
-    // The matrix projects to CSS pixels, the y axis pointing down.
-    vec4 p = u_matrix * vec4(a_position, 1.0);
-    gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, 0.0, 1.0);
+    // The matrix projects to clip space.
+    gl_Position = u_matrix * vec4(a_position, 1.0);
     gl_PointSize = u_pointSize;
     v_color = u_palette[int(a_ring)];
 }`;
@@ -100,8 +98,8 @@ function canvasRenderer(
     const sky = (255 << 24) | (b << 16) | (g << 8) | r;
     const colors = PALETTE.map((color) => rgb(color));
 
-    return (count, matrix) => {
-        projectPositions(positions.subarray(0, 3 * count), matrix, screen);
+    return (count, camera) => {
+        projectPositions(positions.subarray(0, 3 * count), camera.matrix(), screen);
         new Uint32Array(pixels.buffer).fill(sky);
 
         const a = alpha(count);
@@ -154,15 +152,14 @@ function webglRenderer(
     const alphaLocation = uniform('u_alpha');
 
     gl.uniform3fv(uniform('u_palette'), palette);
-    gl.uniform2f(uniform('u_size'), WIDTH, HEIGHT);
     gl.uniform1f(uniform('u_pointSize'), size);
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
     gl.clearColor(background.r / 255, background.g / 255, background.b / 255, 1);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 
-    return (count, matrix) => {
-        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+    return (count, camera) => {
+        gl.uniformMatrix4fv(matrixLocation, false, camera.matrix({ width: WIDTH, height: HEIGHT }));
         gl.uniform1f(alphaLocation, alpha(count));
         gl.clear(gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.POINTS, 0, count);

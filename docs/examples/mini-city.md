@@ -140,20 +140,14 @@ hour and renders, nothing else.
 
 A face is as bright as it faces the sun: the cosine between its normal and
 the way to the sun, never darker than an ambient floor. The normal comes
-from Newell's formula, which sums over every edge, so the doubled vertex of
-a gable or a spire does no harm:
+from [`normal`](/api/#normal), Newell's formula, which sums over every edge,
+so the doubled vertex of a gable or a spire does no harm. It points out of
+every face of `cubes3D`:
 
 ```ts
 function facing(face, sun) {
-    const n = { x: 0, y: 0, z: 0 };
-    face.forEach((p, i) => {
-        const q = face[(i + 1) % face.length];
-        n.x += (p.y - q.y) * (p.z + q.z);
-        n.y += (p.z - q.z) * (p.x + q.x);
-        n.z += (p.x - q.x) * (p.y + q.y);
-    });
-    // cubes3D winds its faces so that this normal points into the piece.
-    return -(n.x * sun.x + n.y * sun.y + n.z * sun.z) / (Math.hypot(n.x, n.y, n.z) || 1);
+    const n = normal(face);
+    return n.x * sun.x + n.y * sun.y + n.z * sun.z;
 }
 ```
 

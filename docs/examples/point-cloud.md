@@ -89,31 +89,30 @@ pixels. The projection is the cheap part either way.
 
 WebGL takes the stars once, into a buffer on the GPU. Every frame only
 sends the matrix, sixteen numbers, and the vertex shader does what
-`projectPositions` does for every star at once. The matrix maps to CSS
-pixels with the y axis pointing down, the shader turns that into clip
-space:
+`projectPositions` does for every star at once. Given the size of the
+canvas, [`.matrix()`](/api/#matrix) maps straight to clip space, so the
+shader is one line:
 
 ```glsl
-vec4 p = u_matrix * vec4(a_position, 1.0);
-gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, 0.0, 1.0);
+gl_Position = u_matrix * vec4(a_position, 1.0);
 ```
 
 ```ts
-gl.uniformMatrix4fv(matrixLocation, false, matrix);
+gl.uniformMatrix4fv(matrixLocation, false, camera.matrix({ width: WIDTH, height: HEIGHT }));
 gl.drawArrays(gl.POINTS, 0, count);
 ```
 
-The z of the matrix is the `rotated` z, the depth [`sort`](/api/#sort)
-reads. The galaxy has no use for it: both renderers add the light of the
-stars, which gives the same picture in any order, so nothing is sorted.
+Without a `depth` the matrix sets every z to 0. The galaxy has no use for
+the depth: both renderers add the light of the stars, which gives the same
+picture in any order, so nothing is sorted.
 
 ## Two canvases
 
 A canvas keeps the first kind of context it hands out, so one canvas cannot
 switch from `2d` to `webgl2`. The figure holds one canvas per renderer and
-shows one of them. Both are sized for the device pixel ratio. The matrix
-projects to CSS pixels: the canvas multiplies by the ratio, WebGL divides by
-the size in CSS pixels.
+shows one of them. Both are sized for the device pixel ratio. The camera
+projects to CSS pixels: the canvas multiplies by the ratio, and WebGL hands
+the size in CSS pixels to `.matrix()`.
 
 ## The whole source
 

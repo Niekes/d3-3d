@@ -7,7 +7,7 @@ import './canvasFigure.css';
  * The scaffold the canvas figures share: a 2D canvas and a WebGL canvas on
  * one stage, a picker for the size of the data, a toggle between the two
  * renderers and a frame counter. One loop turns the figure on drag and on
- * its own and hands the matrix of the camera to the renderer that is shown.
+ * its own and hands the camera to the renderer that is shown.
  */
 
 export const WIDTH = 960;
@@ -15,8 +15,8 @@ export const HEIGHT = 500;
 /** The auto-rotation, in radians per millisecond. */
 const SPIN = 0.00008;
 
-/** Draws `count` items of the figure with the projection `matrix`. */
-export type Draw = (count: number, matrix: Float32Array) => void;
+/** Draws `count` items of the figure as `camera` sees them. */
+export type Draw = (count: number, camera: Camera3DInstance) => void;
 
 export interface CanvasFigure {
     /** What the picker counts, such as "stars". */
@@ -120,11 +120,8 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
         }
 
         // Turn the figure around its vertical axis first, then lean it.
-        const matrix = figure.camera
-            .rotateY(spin + yaw)
-            .rotateX(figure.tilt + pitch)
-            .matrix();
-        (draw[renderer] ?? draw.canvas)(count, matrix);
+        figure.camera.rotateY(spin + yaw).rotateX(figure.tilt + pitch);
+        (draw[renderer] ?? draw.canvas)(count, figure.camera);
     });
 
     return () => {

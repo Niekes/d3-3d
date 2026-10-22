@@ -1,6 +1,5 @@
 import { interpolateRgbBasis, rgb } from 'd3';
 import { camera3D, projectPositions } from '../../index';
-import type { Camera3DInstance } from '../../index';
 import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram } from './canvasFigure';
 import type { Draw } from './canvasFigure';
 
@@ -120,12 +119,7 @@ function colors(field: Field): Uint8Array<ArrayBuffer> {
  * from the far end of x and of z to the near one, which the view direction
  * of the camera tells.
  */
-function canvasRenderer(
-    canvas: HTMLCanvasElement,
-    fields: Map<number, Field>,
-    dpr: number,
-    camera: Camera3DInstance
-): Draw {
+function canvasRenderer(canvas: HTMLCanvasElement, fields: Map<number, Field>, dpr: number): Draw {
     const context = canvas.getContext('2d')!;
     let key = '';
     let screen = new Float32Array(0);
@@ -133,7 +127,7 @@ function canvasRenderer(
 
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    return (count, matrix) => {
+    return (count, camera) => {
         const field = fields.get(count)!;
         if (key !== version(count)) {
             key = version(count);
@@ -146,7 +140,7 @@ function canvasRenderer(
             });
         }
 
-        projectPositions(field.corners, matrix, screen);
+        projectPositions(field.corners, camera.matrix(), screen);
         context.clearRect(0, 0, WIDTH, HEIGHT);
 
         // The view direction points towards the viewer: it tells which end
@@ -181,7 +175,6 @@ function canvasRenderer(
 
 const VERTEX_SHADER = `#version 300 es
 uniform mat4 u_matrix;
-uniform vec2 u_size;
 uniform float u_width;
 in vec4 a_corner;
 // The x, z and height of the bar.
@@ -196,10 +189,7 @@ void main() {
         -a_corner.y * a_bar.z,
         a_bar.y + a_corner.z * u_width
     );
-    vec4 p = u_matrix * vec4(world, 1.0);
-    // A larger z is nearer, clip space wants it smaller. The field fits in
-    // a ball of radius 2 around the rotation center.
-    gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, -p.z / 2.0, 1.0);
+    gl_Position = u_matrix * vec4(world, 1.0);
     v_color = a_color * a_corner.w;
 }`;
 
@@ -249,11 +239,10 @@ function webglRenderer(gl: WebGL2RenderingContext, fields: Map<number, Field>): 
     const widthLocation = uniform('u_width');
     let key = '';
 
-    gl.uniform2f(uniform('u_size'), WIDTH, HEIGHT);
     gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
     gl.enable(gl.DEPTH_TEST);
 
-    return (count, matrix) => {
+    return (count, camera) => {
         const field = fields.get(count)!;
         if (key !== version(count)) {
             key = version(count);
@@ -262,7 +251,12 @@ function webglRenderer(gl: WebGL2RenderingContext, fields: Map<number, Field>): 
             gl.uniform1f(widthLocation, field.width);
         }
 
-        gl.uniformMatrix4fv(matrixLocation, false, matrix);
+        // The field fits in a ball of radius 2 around the rotation center.
+        gl.uniformMatrix4fv(
+            matrixLocation,
+            false,
+            camera.matrix({ width: WIDTH, height: HEIGHT, depth: 2 })
+        );
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.drawArraysInstanced(gl.TRIANGLES, 0, 36, field.n * field.n);
     };
@@ -285,7 +279,7 @@ export function mountBarField(host: HTMLElement): () => void {
         tilt: TILT,
         camera,
         renderers: (canvas, gl, dpr) => ({
-            canvas: canvasRenderer(canvas, fields, dpr, camera),
+            canvas: canvasRenderer(canvas, fields, dpr),
             webgl: gl ? webglRenderer(gl, fields) : undefined
         })
     });

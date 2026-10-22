@@ -49,13 +49,13 @@ vec3 world = vec3(
     -a_corner.y * a_bar.z,
     a_bar.y + a_corner.z * u_width
 );
-vec4 p = u_matrix * vec4(world, 1.0);
-gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, -p.z / 2.0, 1.0);
+gl_Position = u_matrix * vec4(world, 1.0);
 ```
 
-The z of the matrix is the depth that [`sort`](/api/#sort) reads, and a
-larger depth is nearer the viewer. Clip space wants the near end smaller,
-so the shader turns it around. With `gl.enable(gl.DEPTH_TEST)` the GPU then
+The matrix comes from `camera.matrix({ width, height, depth: 2 })`, which
+maps straight to clip space: the field fits in a ball of radius 2 around the
+rotation center, and the near side gets the smaller depth, as clip space
+wants. With `gl.enable(gl.DEPTH_TEST)` the GPU then
 keeps, for every pixel, the face nearest to the viewer. Nothing is sorted,
 and forty thousand bars cost one call:
 

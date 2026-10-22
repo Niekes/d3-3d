@@ -1,12 +1,5 @@
-import {
-    color,
-    interpolateNumber,
-    randomUniform,
-    scaleOrdinal,
-    schemeDark2,
-    select
-} from 'd3';
-import { axes3D, cubes3D, sort } from '../../index';
+import { color, interpolateNumber, randomUniform, scaleOrdinal, schemeDark2, select } from 'd3';
+import { axes3D, box, cubes3D, sort } from '../../index';
 import type { AxesSpec, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
 import { drawChartBox } from './axisEdges';
 import { dragRotate } from './rotatingFigure';
@@ -44,25 +37,13 @@ type BarCube = Cube<BarVertex> & { id: string; height: number; centroid: Point3D
 /** The datum of a label: the height to show and the centre of the top face. */
 type BarLabel = { height: number; centroid: Point3D };
 
-/** The eight vertices of one bar, from its footprint and its depth. */
+/** The eight vertices of one bar, from its footprint and its height, negative upwards. */
 function makeBar(id: string, height: number, x: number, z: number): BarVertex[] {
-    const v = (vx: number, vy: number, vz: number): BarVertex => ({
-        x: vx,
-        y: vy,
-        z: vz,
+    return box({ x, y: 0, z, width: 2, height: -height, depth: 2 }).map((corner) => ({
+        ...corner,
         id,
         height
-    });
-    return [
-        v(x - 1, height, z + 1), // front top left
-        v(x - 1, 0, z + 1), // front bottom left
-        v(x + 1, 0, z + 1), // front bottom right
-        v(x + 1, height, z + 1), // front top right
-        v(x - 1, height, z - 1), // back top left
-        v(x - 1, 0, z - 1), // back bottom left
-        v(x + 1, 0, z - 1), // back bottom right
-        v(x + 1, height, z - 1) // back top right
-    ];
+    }));
 }
 
 /**

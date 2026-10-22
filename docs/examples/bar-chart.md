@@ -28,7 +28,9 @@ the bars grow or shrink into it, their labels counting along.
 ## A bar is eight vertices
 
 The chart has no bar primitive. Every bar is eight points - its footprint in
-the x-z plane and two values for `y` - handed to `cubes3D` as one flat list:
+the x-z plane and two values for `y` - handed to `cubes3D` as one flat list.
+[`box`](/api/#box) builds them in the order `cubes3D` expects, from where the
+bar stands and how high it rises:
 
 ```ts
 const cubes = cubes3D()
@@ -37,7 +39,9 @@ const cubes = cubes3D()
     .rotateY(Math.PI / 6)
     .rotateX(-Math.PI / 6);
 
-const bars = cubes.data([/* eight vertices per bar */]);
+const bars = cubes.data(
+    data.map((d) => box({ x: d.x, y: 0, z: d.z, width: 2, height: d.height, depth: 2 }))
+);
 ```
 
 The renderer cuts those eight vertices into six faces and hands each one

@@ -1,5 +1,5 @@
 import { format, polygonHull, randomInt, randomLcg, range, select } from 'd3';
-import { cubes3D, polygons3D, sort } from '../../index';
+import { cubes3D, normal, polygons3D, sort } from '../../index';
 import type { CubeFace, Point3D, Polygon, ShapeInstance } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import './miniCity.css';
@@ -227,20 +227,13 @@ function sunAt(hour: number): Point3D {
 }
 
 /**
- * The cosine between a face and the way to the sun. Newell's normal sums
- * over every edge, so the doubled vertex of a gable or a spire does no harm,
- * and a face without area, the top of a roof, gets no light.
+ * The cosine between a face and the way to the sun. `normal` sums over
+ * every edge, so the doubled vertex of a gable or a spire does no harm, and
+ * a face without area, the top of a roof, gets no light.
  */
 function facing(face: Point3D[], sun: Point3D): number {
-    const n = { x: 0, y: 0, z: 0 };
-    face.forEach((p, i) => {
-        const q = face[(i + 1) % face.length];
-        n.x += (p.y - q.y) * (p.z + q.z);
-        n.y += (p.z - q.z) * (p.x + q.x);
-        n.z += (p.x - q.x) * (p.y + q.y);
-    });
-    // cubes3D winds its faces so that this normal points into the piece.
-    return -(n.x * sun.x + n.y * sun.y + n.z * sun.z) / (Math.hypot(n.x, n.y, n.z) || 1);
+    const n = normal(face);
+    return n.x * sun.x + n.y * sun.y + n.z * sun.z;
 }
 
 /** How bright a surface is at a cosine to the sun, as the percentage CSS mixes in. */
