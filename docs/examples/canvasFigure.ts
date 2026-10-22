@@ -1,5 +1,5 @@
 import { select, timer } from 'd3';
-import type { ShapeInstance } from '../../index';
+import type { Camera3DInstance } from '../../index';
 import { dragRotate } from './rotatingFigure';
 import './canvasFigure.css';
 
@@ -7,7 +7,7 @@ import './canvasFigure.css';
  * The scaffold the canvas figures share: a 2D canvas and a WebGL canvas on
  * one stage, a picker for the size of the data, a toggle between the two
  * renderers and a frame counter. One loop turns the figure on drag and on
- * its own and hands the matrix of the view to the renderer that is shown.
+ * its own and hands the matrix of the camera to the renderer that is shown.
  */
 
 export const WIDTH = 960;
@@ -27,8 +27,8 @@ export interface CanvasFigure {
     count: number;
     /** The lean of the figure towards the reader, in radians. */
     tilt: number;
-    /** The renderer that holds the scale and the origin of the figure. */
-    view: ShapeInstance;
+    /** The camera that holds the scale and the origin of the figure. */
+    camera: Camera3DInstance;
     /** Builds the renderers once the canvases are sized for `dpr`. */
     renderers(
         canvas: HTMLCanvasElement,
@@ -120,7 +120,7 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
         }
 
         // Turn the figure around its vertical axis first, then lean it.
-        const matrix = figure.view
+        const matrix = figure.camera
             .rotateY(spin + yaw)
             .rotateX(figure.tilt + pitch)
             .matrix();

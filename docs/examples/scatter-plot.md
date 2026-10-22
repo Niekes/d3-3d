@@ -40,17 +40,18 @@ again: the ids stay, so every point glides to its new height.
 ## One box, three renderers
 
 The box, the points and the line segments come from three renderers:
-`axes3D`, `points3D` and `lines3D`. All three read the data through the
-same accessors, and the accessors map every axis through its own scale onto
-the box from -1 to 1. The box is described in data units like the points:
-the domain and the ticks of each scale.
+`axes3D`, `points3D` and `lines3D`. All three hang on one
+[`camera3D`](/api/#camera), so turning the camera turns them all. They read
+the data through the same accessors, and the accessors map every axis
+through its own scale onto the box from -1 to 1. The box is described in
+data units like the points: the domain and the ticks of each scale.
 
 ```ts
+const camera = camera3D().scale(SCALE).origin(ORIGIN);
 const renderers = [box3d, points3d, segments3d];
 for (const renderer of renderers) {
     renderer
-        .scale(SCALE)
-        .origin(ORIGIN)
+        .camera(camera)
         .x((d) => scales.x(d.x))
         .y((d) => -scales.z(d.z))
         .z((d) => scales.y(d.y));

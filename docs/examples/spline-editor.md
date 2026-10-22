@@ -88,24 +88,18 @@ moves the point across the screen, exactly under the pointer, and leaves
 its depth alone. Its normal is the view direction, turned back into the
 world.
 
-The renderer turns a point around z, then y, then x, with the rotation
-matrix of
-[`rotationMatrix`](https://github.com/niekes/d3-3d/blob/master/src/rotation.ts).
-The camera looks along the z axis of the screen, and the inverse of a
-rotation is its transpose, so the view direction in the world is the third
-row of that matrix. The figure never sets `rotateZ`, and with α the angle of
-`rotateX` and θ the angle of `rotateY` the row reads:
+Every renderer knows that direction:
+[`.viewDirection()`](/api/#viewdirection) returns it as a unit vector in
+world coordinates, pointing from the scene towards the viewer. The camera
+looks along the z axis of the screen, and the inverse of a rotation is its
+transpose, so it is the third row of the rotation matrix:
 
 ```ts
-const a = dots.rotateX();
-const t = dots.rotateY();
-const normal = { x: -Math.cos(a) * Math.sin(t), y: Math.sin(a), z: Math.cos(a) * Math.cos(t) };
+const normal = dots.viewDirection();
 ```
 
 It is the same direction `unproject` follows from the screen into the
-scene, so this plane is never seen edge-on. A normal may point either way,
-but the signs between its parts matter: with one of them wrong, the plane
-tilts away from the screen and the point drifts away from the pointer.
+scene, so this plane is never seen edge-on.
 
 ## Only up, only across
 
@@ -114,7 +108,7 @@ neither of them is up or along the floor. Two more planes split them:
 
 - **<kbd>Shift</kbd>** takes the upright plane that faces the camera, with
   the view direction flattened onto the floor as its normal,
-  `{ x: -Math.sin(t), y: 0, z: Math.cos(t) }`. The drag keeps the x and z of
+  `{ x: v.x, y: 0, z: v.z }`. The drag keeps the x and z of
   the start and takes only the new height.
 - **<kbd>Alt</kbd>** takes the floor plane through the point, with the
   normal `{ x: 0, y: 1, z: 0 }`. The drag keeps the height and takes only

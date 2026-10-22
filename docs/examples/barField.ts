@@ -1,5 +1,6 @@
 import { interpolateRgbBasis, rgb } from 'd3';
-import { cubes3D, projectPositions } from '../../index';
+import { camera3D, projectPositions } from '../../index';
+import type { Camera3DInstance } from '../../index';
 import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram } from './canvasFigure';
 import type { Draw } from './canvasFigure';
 
@@ -116,10 +117,15 @@ function colors(field: Field): Uint8Array<ArrayBuffer> {
 
 /**
  * The 2D canvas: no sort. On a grid the painter's order is the loop order,
- * from the far end of x and of z to the near one, which the matrix tells
- * as well.
+ * from the far end of x and of z to the near one, which the view direction
+ * of the camera tells.
  */
-function canvasRenderer(canvas: HTMLCanvasElement, fields: Map<number, Field>, dpr: number): Draw {
+function canvasRenderer(
+    canvas: HTMLCanvasElement,
+    fields: Map<number, Field>,
+    dpr: number,
+    camera: Camera3DInstance
+): Draw {
     const context = canvas.getContext('2d')!;
     let key = '';
     let screen = new Float32Array(0);
@@ -143,11 +149,12 @@ function canvasRenderer(canvas: HTMLCanvasElement, fields: Map<number, Field>, d
         projectPositions(field.corners, matrix, screen);
         context.clearRect(0, 0, WIDTH, HEIGHT);
 
-        // The third row of the matrix is the depth, and a larger depth is
-        // nearer: it tells which end of every axis faces the camera. The
-        // top is the high end of y, which points to -y.
+        // The view direction points towards the viewer: it tells which end
+        // of every axis is near. The top is the high end of y, which points
+        // to -y.
         const { n } = field;
-        const near = [matrix[2] > 0, matrix[6] < 0, matrix[10] > 0];
+        const v = camera.viewDirection();
+        const near = [v.x > 0, v.y < 0, v.z > 0];
         const faces = FACES.map((quad, axis) =>
             quad.map((corner) => corner + (near[axis] ? AXIS_BITS[axis] : 0))
         );
@@ -266,6 +273,9 @@ function webglRenderer(gl: WebGL2RenderingContext, fields: Map<number, Field>): 
  */
 export function mountBarField(host: HTMLElement): () => void {
     const fields = new Map(COUNTS.map((count) => [count, field(count)]));
+    const camera = camera3D()
+        .scale(SCALE)
+        .origin({ x: WIDTH / 2, y: HEIGHT / 2 + 20 });
 
     return canvasFigure(host, {
         unit: 'bars',
@@ -273,11 +283,9 @@ export function mountBarField(host: HTMLElement): () => void {
         counts: COUNTS,
         count: COUNTS[1],
         tilt: TILT,
-        view: cubes3D()
-            .scale(SCALE)
-            .origin({ x: WIDTH / 2, y: HEIGHT / 2 + 20 }),
+        camera,
         renderers: (canvas, gl, dpr) => ({
-            canvas: canvasRenderer(canvas, fields, dpr),
+            canvas: canvasRenderer(canvas, fields, dpr, camera),
             webgl: gl ? webglRenderer(gl, fields) : undefined
         })
     });

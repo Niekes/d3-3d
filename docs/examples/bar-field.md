@@ -32,8 +32,8 @@ a light page and lighter on a dark one.
 
 The field is a 3D bar chart of a height map: a square grid of bars over the
 floor from -1 to 1. Both renderers take its projection from
-[`.matrix()`](/api/#matrix) of a `cubes3D` renderer, which the drag turns
-like any other shape. Neither builds the bars with `.data()`: every frame
+[`.matrix()`](/api/#matrix) of a [`camera3D`](/api/#camera), which the drag
+turns like any shape. Neither builds the bars with `.data()`: every frame
 that would build an object for every corner of every bar. The corners stay
 in one `Float32Array` instead, eight per bar.
 
@@ -76,14 +76,15 @@ nearer. `sort` then paints the tall bar last, over the top of the low bar
 in front of it.
 
 On a grid the order needs no sort at all. The rows go from the far end to
-the near one, and so do the bars in a row. Which end is far is in the
-matrix: its third row is the depth, so the depth grows with x where
-`matrix[2]` is positive and with z where `matrix[10]` is. The top is the
-high end of y, which points to -y, so it is nearer where `matrix[6]` is
-negative:
+the near one, and so do the bars in a row. Which end is near tells
+[`.viewDirection()`](/api/#viewdirection) of the camera, the direction
+towards the viewer: the high end of x is near where it points along +x, the
+high end of z where it points along +z. The top is the high end of y, which
+points to -y, so it is near where the view direction points along -y:
 
 ```ts
-const near = [matrix[2] > 0, matrix[6] < 0, matrix[10] > 0];
+const v = camera.viewDirection();
+const near = [v.x > 0, v.y < 0, v.z > 0];
 const [i0, di] = near[0] ? [0, 1] : [n - 1, -1];
 const [k0, dk] = near[2] ? [0, 1] : [n - 1, -1];
 
@@ -97,9 +98,9 @@ for (let row = 0, k = k0; row < n; row += 1, k += dk) {
 ## Three faces per bar
 
 A box shows at most three faces: one along each axis, the one on the side
-of the camera. All bars face the same way, so the matrix tells that side
-once per frame: the top shows where the depth grows upwards, the side at
-+x where it grows with x. The three faces of a box never overlap each
+of the camera. All bars face the same way, so the view direction tells
+that side once per frame, with the same `near`: the top shows where it
+points up, the side at +x where it points along +x. The three faces of a box never overlap each
 other, so a bar paints them in any order:
 
 ```ts

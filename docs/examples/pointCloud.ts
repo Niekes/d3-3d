@@ -1,5 +1,5 @@
 import { randomNormal, rgb } from 'd3';
-import { points3D, projectPositions } from '../../index';
+import { camera3D, projectPositions } from '../../index';
 import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram } from './canvasFigure';
 import type { Draw } from './canvasFigure';
 import './pointCloud.css';
@@ -181,7 +181,7 @@ export function mountPointCloud(host: HTMLElement): () => void {
         counts: COUNTS,
         count: COUNTS[1],
         tilt: TILT,
-        view: points3D()
+        camera: camera3D()
             .scale(SCALE)
             .origin({ x: WIDTH / 2, y: HEIGHT / 2 }),
         renderers(canvas, gl, dpr) {

@@ -288,20 +288,16 @@ export function mountSplineEditor(host: HTMLElement): () => void {
 
     /**
      * The normal of the plane a drag moves its point in. The plane that
-     * faces the camera has the view direction as its normal: the third row
-     * of the rotation matrix, the ray `unproject` follows. The upright plane
-     * that faces the camera drops its height, and the floor plane points up.
+     * faces the camera has the view direction as its normal, the ray
+     * `unproject` follows. The upright plane that faces the camera drops
+     * its height, and the floor plane points up.
      */
     function normalOf(mode: Grab['mode']): Point3D {
-        const a = dots.rotateX();
-        const t = dots.rotateY();
-        if (mode === 'height') {
-            return { x: -Math.sin(t), y: 0, z: Math.cos(t) };
-        }
         if (mode === 'floor') {
             return { x: 0, y: 1, z: 0 };
         }
-        return { x: -Math.cos(a) * Math.sin(t), y: Math.sin(a), z: Math.cos(a) * Math.cos(t) };
+        const v = dots.viewDirection();
+        return mode === 'height' ? { x: v.x, y: 0, z: v.z } : v;
     }
 
     // The drag on a point moves it. d3.drag stops the press from reaching

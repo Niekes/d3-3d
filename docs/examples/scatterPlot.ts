@@ -17,7 +17,7 @@ import {
     timer
 } from 'd3';
 import type { Timer } from 'd3';
-import { axes3D, lines3D, points3D, sort } from '../../index';
+import { axes3D, camera3D, lines3D, points3D, sort } from '../../index';
 import type {
     AxesSpec,
     AxisWall,
@@ -241,12 +241,13 @@ export function mountScatterPlot(host: HTMLElement): () => void {
     const probe3d = lines3D();
 
     // Data x runs across the screen, data z up and data y into the depth,
-    // as in matterviz. The screen y grows downwards, so z is negated.
+    // as in matterviz. The screen y grows downwards, so z is negated. All
+    // renderers hang on one camera, so turning it turns the whole scene.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
     const renderers: ShapeInstance<any>[] = [box3d, points3d, segments3d, probe3d];
     for (const renderer of renderers) {
         renderer
-            .scale(SCALE)
-            .origin(ORIGIN)
+            .camera(camera)
             .x((d: Point3D) => scales.x(d.x))
             .y((d: Point3D) => -scales.z(d.z))
             .z((d: Point3D) => scales.y(d.y));
@@ -455,9 +456,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
 
     /** Turns the scene by the drag and the auto-rotation and draws it. */
     function drawScene(): void {
-        for (const renderer of renderers) {
-            renderer.rotateY(dragYaw + autoYaw + START_YAW).rotateX(-dragPitch - START_TILT);
-        }
+        camera.rotateY(dragYaw + autoYaw + START_YAW).rotateX(-dragPitch - START_TILT);
         drawWalls();
         drawAxisEdges(
             axisGroup,
