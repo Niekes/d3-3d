@@ -24,6 +24,7 @@
 - [Rotation order](/examples/rotation-order) — two copies of a block of five cubes, built with `box` and drawn with `cubes3D` and their own axes with `lines3D`, turned by the same three angles: the renderer turns one around z, y and x, a chain of three `transform` calls turns the other in an order you pick, from quarter turns to gimbal lock
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer
 - [Mesh inspector](/examples/mesh-inspector) — a vase of triangles drawn with `triangles3D` and its normals with `lines3D`; toggle the faces, edges, normals and back faces, click a face to inspect it
+- [Möbius strip](/examples/mobius-strip) — a strip of 768 triangles drawn with `triangles3D` and its edge with `lineStrips3D`, lit from either side by the absolute cosine between `normal` and `viewDirection`; a walker comes back from one lap upside down, and a slider sets the half-twists from 0 to 5
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
 
 The office tower is inspired by

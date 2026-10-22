@@ -1,13 +1,8 @@
 import { interpolateRgb, range } from 'd3';
 import { camera3D, lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
 import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
-import type {
-    HasCentroid,
-    LineStrips3DInstance,
-    Point3D,
-    Triangle,
-    Triangles3DInstance
-} from '../../index';
+import { joinFacets } from './facets';
+import type { HasCentroid, LineStrips3DInstance, Point3D, Triangles3DInstance } from '../../index';
 
 /*
  * The solar system: every body is a sphere of triangles, all of them go
@@ -52,9 +47,6 @@ const BODIES: Body[] = [
     { name: 'Uranus', radius: 9, distance: 276, period: 48, color: '#8fdcf0', segments: 10 },
     { name: 'Neptune', radius: 9, distance: 326, period: 61, color: '#4c6ef5', segments: 10 }
 ];
-
-/** A projected triangle with the index it was built at, the key of the join, and its shaded fill. */
-type Facet = Triangle<Point3D> & { id: number; fill: string };
 
 /**
  * A sphere of `radius` around the origin: a half circle from the bottom pole
@@ -150,13 +142,7 @@ export function mountSolarSystem(host: HTMLElement): () => void {
         const facets = triangles.data(mesh).map((d, i) => Object.assign(d, { id: i, fill: fills[i] }));
 
         // A face that turns away keeps its element and is only hidden.
-        group
-            .selectAll<SVGPathElement, Facet>('path.facet')
-            .data(facets, (d) => d.id)
-            .join((enter) => enter.append('path').attr('class', 'facet'))
-            .attr('visibility', (d) => (d.ccw ? null : 'hidden'))
-            .style('fill', (d) => d.fill)
-            .attr('d', triangles.draw);
+        joinFacets(group, facets, triangles).attr('visibility', (d) => (d.ccw ? null : 'hidden'));
 
         group
             .selectAll('path.orbit')
