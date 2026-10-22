@@ -89,7 +89,7 @@ paints over a house in front of it. The centre of the lot does not move
 with the height, so the bottom face of the first piece gives it:
 
 ```ts
-centroid: pieces[0].faces!.find((f) => f.face === 'bottom')!.centroid;
+centroid: pieces[0].faces.find((f) => f.face === 'bottom')!.centroid;
 ```
 
 The lots are equal squares on a grid and never overlap, so seen from above,

@@ -127,7 +127,7 @@ export function mountExplodedCubes(host: HTMLElement): () => void {
 
         const cubeGroups = group
             .selectAll<SVGGElement, Cube<CubeVertex>>('g.cube')
-            .data(cubes.data(ASSEMBLY) as Cube<CubeVertex>[], (d) => d[0].id)
+            .data(cubes.data(ASSEMBLY), (d) => d[0].id)
             .join((enter) => enter.append('g').attr('class', (d) => `cube layer-${d[0].layer}`))
             .classed('is-selected', (d) => d[0].id === selected?.id)
             .sort(sort);

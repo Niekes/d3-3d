@@ -27,7 +27,7 @@ const TILT = 0.22;
 const DOLLY = 2400;
 
 type HouseVertex = Point3D & { house: number };
-type House = Cube<HouseVertex> & { centroid: Point3D };
+type House = Cube<HouseVertex>;
 type Cull = 'ccw' | 'viewDirection';
 
 /** The heights of the houses, in model units, two by two from the far end. */

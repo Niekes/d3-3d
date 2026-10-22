@@ -235,7 +235,7 @@ function drawCopy<C extends Vertex, A extends Point3D>(
 ): Cube<C>[] {
     // A face against another cube is dropped, so only the surface of the
     // block reaches the DOM.
-    const turned = cubes.data(block) as Cube<C>[];
+    const turned = cubes.data(block);
     for (const cube of turned) {
         cube.faces = cube.faces.filter((face) => isOpen(cube[0], face.face));
     }

@@ -236,7 +236,7 @@ export function mountSortingSculpture(host: HTMLElement): () => void {
         // high up, and seen from above it would paint over a short one in
         // front of it.
         const columns = cubes.data(items.map(makeColumn)).map((cube) =>
-            Object.assign(cube as Column, {
+            Object.assign(cube, {
                 centroid: cube.faces.find((face) => face.face === 'bottom')!.centroid
             })
         );

@@ -33,7 +33,7 @@ const SPEC: AxesSpec = {
 type BarVertex = Point3D & { id: string; height: number };
 
 /** One bar after the projection, with the centroid of its footprint to sort by. */
-type BarCube = Cube<BarVertex> & { id: string; height: number; centroid: Point3D };
+type BarCube = Cube<BarVertex> & { id: string; height: number };
 
 /** The datum of a label: the height to show and the centre of the top face. */
 type BarLabel = { height: number; centroid: Point3D };
