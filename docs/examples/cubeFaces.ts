@@ -3,15 +3,17 @@ import type { CubeFace } from '../../index';
 
 /**
  * Joins one path per face of a cube, keyed by the face name, and draws it.
- * A face that turns away keeps its element and is only hidden, so a drag
- * never adds or removes one.
+ * A face that turns away, by default one that does not wind
+ * counter-clockwise, keeps its element and is only hidden, so a drag never
+ * adds or removes one.
  */
 export function joinFaces<Datum, Parent extends BaseType, ParentDatum>(
     faces: Selection<SVGPathElement, CubeFace<Datum>, Parent, ParentDatum>,
-    draw: (face: CubeFace<Datum>) => string
+    draw: (face: CubeFace<Datum>) => string,
+    visible: (face: CubeFace<Datum>) => boolean = (face) => face.ccw
 ): void {
     faces
         .join((enter) => enter.append('path').attr('class', (d) => `face face-${d.face}`))
-        .attr('visibility', (d) => (d.ccw ? null : 'hidden'))
+        .attr('visibility', (d) => (visible(d) ? null : 'hidden'))
         .attr('d', draw);
 }

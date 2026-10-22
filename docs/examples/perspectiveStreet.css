@@ -1,0 +1,166 @@
+.perspective-street {
+    --ps-ink: #1b1e21;
+    --ps-muted: #6b7075;
+    --ps-line: #c4c7c9;
+    --ps-bg: #ffffff;
+    --ps-accent: #1c7ed6;
+    --ps-sidewalk: #dcd8cf;
+    --ps-street: #6f777d;
+    --ps-street-alt: #7d858b;
+    --ps-roof: #f0c9a0;
+    --ps-wall-x: #d08b5b;
+    --ps-wall-z: #b36b3f;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    border: 1px solid var(--ps-line);
+    border-radius: 12px;
+    background: var(--ps-bg);
+    color: var(--ps-ink);
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+}
+
+.dark .perspective-street {
+    --ps-ink: #e6e8e9;
+    --ps-muted: #9aa0a6;
+    --ps-line: #3d4144;
+    --ps-bg: #0c0d0e;
+    --ps-accent: #4dabf7;
+    --ps-sidewalk: #3a3833;
+    --ps-street: #24282b;
+    --ps-street-alt: #2c3134;
+    --ps-roof: #e8b98b;
+    --ps-wall-x: #b5713f;
+    --ps-wall-z: #8f532c;
+}
+
+/* All layers lie on one stage of the figure's aspect, the overlay on top. */
+.perspective-street .ps-stage {
+    position: relative;
+    aspect-ratio: 960 / 500;
+}
+
+.perspective-street .ps-stage > * {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.perspective-street .ps-stage > [hidden] {
+    display: none;
+}
+
+.perspective-street .ps-overlay {
+    cursor: grab;
+    touch-action: none;
+}
+
+.perspective-street .ps-overlay:active {
+    cursor: grabbing;
+}
+
+.perspective-street .paint-sidewalk {
+    fill: var(--ps-sidewalk);
+}
+
+.perspective-street .paint-street {
+    fill: var(--ps-street);
+}
+
+.perspective-street .paint-street-alt {
+    fill: var(--ps-street-alt);
+}
+
+.perspective-street .face-top,
+.perspective-street .face-bottom {
+    fill: var(--ps-roof);
+}
+
+.perspective-street .face-left,
+.perspective-street .face-right {
+    fill: var(--ps-wall-x);
+}
+
+.perspective-street .face-front,
+.perspective-street .face-back {
+    fill: var(--ps-wall-z);
+}
+
+.perspective-street .house text {
+    fill: var(--ps-ink);
+    font-weight: 600;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+}
+
+.perspective-street .ps-tile {
+    fill: none;
+    stroke: var(--ps-accent);
+    stroke-width: 2.5;
+    stroke-linejoin: round;
+}
+
+.perspective-street .ps-hit {
+    fill: var(--ps-accent);
+    stroke: var(--ps-bg);
+    stroke-width: 1.5;
+}
+
+.perspective-street .ps-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--ps-line);
+}
+
+.perspective-street .ps-controls fieldset {
+    display: flex;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.perspective-street .ps-controls fieldset:disabled {
+    opacity: 0.5;
+}
+
+.perspective-street .ps-controls legend {
+    float: left;
+    margin-right: 4px;
+    padding: 0;
+}
+
+.perspective-street .ps-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.perspective-street .ps-controls output {
+    min-width: 2.5em;
+    font-variant-numeric: tabular-nums;
+}
+
+.perspective-street .ps-controls button {
+    padding: 3px 12px;
+    border: 1px solid var(--ps-line);
+    border-radius: 6px;
+    background: var(--ps-bg);
+    color: var(--ps-ink);
+    font: inherit;
+    cursor: pointer;
+}
+
+.perspective-street .ps-readout {
+    padding: 0 14px 10px;
+    color: var(--ps-muted);
+}
+
+.perspective-street .ps-readout p {
+    margin: 4px 0;
+}
