@@ -22,15 +22,29 @@ onBeforeUnmount(() => {
 
 <div ref="host"></div>
 
-**Drag a point** to move it across the screen, hold <kbd>Shift</kbd> to
-change only its height and <kbd>Alt</kbd> (<kbd>Option</kbd> on macOS) to
-move it only across the floor. **Double-click the curve** to add a point
-and press <kbd>Delete</kbd> to remove the selected one. **Drag the
-background** to rotate the scene, and flick it to let it spin out. With the
-figure focused, <kbd>[</kbd> and <kbd>]</kbd> pick a point, the arrow keys
-move it across the floor, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> move
-it up and down, <kbd>A</kbd> adds a point halfway to the next one and
-<kbd>Escape</kbd> clears the selection.
+With the pointer:
+
+| Input                                                      | Does                                                       |
+| ---------------------------------------------------------- | ---------------------------------------------------------- |
+| Hover the curve                                            | Shows a ghost point where a double-click adds one          |
+| Double-click the curve                                     | Adds a point there                                         |
+| Drag a point                                               | Moves it across the screen                                 |
+| <kbd>Shift</kbd> + drag a point                            | Changes only its height                                    |
+| <kbd>Alt</kbd> (<kbd>Option</kbd> on macOS) + drag a point | Moves it only across the floor                             |
+| Hold <kbd>Shift</kbd> or <kbd>Alt</kbd> over a point       | Shows the line or the plane the drag will follow           |
+| Click a point                                              | Selects it; a click on the background clears the selection |
+| Drag the background                                        | Rotates the scene; a flick lets it spin out                |
+
+With the figure focused, after a click on it or with <kbd>Tab</kbd>:
+
+| Key                                         | Does                                                     |
+| ------------------------------------------- | -------------------------------------------------------- |
+| <kbd>[</kbd> and <kbd>]</kbd>               | Pick the previous and the next point                     |
+| Arrow keys                                  | Move the selected point across the floor                 |
+| <kbd>Page Up</kbd> and <kbd>Page Down</kbd> | Move it up and down                                      |
+| <kbd>A</kbd>                                | Adds a point halfway to the next one                     |
+| <kbd>Delete</kbd> or <kbd>Backspace</kbd>   | Removes the selected point; the curve keeps at least two |
+| <kbd>Escape</kbd>                           | Clears the selection                                     |
 
 ## Two numbers for three
 
@@ -106,6 +120,25 @@ neither of them is up or along the floor. Two more planes split them:
   normal `{ x: 0, y: 1, z: 0 }`. The drag keeps the height and takes only
   the new x and z.
 
+Hold <kbd>Shift</kbd> or <kbd>Alt</kbd> with the pointer on a point, and the
+figure draws the path before the drag starts: the upright line through the
+point from the floor to the top of the editing space, or the outline of the
+plane at the point's height. Both are `lines3D` segments in world units, so
+they turn with the scene, and the guide stays until the drag ends:
+
+```ts
+const guided = grab?.knot ?? knots.find((k) => k.id === hovered);
+previewGroup
+    .selectAll('.guide')
+    .data(lines.data(guided ? guideOf(guided, grab?.mode ?? held) : []))
+    .join('line')
+    .attr('class', 'guide')
+    .call(placeSegments);
+```
+
+The keys reach the page when the figure has no focus, so the window listens
+for them, and the figure stops listening when it is removed.
+
 The readout under the figure shows the change: a <kbd>Shift</kbd> drag moves
 only the height, an <kbd>Alt</kbd> drag only x and z. The height is −y: the
 screen y grows downwards, so the points rise towards a negative y, and the
@@ -137,8 +170,10 @@ The curve is a uniform Catmull–Rom spline through the points, with the end
 points doubled, sampled at 20 steps per segment and drawn with
 `lineStrips3D`. It passes through every point, so moving a point moves the
 curve through it. A double-click on the curve adds a point at the sample
-nearest the pointer, and the readout shows the length of the curve as the
-sum of the distances between its samples.
+nearest the pointer. Hovering the curve finds that sample with the same
+function and draws a ghost there, with its own drop line, so the new point
+lands where the ghost stands. The readout shows the length of the curve as
+the sum of the distances between its samples.
 
 ## The whole source
 

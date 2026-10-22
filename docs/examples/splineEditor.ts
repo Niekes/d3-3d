@@ -82,6 +82,37 @@ function confine(point: Point3D): void {
     point.z = clamp(point.z, -HALF, HALF);
 }
 
+/** The plane a drag takes for the held modifier: Shift the height, Alt the floor. */
+const modeOf = (event: { shiftKey: boolean; altKey: boolean }): Grab['mode'] =>
+    event.shiftKey ? 'height' : event.altKey ? 'floor' : 'free';
+
+/**
+ * The guide of a constrained drag: the upright line a Shift drag moves the
+ * point along, or the outline of the plane at its height that an Alt drag
+ * moves it in. A free drag has none.
+ */
+function guideOf(knot: Point3D, mode: Grab['mode']): Point3D[][] {
+    if (mode === 'height') {
+        return [
+            [
+                { ...knot, y: 0 },
+                { ...knot, y: -TOP }
+            ]
+        ];
+    }
+    if (mode === 'floor') {
+        const ring = [
+            [-HALF, -HALF],
+            [HALF, -HALF],
+            [HALF, HALF],
+            [-HALF, HALF],
+            [-HALF, -HALF]
+        ];
+        return pairs(ring.map(([x, z]) => ({ x, y: knot.y, z })));
+    }
+    return [];
+}
+
 const describe = (knot: Point3D) =>
     `x ${knot.x.toFixed(2)}, height ${(-knot.y).toFixed(2)}, z ${knot.z.toFixed(2)}`;
 
@@ -119,6 +150,11 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     let yaw = 0;
     let pitch = 0;
     let grab: Grab | undefined;
+    // The previews: the curve sample under the pointer, where a double-click
+    // adds a point, and the point under it with the held modifier.
+    let ghost: number | undefined;
+    let hovered: number | undefined;
+    let held: Grab['mode'] = 'free';
 
     const lines = lines3D();
     const dots = points3D<Knot>();
@@ -151,6 +187,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     const gridGroup = group.append('g').attr('class', 'spline-grid');
     const depthGroup = group.append('g').attr('class', 'spline-depth');
     const curveGroup = group.append('g').attr('class', 'spline-curve');
+    const previewGroup = group.append('g').attr('class', 'spline-preview');
     const pointGroup = group.append('g').attr('class', 'spline-points');
     const polygonPath = curveGroup.append('path').attr('class', 'polygon');
     const curvePath = curveGroup.append('path').attr('class', 'curve');
@@ -203,6 +240,30 @@ export function mountSplineEditor(host: HTMLElement): () => void {
             .attr('d', strips.draw(controls))
             .attr('display', polygon.checked ? null : 'none');
 
+        // The ghost of the point a double-click adds, with its drop line, and
+        // the guide of a Shift or Alt drag, shown before the drag and during it.
+        const at = ghost === undefined ? undefined : samples[ghost];
+        const drops = lines.data(at ? [[at, { ...at, y: 0 }]] : []);
+        const guided = grab?.knot ?? knots.find((k) => k.id === hovered);
+        previewGroup
+            .selectAll<SVGLineElement, Line<Point3D>>('.drop')
+            .data(drops)
+            .join('line')
+            .attr('class', 'drop')
+            .call(placeSegments);
+        previewGroup
+            .selectAll<SVGLineElement, Line<Point3D>>('.guide')
+            .data(lines.data(guided ? guideOf(guided, grab?.mode ?? held) : []))
+            .join('line')
+            .attr('class', 'guide')
+            .call(placeSegments);
+        previewGroup
+            .selectAll('circle')
+            .data(drops.map(([top]) => top))
+            .join('circle')
+            .attr('transform', (d) => `translate(${d.projected.x},${d.projected.y})`)
+            .attr('r', DOT * unit);
+
         // Only the points are sorted, so a nearer one covers a farther one.
         pointGroup
             .selectAll<SVGGElement, Point<Knot>>('g')
@@ -251,8 +312,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
         .subject((event) => ({ x: event.x, y: event.y }))
         .on('start', (event, d) => {
             const knot = knots.find((k) => k.id === d.id)!;
-            const { shiftKey, altKey } = event.sourceEvent;
-            const mode = shiftKey ? 'height' : altKey ? 'floor' : 'free';
+            const mode = modeOf(event.sourceEvent);
             const start = { x: knot.x, y: knot.y, z: knot.z };
             const normal = normalOf(mode);
             // The offset keeps the point where it was grabbed, not under
@@ -278,6 +338,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
         })
         .on('end', () => {
             grab = undefined;
+            render();
         });
 
     /** Adds a point on the curve after the knot `index` and selects it. */
@@ -304,22 +365,57 @@ export function mountSplineEditor(host: HTMLElement): () => void {
         render();
     }
 
-    // A double-click on the curve adds a point at the sample nearest the
-    // pointer, between the two knots of its segment.
-    curveHit.on('dblclick', (event: MouseEvent) => {
+    /** The index of the curve sample nearest the pointer. */
+    function sampleAt(event: MouseEvent): number {
         const [x, y] = pointer(event, group.node());
         const curve = strips.data([spline(knots)])[0];
-        const i = leastIndex(curve, (p) => (p.projected.x - x) ** 2 + (p.projected.y - y) ** 2)!;
-        insert(Math.min(Math.floor(i / STEPS), knots.length - 2), curve[i]);
+        return leastIndex(curve, (p) => (p.projected.x - x) ** 2 + (p.projected.y - y) ** 2)!;
+    }
+
+    /** The id of the point an event targets, if any. */
+    function knotAt(event: Event): number | undefined {
+        const hit = (event.target as Element).closest('.spline-point');
+        return hit ? select<Element, Point<Knot>>(hit).datum().id : undefined;
+    }
+
+    // A double-click on the curve adds a point at the sample nearest the
+    // pointer, between the two knots of its segment: where the ghost is.
+    curveHit.on('dblclick', (event: MouseEvent) => {
+        const i = sampleAt(event);
+        ghost = undefined;
+        insert(Math.min(Math.floor(i / STEPS), knots.length - 2), spline(knots)[i]);
     });
 
     // A click selects the point under it, or clears the selection. d3.drag
     // swallows the click that ends a turn of the scene.
     svg.on('click', (event: MouseEvent) => {
-        const hit = (event.target as Element).closest('.spline-point');
-        selected = hit ? select<Element, Point<Knot>>(hit).datum().id : undefined;
+        selected = knotAt(event);
         render();
     });
+
+    // The pointer picks the previews while no button is down: the ghost over
+    // the curve, the guide over a point.
+    svg.on('pointermove', (event: PointerEvent) => {
+        const free = !event.buttons;
+        ghost = free && event.target === curveHit.node() ? sampleAt(event) : undefined;
+        hovered = free ? knotAt(event) : undefined;
+        held = modeOf(event);
+        render();
+    }).on('pointerleave', () => {
+        ghost = hovered = undefined;
+        render();
+    });
+
+    // Shift and Alt switch the guide while the pointer rests on a point. The
+    // keys go to the page when the figure has no focus, so the window listens.
+    function hold(event: KeyboardEvent): void {
+        if (modeOf(event) !== held) {
+            held = modeOf(event);
+            render();
+        }
+    }
+    window.addEventListener('keydown', hold);
+    window.addEventListener('keyup', hold);
 
     // The brackets pick a point, the arrows and the page keys move it, A adds
     // one halfway along the curve to the next and Delete removes it.
@@ -375,6 +471,8 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     reset();
 
     return () => {
+        window.removeEventListener('keydown', hold);
+        window.removeEventListener('keyup', hold);
         host.innerHTML = '';
         host.classList.remove('spline-editor');
     };
@@ -443,7 +541,8 @@ const STYLES = `
     stroke-width: 0.75;
 }
 
-.spline-editor .spline-depth line {
+.spline-editor .spline-depth line,
+.spline-editor .spline-preview .drop {
     stroke: var(--se-muted);
     stroke-width: 1;
     stroke-dasharray: 2 3;
@@ -475,6 +574,24 @@ const STYLES = `
 .spline-editor .curve-hit {
     stroke: transparent;
     stroke-width: 16;
+}
+
+.spline-editor .spline-preview {
+    pointer-events: none;
+}
+
+.spline-editor .spline-preview circle {
+    fill: var(--se-bg);
+    fill-opacity: 0.7;
+    stroke: var(--se-point);
+    stroke-width: 2;
+    stroke-dasharray: 3 2;
+}
+
+.spline-editor .spline-preview .guide {
+    stroke: var(--se-point);
+    stroke-width: 1.5;
+    stroke-dasharray: 6 4;
 }
 
 .spline-editor .spline-point {
