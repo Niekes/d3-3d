@@ -97,6 +97,7 @@ export default defineConfig({
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Network explorer', link: '/examples/network-explorer' },
                             { text: 'Linked views', link: '/examples/linked-views' },
+                            { text: 'Flocking', link: '/examples/flocking' },
                             { text: 'Projection playground', link: '/examples/projection-playground' },
                             { text: 'Coordinate explorer', link: '/examples/coordinate-explorer' },
                             { text: 'Perspective street', link: '/examples/perspective-street' },

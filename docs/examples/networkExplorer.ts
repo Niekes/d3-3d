@@ -2,7 +2,7 @@ import { groups, least, pointer, randomLcg, randomNormal, range, select } from '
 import { camera3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
 import { rotatingFigure, turnCamera } from './rotatingFigure';
-import { placeSegments } from './segments';
+import { placePoints, placeSegments } from './segments';
 
 /*
  * A network explorer: nodes in three spatial clusters, linked to their
@@ -349,8 +349,7 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
             .join((enter) =>
                 enter.append('circle').call((circle) => circle.append('title').text((d) => d.id))
             )
-            .attr('cx', (d) => d.projected.x)
-            .attr('cy', (d) => d.projected.y)
+            .call(placePoints)
             .attr('r', (d) =>
                 d.id === selected?.id || d.id === hovered ? SELECTED_RADIUS : RADIUS
             )

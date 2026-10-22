@@ -28,7 +28,7 @@ import type {
     ShapeInstance
 } from '../../index';
 import { rotatingFigure, turnCamera } from './rotatingFigure';
-import { placeSegments } from './segments';
+import { placePoints, placeSegments } from './segments';
 import { drawAxisEdges } from './axisEdges';
 import './scatterPlot.css';
 
@@ -363,8 +363,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             .selectAll<SVGCircleElement, Point<ShownPoint>>('circle')
             .data(projected, (d) => d.id)
             .join('circle')
-            .attr('cx', (d) => d.projected.x)
-            .attr('cy', (d) => d.projected.y)
+            .call(placePoints)
             .attr('r', radius)
             .attr('fill', fill)
             .attr('opacity', (d) => d.fade);
