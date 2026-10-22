@@ -100,6 +100,7 @@ export default defineConfig({
                             { text: 'Depth-ordering lab', link: '/examples/depth-ordering' },
                             { text: 'Rotation order', link: '/examples/rotation-order' },
                             { text: 'Solar system', link: '/examples/solar-system' },
+                            { text: 'Space-time cube', link: '/examples/space-time-cube' },
                             { text: 'Mesh inspector', link: '/examples/mesh-inspector' },
                             { text: 'Möbius strip', link: '/examples/mobius-strip' },
                             { text: 'Office tower', link: '/examples/iso-tower' }
