@@ -3,10 +3,9 @@
     --ps-muted: #6b7075;
     --ps-line: #c4c7c9;
     --ps-bg: #ffffff;
-    --ps-accent: #1c7ed6;
-    --ps-sidewalk: #dcd8cf;
-    --ps-street: #6f777d;
-    --ps-street-alt: #7d858b;
+    --ps-sidewalk: #4f4b45;
+    --ps-street: #393e42;
+    --ps-street-alt: #43494d;
     --ps-roof: #f0c9a0;
     --ps-wall-x: #d08b5b;
     --ps-wall-z: #b36b3f;
@@ -25,10 +24,9 @@
     --ps-muted: #9aa0a6;
     --ps-line: #3d4144;
     --ps-bg: #0c0d0e;
-    --ps-accent: #4dabf7;
-    --ps-sidewalk: #3a3833;
-    --ps-street: #24282b;
-    --ps-street-alt: #2c3134;
+    --ps-sidewalk: #23211e;
+    --ps-street: #1a1d1f;
+    --ps-street-alt: #202427;
     --ps-roof: #e8b98b;
     --ps-wall-x: #b5713f;
     --ps-wall-z: #8f532c;
@@ -78,21 +76,6 @@
     font-weight: 600;
     text-anchor: middle;
     dominant-baseline: central;
-    pointer-events: none;
-}
-
-.perspective-street .ps-tile {
-    fill: none;
-    stroke: var(--ps-accent);
-    stroke-width: 2.5;
-    stroke-linejoin: round;
-    pointer-events: none;
-}
-
-.perspective-street .ps-hit {
-    fill: var(--ps-accent);
-    stroke: var(--ps-bg);
-    stroke-width: 1.5;
     pointer-events: none;
 }
 

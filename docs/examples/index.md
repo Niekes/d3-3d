@@ -18,7 +18,7 @@
 - [Spline editor](/examples/spline-editor) — a curve through six points above a floor, drawn with `lineStrips3D`, its points and their shadows with `points3D` and the floor and drop lines with `lines3D`; a drag moves a point in the plane that faces the camera through `unproject`, Shift only up and Alt only across the floor
 - [Network explorer](/examples/network-explorer) — 45 nodes in three clusters, drawn with `points3D` and `lines3D`; click a node to highlight its neighbors, filter the clusters
 - [Projection playground](/examples/projection-playground) — rotation, scale, origin and rotation center of one cube, with the renderer call and its vertices beside the SVG and twelve presets from isometric to a corner pivot
-- [Perspective street](/examples/perspective-street) — sixteen houses along a street seen through `.perspective()`, drawn with `cubes3D` and `planes3D`; a dolly zoom moves the eye, `unproject` casts a ray from it onto the street, and a toggle shows why `ccw` and not the view direction tells the faces that show
+- [Perspective street](/examples/perspective-street) — sixteen houses along a street seen through `.perspective()`, drawn with `cubes3D` and `planes3D`; a dolly zoom moves the eye, and a toggle shows why `ccw` and not the view direction tells the faces that show
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer
 - [Mesh inspector](/examples/mesh-inspector) — a vase of triangles drawn with `triangles3D` and its normals with `lines3D`; toggle the faces, edges, normals and back faces, click a face to inspect it
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`

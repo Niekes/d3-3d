@@ -22,15 +22,12 @@ onBeforeUnmount(() => {
 
 <div ref="host" class="perspective-street"></div>
 
-**Drag the street** to look at it from another side, and **point at the
-street** to find the tile under the pointer. The slider moves the eye, from
-twelve units in front of the rotation center to infinitely far away at its
-right end, and **dolly out** and **dolly in** glide it to either end. Point
-above the horizon to see the ray miss the floor. The toggle switches the
-test that hides the faces.
+**Drag the street** to look at it from another side. The slider moves the
+eye, from twelve units in front of the rotation center to infinitely far
+away at its right end, and **dolly out** and **dolly in** glide it to either
+end. The toggle switches the test that hides the faces.
 
-The floor, the houses and the dot under the pointer hang on one
-`camera3D`, and all of it is SVG.
+The floor and the houses hang on one `camera3D`, and all of it is SVG.
 
 ## One number moves the eye
 
@@ -99,18 +96,6 @@ has to turn towards a point, the eye at
 vanish, a few walls that turn away are drawn, and the readout counts both.
 At the right end of the slider the two tests agree again.
 
-## The pointer casts a ray from the eye
-
-```ts
-const hit = camera.unproject(pointer, { x: 0, y: 0, z: 0 }, { x: 0, y: 1, z: 0 });
-```
-
-`unproject` maps a screen point back onto a plane, here the floor. In an
-orthographic view the ray runs along the view direction; in perspective it
-starts at the eye and runs through the screen point. Above the horizon that
-ray climbs away from the floor and meets the plane only behind the eye, and
-`unproject` returns `null` there.
-
 ## Text at a rotated point
 
 ```ts
@@ -127,7 +112,7 @@ The house numbers sit on the roofs. `perspective(point, options)` is the
 projection itself: it maps the rotated centroid of the roof to the screen,
 as `orthographic` does in the [bar chart](./bar-chart). A text or a circle
 keeps its size on the screen, so the growth of the roof scales the font
-too. The dot under the pointer shrinks the same way.
+too.
 
 ## Where it ends
 
@@ -144,6 +129,10 @@ the image of a plane in perspective is not.
 
 The figure lives in
 [docs/examples/perspectiveStreet.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/perspectiveStreet.ts)
-and its styles in
-[docs/examples/perspectiveStreet.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/perspectiveStreet.css).
-It borrows the drag from the rotating figures of these examples.
+in the repository, its styles in
+[docs/examples/perspectiveStreet.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/perspectiveStreet.css),
+and the drag in
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+The figure, ready to copy:
+
+<<< @/examples/perspectiveStreet.ts

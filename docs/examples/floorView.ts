@@ -1,6 +1,5 @@
 import type { Camera3DInstance, Point3D } from '../../index';
 import { turnCamera } from './rotatingFigure';
-import type { Turn } from './rotatingFigure';
 
 /*
  * The camera of the figures built on a floor. The scene turns around a pivot
@@ -10,10 +9,7 @@ import type { Turn } from './rotatingFigure';
  * everything that stands on it.
  */
 
-/** The tilts a camera above a floor may take. */
-export const ABOVE_FLOOR: Turn = { minTilt: Math.PI / 18, maxTilt: (17 * Math.PI) / 36 };
-
-const START = { yaw: Math.PI / 5, tilt: 0.6, ...ABOVE_FLOOR };
+const START = { yaw: Math.PI / 5, tilt: 0.6, minTilt: Math.PI / 18, maxTilt: (17 * Math.PI) / 36 };
 
 /**
  * Poses the camera that every renderer of a figure hangs on: the projection

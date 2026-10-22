@@ -1,17 +1,16 @@
-import { easeCubicInOut, pointer, select, timer } from 'd3';
+import { easeCubicInOut, select, timer } from 'd3';
 import type { Timer } from 'd3';
-import { box, camera3D, cubes3D, normal, perspective, planes3D, points3D, sort } from '../../index';
+import { box, camera3D, cubes3D, normal, perspective, planes3D, sort } from '../../index';
 import type { Camera3DInstance, Cube, CubeFace, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
-import { ABOVE_FLOOR } from './floorView';
 import { dragRotate, turnCamera } from './rotatingFigure';
 import './perspectiveStreet.css';
 
 /*
  * A street of sixteen houses seen through `.perspective()`, drawn as SVG
- * paths. A slider and a dolly zoom move the eye, the pointer casts a ray
- * from it onto the street, and a toggle hides the faces by their winding or
- * by the orthographic test against the view direction.
+ * paths. A slider and a dolly zoom move the eye, and a toggle hides the
+ * faces by their winding or by the orthographic test against the view
+ * direction.
  */
 
 const WIDTH = 960;
@@ -75,9 +74,6 @@ function floorClass(q: number): string {
     return (Math.floor(t / 2) + t) % 2 === 0 ? 'street' : 'street-alt';
 }
 
-const ORIGIN = { x: 0, y: 0, z: 0 };
-const UP = { x: 0, y: 1, z: 0 };
-
 const fixed = (value: number) => value.toFixed(1).replace('-', '−');
 
 /** How much larger than at the rotation center a rotated depth is drawn. */
@@ -94,26 +90,6 @@ function shows(face: CubeFace<HouseVertex>, cull: Cull, v: Point3D): boolean {
     }
     const n = normal(face);
     return n.x * v.x + n.y * v.y + n.z * v.z > 0;
-}
-
-/** The tile of the street under a floor point, or null off the street. */
-function tileAt(point: Point3D): Point3D[] | null {
-    const column = Math.floor(point.x + 1);
-    const row = Math.floor(point.z + 8.5);
-    return column >= 0 && column < 2 && row >= 0 && row < 17 ? TILES[2 * row + column] : null;
-}
-
-/** What the pointer finds on the floor, in words. */
-function describeHit(hit: Point3D | null, camera: Camera3DInstance): string {
-    if (!hit) {
-        return camera.perspective() === Infinity
-            ? 'The floor is seen edge-on: the ray runs along it.'
-            : 'Above the horizon: the ray from the eye meets the floor only behind the eye, so unproject returns null.';
-    }
-    const where = `x ${fixed(hit.x)}, z ${fixed(hit.z)}`;
-    return tileAt(hit)
-        ? `The ray from the eye meets the street at ${where}.`
-        : `The ray meets the floor at ${where}, off the street.`;
 }
 
 /** Where the eye is, in words. */
@@ -160,15 +136,11 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
         <div class="ps-readout">
             <p class="ps-eye"></p>
             <p class="ps-faces"></p>
-            <p class="ps-pointer" aria-live="polite">Point at the street.</p>
         </div>`;
 
     const svg = select(host).select<SVGSVGElement>('svg');
     const floorGroup = svg.append('g');
     const houseGroup = svg.append('g');
-    // The tile under the pointer and the dot where the ray meets it, on top.
-    const tilePath = svg.append('path').attr('class', 'ps-tile');
-    const hitDot = svg.append('circle').attr('class', 'ps-hit');
 
     const form = host.querySelector('form')!;
     const slider = form.elements.namedItem('distance') as HTMLInputElement;
@@ -182,12 +154,10 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
         .perspective(START);
     const floor = planes3D().camera(camera);
     const cubes = cubes3D<HouseVertex>().camera(camera);
-    const marker = points3D().camera(camera);
 
     let cull: Cull = 'ccw';
     let yaw = 0;
     let pitch = 0;
-    let hover: [number, number] | null = null;
     let dolly: Timer | undefined;
 
     /** The houses as `cubes3D` projects them, each sorting by its footprint. */
@@ -252,31 +222,11 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
         });
     }
 
-    /** The point of the floor under the pointer and its tile. */
-    function drawHit(): void {
-        const hit = hover && camera.unproject({ x: hover[0], y: hover[1] }, ORIGIN, UP);
-        const tile = hit && tileAt(hit);
-        tilePath.attr('d', tile ? floor.draw(floor.data([tile])[0]) : null);
-
-        // The dot shrinks with the distance, as `perspective` scales a point.
-        const [mark] = hit ? marker.data([hit]) : [];
-        hitDot
-            .attr('visibility', mark ? null : 'hidden')
-            .attr('cx', mark?.projected.x ?? 0)
-            .attr('cy', mark?.projected.y ?? 0)
-            .attr('r', mark ? 5 * growth(camera, mark.rotated.z) : 0);
-
-        if (hover) {
-            line('pointer').textContent = describeHit(hit, camera);
-        }
-    }
-
     function render(): void {
-        turnCamera(camera, yaw, pitch, { tilt: TILT, ...ABOVE_FLOOR });
+        turnCamera(camera, yaw, pitch, { tilt: TILT });
 
         const houses = project();
         drawStreet(houses);
-        drawHit();
 
         const d = camera.perspective();
         output.textContent = d === Infinity ? '∞' : fixed(d);
@@ -331,16 +281,7 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
             pitch = p;
             render();
         })
-    )
-        .on('pointermove', (event: PointerEvent) => {
-            hover = pointer(event, svg.node());
-            drawHit();
-        })
-        .on('pointerleave', () => {
-            hover = null;
-            line('pointer').textContent = 'Point at the street.';
-            drawHit();
-        });
+    );
 
     render();
 
