@@ -91,6 +91,7 @@ export default defineConfig({
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
                             { text: 'Point cloud', link: '/examples/point-cloud' },
                             { text: 'Pixel space', link: '/examples/pixel-space' },
+                            { text: 'Particle text morph', link: '/examples/particle-text-morph' },
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Network explorer', link: '/examples/network-explorer' },
                             { text: 'Projection playground', link: '/examples/projection-playground' },
