@@ -115,6 +115,9 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
     private apply(points: Point3D[]) {
         return transform(points, {
             ...this.transformOptions(),
+            // An isometric view is orthographic, and so are the affine
+            // frames of `plane`.
+            perspective: Infinity,
             x: (point) => point.x,
             y: (point) => point.y,
             z: (point) => point.z

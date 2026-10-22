@@ -4,6 +4,8 @@
  */
 
 // Shape factories - one per shape module under src/shapes.
+export { axes3D } from './src/shapes/axes';
+export { camera3D } from './src/shapes/shape';
 export { cubes3D } from './src/shapes/cubes';
 export { gridPlanes3D } from './src/shapes/gridPlanes';
 export { iso3D } from './src/shapes/iso';
@@ -18,18 +20,29 @@ export { triangles3D } from './src/shapes/triangles';
 export { sort } from './src/sort';
 export { ccw } from './src/counter-clockwise';
 export { centroid } from './src/centroid';
+export { normal } from './src/normal';
+export { box } from './src/box';
+export { lathe } from './src/lathe';
+export { strips } from './src/strips';
+export { catmullRom } from './src/catmull-rom';
+export { axisSpec } from './src/axis-spec';
 export { transform } from './src/transform';
 export { orthographic } from './src/projection-orthographic';
+export { perspective } from './src/projection-perspective';
+export { projectPositions } from './src/projection-matrix';
 
 // Shared types.
 export * from './src/types';
 export type { HasCentroid } from './src/sort';
 export type { OrthographicOptions } from './src/projection-orthographic';
+export type { PerspectiveOptions } from './src/projection-perspective';
+export type { TickScale } from './src/axis-spec';
 
 // The shape contract that every shape instance implements.
-export type { ShapeInstance } from './src/shapes/shape';
+export type { Camera3DInstance, ShapeInstance } from './src/shapes/shape';
 
 // Shape result types - one per shape module under src/shapes.
+export type { AxisEdge, AxisWall } from './src/shapes/axes';
 export type { Cube, CubeFace, CubeFaceName } from './src/shapes/cubes';
 export type { GridPlane } from './src/shapes/gridPlanes';
 export type { IsoBox, IsoPlane } from './src/shapes/iso';
@@ -41,6 +54,7 @@ export type { Polygon } from './src/shapes/polygons';
 export type { Triangle } from './src/shapes/triangles';
 
 // Shape instance types - one per shape module under src/shapes.
+export type { Axes3DInstance } from './src/shapes/axes';
 export type { Cubes3DInstance } from './src/shapes/cubes';
 export type { GridPlanes3DInstance } from './src/shapes/gridPlanes';
 export type { Iso3DInstance } from './src/shapes/iso';

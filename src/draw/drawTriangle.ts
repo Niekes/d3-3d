@@ -1,5 +1,6 @@
 import { TransformedPoint } from '../types';
+import { drawVertex } from './drawVertex';
 
 export function drawTriangle<T>(vertices: ReadonlyArray<TransformedPoint<T>>): string {
-    return `M${vertices[0].projected.x},${vertices[0].projected.y}L${vertices[1].projected.x},${vertices[1].projected.y}L${vertices[2].projected.x},${vertices[2].projected.y}Z`;
+    return `M${drawVertex(vertices[0])}L${drawVertex(vertices[1])}L${drawVertex(vertices[2])}Z`;
 }

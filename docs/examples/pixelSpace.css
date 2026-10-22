@@ -1,0 +1,29 @@
+/* The ground is dark in both themes: the light pixels show on it. */
+.pixel-space .canvas-figure-stage {
+    background: #121417;
+    color: #e6e8e9;
+}
+
+/* A crosshair over a pixel, unless Space has the drag orbit. */
+.pixel-space:not(.orbiting) canvas.on-pixel {
+    cursor: crosshair;
+}
+
+.pixel-space .pixel-space-readout {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.pixel-space .canvas-figure-controls input[type='range'] {
+    width: 110px;
+}
+
+.pixel-space .canvas-figure-controls input[type='range'] + span {
+    min-width: 3em;
+    font-variant-numeric: tabular-nums;
+}

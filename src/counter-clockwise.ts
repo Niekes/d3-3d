@@ -6,8 +6,8 @@ export function ccw<T>(polygon: ReadonlyArray<TransformedPoint<T>>): boolean {
     let sum = 0;
 
     for (let i = 0; i < polygon.length; i += 1) {
-        const p1 = poly[i].rotated;
-        const p2 = poly[i + 1].rotated;
+        const p1 = poly[i].projected;
+        const p2 = poly[i + 1].projected;
 
         sum += (p2.x - p1.x) * (p2.y + p1.y);
     }

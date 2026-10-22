@@ -1,7 +1,6 @@
 import { Point3D, TransformedPoint } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
-import { rotateRzRyRx } from '../rotation';
-import { orthographic } from '../projection-orthographic';
+import { transform } from '../transform';
 
 export type Point<Datum> = TransformedPoint<Datum> & {
     centroid: Point3D;
@@ -16,33 +15,10 @@ class Points3DRenderer<Datum = Point3D>
     implements Points3DInstance<Datum>
 {
     data(data: Datum[]): Point<Datum>[] {
-        return data.map((point) => {
-            const startPoint: Point3D = {
-                x: this.x()(point),
-                y: this.y()(point),
-                z: this.z()(point)
-            };
-
-            const rotated = rotateRzRyRx(startPoint, {
-                x: this.rotateX(),
-                y: this.rotateY(),
-                z: this.rotateZ(),
-                rotateCenter: this.rotationCenter()
-            });
-
-            const projected = orthographic(rotated, {
-                scale: this.scale(),
-                origin: this.origin()
-            });
-
-            const centroid = rotated;
-
-            return {
-                ...point,
-                rotated,
-                centroid,
-                projected
-            };
+        return transform(data, this.transformOptions()).map((transformed) => {
+            const point = transformed as Point<Datum>;
+            point.centroid = point.rotated;
+            return point;
         });
     }
 }

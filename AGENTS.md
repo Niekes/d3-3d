@@ -74,17 +74,17 @@ Two consequences worth remembering:
 owns exactly three things:
 
 ```ts
-import { Point3D, TransformedPoint } from '../types';
+import { Point3D, ShapeFields, TransformedPoint } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
-import { transform } from '../transform';
 
-export type Cube<Datum = Point3D> = TransformedPoint<Datum>[] & {
-    centroid: Point3D;
-};
+export type Cube<Datum = Point3D, Shape extends Datum[] = Datum[]> = TransformedPoint<Datum>[] &
+    ShapeFields<Shape> & {
+        centroid: Point3D;
+    };
 
 // The contract: what a consumer of the shape may call.
 export interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): Cube<Datum>[];
+    data<Shape extends Datum[]>(data: Shape[]): Cube<Datum, Shape>[];
 }
 
 // The implementation: extends ShapeRenderer, implements the contract.
@@ -92,9 +92,9 @@ class Cubes3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Cubes3DInstance<Datum>
 {
-    data(data: Datum[][]): Cube<Datum>[] {
+    data<Shape extends Datum[]>(data: Shape[]): Cube<Datum, Shape>[] {
         return data.map((cube) => {
-            const transformedCube = transform(cube, this.transformOptions()) as Cube<Datum>;
+            const transformedCube = this.transformShape(cube) as Cube<Datum, Shape>;
             transformedCube.centroid = centroid(transformedCube);
             return transformedCube;
         });
@@ -121,7 +121,9 @@ The rules that `scripts/check-template.mjs` enforces:
 
 `ShapeRenderer.transformOptions()` is the shared wiring for the renderer
 state. Use it instead of assembling the transform options by hand - that is
-what keeps the shape modules from drifting apart.
+what keeps the shape modules from drifting apart. A shape whose input is a
+list of point arrays transforms each array with `this.transformShape()`,
+which also keeps the fields set on the array, such as a `color` (#44).
 
 ### The public API
 

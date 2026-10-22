@@ -1,0 +1,169 @@
+import { interpolateRgb, range } from 'd3';
+import { camera3D, lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
+import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
+import { joinFacets } from './facets';
+import type { HasCentroid, LineStrips3DInstance, Point3D, Triangles3DInstance } from '../../index';
+
+/*
+ * The solar system: every body is a sphere of triangles, all of them go
+ * through one triangles3D, the `sort` utility paints them back to front and
+ * the sun lights the side of a planet that faces it. A d3 timer moves the
+ * bodies along their orbits, the drag rotates the scene.
+ */
+
+const ORIGIN = { x: 480, y: 250 };
+const SUN: Point3D = { x: 0, y: 0, z: 0 };
+const TILT = Math.PI / 6;
+const ORBIT_POINTS = 64;
+// The points of an orbit per strip: every strip sorts on its own depth.
+const ORBIT_STRIP = 5;
+const NIGHT = 0.3;
+// Some seconds into the animation, so the planets do not start in a row.
+const START = 40;
+
+/**
+ * Not to scale: `distance` is the radius of the orbit around the sun, or
+ * around `around`, and `period` the seconds of one orbit.
+ */
+interface Body {
+    name: string;
+    radius: number;
+    distance: number;
+    period: number;
+    color: string;
+    segments: number;
+    around?: string;
+}
+
+const BODIES: Body[] = [
+    { name: 'Sun', radius: 34, distance: 0, period: 1, color: '#ffb52e', segments: 16 },
+    { name: 'Mercury', radius: 3, distance: 52, period: 4, color: '#b5aca3', segments: 8 },
+    { name: 'Venus', radius: 6, distance: 72, period: 6.5, color: '#e8c787', segments: 10 },
+    { name: 'Earth', radius: 6.5, distance: 98, period: 10, color: '#3d8bfd', segments: 10 },
+    { name: 'Moon', radius: 2, distance: 12, period: 2.5, color: '#d6d3d1', segments: 6, around: 'Earth' },
+    { name: 'Mars', radius: 4.5, distance: 124, period: 14, color: '#e0553a', segments: 8 },
+    { name: 'Jupiter', radius: 16, distance: 170, period: 23, color: '#d9a877', segments: 12 },
+    { name: 'Saturn', radius: 13, distance: 222, period: 35, color: '#ecd193', segments: 12 },
+    { name: 'Uranus', radius: 9, distance: 276, period: 48, color: '#8fdcf0', segments: 10 },
+    { name: 'Neptune', radius: 9, distance: 326, period: 61, color: '#4c6ef5', segments: 10 }
+];
+
+/**
+ * A sphere of `radius` around the origin: a half circle from the bottom pole
+ * to the top one, turned around the y axis by `lathe`. The poles lie on the
+ * axis, so the bands next to them close in fans.
+ */
+function sphere(radius: number, segments: number): Point3D[][] {
+    const profile = range(1, segments).map((i) => {
+        const theta = (i / segments) * Math.PI;
+        return { x: radius * Math.sin(theta), y: radius * Math.cos(theta) };
+    });
+    return lathe([{ x: 0, y: radius }, ...profile, { x: 0, y: -radius }], segments);
+}
+
+/** Where `body` is after `t` seconds: on a circle in the x-z plane around `center`. */
+function orbit(body: Body, t: number, center: Point3D): Point3D {
+    const angle = (t / body.period) * Math.PI * 2;
+    return {
+        x: center.x + body.distance * Math.cos(angle),
+        y: center.y,
+        z: center.z + body.distance * Math.sin(angle)
+    };
+}
+
+/**
+ * How much sunlight a triangle of a sphere at `center` gets: the cosine
+ * between its outward normal and the way to the sun at the origin, never
+ * darker than NIGHT.
+ */
+function sunlight(triangle: Point3D[], center: Point3D): number {
+    const n = normal(triangle);
+    const cos =
+        -(n.x * center.x + n.y * center.y + n.z * center.z) /
+        Math.hypot(center.x, center.y, center.z);
+    return Math.max(NIGHT, cos);
+}
+
+/**
+ * Mounts the figure into `host` and returns a function that removes it.
+ */
+export function mountSolarSystem(host: HTMLElement): () => void {
+    // The bodies and the orbits hang on one camera, so turning it turns both.
+    const camera = camera3D().origin(ORIGIN);
+    turnCamera(camera, 0, 0, { tilt: TILT });
+    const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>().camera(camera);
+    const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>().camera(camera);
+
+    const meshes = BODIES.map((body) => sphere(body.radius, body.segments));
+    const shades = BODIES.map((body) => interpolateRgb('#000', body.color));
+    // The planets' orbits never move, the moon's travels with the earth.
+    // Cut into strips, an orbit passes in front of the sun and behind it.
+    const orbits = BODIES.filter((body) => body.distance && !body.around).flatMap((body) =>
+        strips(
+            range(ORBIT_POINTS + 1).map((i) => orbit(body, (i / ORBIT_POINTS) * body.period, SUN)),
+            ORBIT_STRIP
+        )
+    );
+
+    let t = START;
+
+    const { group, button } = rotatingFigure(
+        host,
+        'solar-system',
+        'The sun, the planets and the moon, made of triangles. Drag the figure to rotate it.',
+        (yaw, pitch) => {
+            turnCamera(camera, yaw, pitch, { tilt: TILT });
+            draw();
+        }
+    );
+
+
+    /**
+     * Places every body at `t`, joins all triangles and the strips of the
+     * orbits, and repaints them back to front in one list.
+     */
+    function draw(): void {
+        const centers = new Map<string, Point3D>();
+        const mesh: Point3D[][] = [];
+        const fills: string[] = [];
+
+        BODIES.forEach((body, k) => {
+            const center = orbit(body, t, centers.get(body.around ?? '') ?? SUN);
+            centers.set(body.name, center);
+            for (const triangle of meshes[k]) {
+                mesh.push(triangle.map((p) => ({ x: p.x + center.x, y: p.y + center.y, z: p.z + center.z })));
+                // The sun shines by itself.
+                fills.push(shades[k](body.distance ? sunlight(triangle, center) : 1));
+            }
+        });
+
+        // The projected triangles are new arrays, so the key and the fill are
+        // stamped on after the projection.
+        const facets = triangles.data(mesh).map((d, i) => Object.assign(d, { id: i, fill: fills[i] }));
+
+        // A face that turns away keeps its element and is only hidden.
+        joinFacets(group, facets, triangles).attr('visibility', (d) => (d.ccw ? null : 'hidden'));
+
+        group
+            .selectAll('path.orbit')
+            .data(orbits3d.data(orbits))
+            .join((enter) => enter.append('path').attr('class', 'orbit'))
+            .attr('d', orbits3d.draw);
+
+        group.selectAll<SVGPathElement, HasCentroid>('path').sort(sort);
+    }
+
+    // One frame of the animation: the clock moves on by the time since the last one.
+    const play = playback(button, (elapsed) => {
+        t += elapsed / 1000;
+        draw();
+    });
+
+    draw();
+    play(!window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+    return () => {
+        play(false);
+        host.innerHTML = '';
+    };
+}

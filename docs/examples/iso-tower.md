@@ -34,9 +34,9 @@ cursor, <kbd>n</kbd> starts the night shift from the lobby to the spire and
 
 ## A building is not an exploded diagram
 
-The [iso stack](/examples/iso-stack) sorts its slabs with the `sort` utility
-of the library: the slabs stand apart, so the depth of their centre decides
-the order. A building does not work that way. A floor band rests on the
+Boxes that stand apart can be sorted with the `sort` utility of the library:
+the depth of their centre decides the order. A building does not work that
+way. A floor band rests on the
 facade it belongs to, so the centre of the band is _farther_ from the camera
 than the centre of the tower. A global sort would swallow the lower floors.
 
@@ -44,11 +44,9 @@ The tower is therefore drawn in the order of its parts, from the city block
 up to the beacon, and only the street trees are sorted — they stand next to
 each other and the nearest one has to be drawn last.
 
-## The same kernel, the other way round
+## The setup
 
-The tower is the counterpart of the stack: where the stack explodes a
-structure into floating slabs, the tower stacks a structure into a solid.
-Both use the same three lines of setup, because the projection is the same:
+The isometric projection takes three lines of setup:
 
 ```ts
 const iso = iso3D()
@@ -57,9 +55,7 @@ const iso = iso3D()
     .scale(Math.sqrt(1.5));
 ```
 
-The difference is what the library hands out. The stack needs the frame of
-a face to place its labels, the tower needs the projected point of the
-spire to hang the beacon on it:
+The beacon hangs on the projected point of the spire:
 
 ```ts
 const beacon = iso.project([{ x: 104, y: 72, z: 336 }])[0];
@@ -69,8 +65,7 @@ const beacon = iso.project([{ x: 104, y: 72, z: 336 }])[0];
 
 The figure lives in
 [docs/examples/isoTower.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoTower.ts)
-in the repository. It shares the projection, the face frames and the filters
-with the [iso stack](/examples/iso-stack), that part lives in
+in the repository. The projection, the face frames and the filters live in
 [docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCommon.ts).
 Both files, ready to copy:
 

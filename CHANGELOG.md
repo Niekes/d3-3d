@@ -7,8 +7,77 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-Nothing yet. See the [open issues](https://github.com/Niekes/d3-3d/issues) for
-what is being worked on.
+## [2.2.0] - 2026-10-22
+
+### Added
+
+- `camera3D`: a camera without data. Shapes share its view with
+  `.camera(camera)`, so turning the camera turns them all, and its
+  `.matrix()` serves a canvas or WebGL.
+- `.viewDirection()` on every shape and camera: the unit vector towards the
+  viewer, in world coordinates.
+- `.matrix()` on every shape: the projection as a column-major 4×4 matrix.
+  `projectPositions` projects packed x, y, z triples through it into a
+  reusable `Float32Array`, and `.matrix({ width, height, depth })` maps to
+  clip space for a WebGL uniform.
+- `normal(polygon)`: the unit normal of a polygon, on the side `ccw`
+  reports.
+- `box(spec)`: the eight corners of a box in the order `cubes3D` expects.
+
+- `axes3D`: the box of a 3D chart. `.data(spec)` returns the six walls with
+  their gridlines and `ccw`, `.draw(wall)` their paths, and `.axes(spec)` the
+  three axes on the outline of the box, with their ticks and the direction
+  that points away from the box.
+- `lathe(profile, segments)`: the triangles of a surface of revolution, every
+  one wound to face outwards; a point of the profile on the axis closes it.
+- `strips(points, size)`: a polyline cut into strips that share their ends,
+  so every piece of a long line sorts on its own depth.
+- `catmullRom(points, steps)`: the Catmull–Rom spline through 3D points.
+- `axisSpec(scale, count)`: one axis of `axes3D` from a d3 scale.
+- `.draw()` on `lines3D`.
+- `axis` and `side` on the walls of `axes3D`.
+- `topWidth` and `topDepth` on `box`, for tapered shafts, ridges and apexes.
+- `.perspective(distance)` on every shape and camera, back after its removal
+  in 2017 (#16): the distance of the eye from the rotation center. The
+  default, `Infinity`, is the orthographic projection as before. `transform`,
+  `.matrix()`, `projectPositions` and `.unproject()` follow it, and
+  `perspective(point, options)` is the projection itself. `iso3D` stays
+  orthographic.
+- `iso3D`: isometric scenes of boxes. `.data(boxes)` returns the wall, the
+  top and the frames of the faces of every box, with a `centroid` for
+  `sort`; `.plane`, `.path`, `.project` and `.frame` place faces, paths and
+  the view box of a scene.
+- `.unproject(point, planePoint, planeNormal)` on every shape and camera:
+  the world point on a plane under a screen point, or `null` when the plane
+  is seen edge-on or lies behind the eye. It is what dragging along a floor
+  needs.
+- The documentation site, deployed to GitHub Pages: the guide, the API
+  reference, a migration guide and 34 interactive examples. The README
+  points to it.
+
+### Changed
+
+- `ccw` reads the winding of the `projected` points instead of the `rotated`
+  ones, so that it holds in perspective. The result is the same for an
+  orthographic projection.
+- `Cube`: `faces` and `centroid` are no longer optional, since `cubes3D`
+  always sets both. Code that reads them needs no `!` or `?.` any more; code
+  that builds a `Cube` by hand has to set them.
+- Path strings are rounded to three decimals, as `d3.pathRound` does. The
+  difference is invisible and the paths get much shorter, but tests that
+  compare paths character by character need updating.
+- The rotation matrix is built once per `.data()` call instead of once per
+  point.
+
+### Fixed
+
+- `draw` of `planes3D`, `polygons3D`, `triangles3D` and `lineStrips3D` is
+  typed to take the transformed points that `.data()` returns, not raw
+  points.
+- Shapes keep the fields of their input arrays again, as in 1.x, and their
+  types carry them (#44): `Object.assign(vertices, { color })` gives the
+  triangle its `color`. This holds for `cubes3D`, `lines3D`,
+  `lineStrips3D`, `planes3D`, `polygons3D` and `triangles3D`.
 
 ## [2.1.0] - 2026-10-21
 
@@ -16,7 +85,6 @@ what is being worked on.
 
 - Migrated the build to Vite+ 1.3.0 and `vp pack`.
 - Moved the toolchain to TypeScript 7, Vite 8 and Vitest 5.
-- Added the VitePress documentation site, deployed to GitHub Pages.
 
 ### Added
 
@@ -111,7 +179,8 @@ Initial releases. The first public version of d3-3d with points, lines, line
 strips, triangles, planes, polygons and cubes, plus grid planes, centroid and
 counter-clockwise detection and the `sort` utility.
 
-[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/Niekes/d3-3d/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Niekes/d3-3d/compare/v2.0.2...v2.1.0
 [2.0.2]: https://github.com/Niekes/d3-3d/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/Niekes/d3-3d/compare/v2.0.0...v2.0.1

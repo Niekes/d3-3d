@@ -28,16 +28,21 @@ the bars grow or shrink into it, their labels counting along.
 ## A bar is eight vertices
 
 The chart has no bar primitive. Every bar is eight points - its footprint in
-the x-z plane and two values for `y` - handed to `cubes3D` as one flat list:
+the x-z plane and two values for `y` - handed to `cubes3D` as one flat list.
+[`box`](/api/#box) builds them in the order `cubes3D` expects, from where the
+bar stands and how high it rises:
 
 ```ts
-const cubes = cubes3D()
+const camera = camera3D()
     .scale(20)
     .origin({ x: 480, y: 300 })
     .rotateY(Math.PI / 6)
     .rotateX(-Math.PI / 6);
+const cubes = cubes3D().camera(camera);
 
-const bars = cubes.data([/* eight vertices per bar */]);
+const bars = cubes.data(
+    data.map((d) => box({ x: d.x, y: 0, z: d.z, width: 2, height: d.height, depth: 2 }))
+);
 ```
 
 The renderer cuts those eight vertices into six faces and hands each one
@@ -63,12 +68,13 @@ enter or exit again - a new sample only changes the depth of each bar.
 ## Labels that count
 
 The label of a bar sits on the centroid of its top face, which is the
-average of the rotated vertices. The projection maps it onto the screen the
-same way it maps the vertices themselves:
+average of the rotated vertices. `orthographic` maps it onto the screen the
+same way the camera maps the vertices themselves:
 
 ```ts
-.attr('x', (d) => origin.x + scale * d.centroid.x)
-.attr('y', (d) => origin.y + scale * d.centroid.y);
+const view = { origin: camera.origin(), scale: camera.scale() };
+.attr('x', (d) => orthographic(d.centroid, view).x)
+.attr('y', (d) => orthographic(d.centroid, view).y);
 ```
 
 The number itself is a transition tween: it interpolates from the current
@@ -88,10 +94,17 @@ label counts while the bar grows or shrinks:
 ## The painter's algorithm, twice
 
 The bars do not overlap each other, but the six faces of one bar do. The
-[`sort`](/api/#utility-functions) utility orders by the depth of a centroid,
-so the chart sorts at two levels: the cube groups by the depth of the cube
-centroid, and inside each group the faces and the label by the depth of
-theirs:
+`sort` utility orders by the depth of a centroid,
+so the chart sorts at two levels: the cube groups by the depth of their
+footprint, and inside each group the faces and the label by the depth of
+theirs. The bars stand on one floor, so the footprint is the right depth:
+the centre of a tall bar sits high up, and seen from above it would paint
+over a short bar in front of it. A cube has the centroid of its `bottom`
+face at hand:
+
+```ts
+centroid: cube.faces.find((face) => face.face === 'bottom').centroid;
+```
 
 ```ts
 group.selectAll('g.cube').sort(sort);
@@ -101,11 +114,30 @@ cubes.selectAll('.d3-3d').sort(sort);
 The sort runs after every draw: the drag changes the depth of every face, so
 the order has to be recomputed with every frame.
 
+## The box around the bars
+
+`axes3D` draws the chart box from a spec of three axes, a
+domain and the ticks for each. The bars grow towards a negative `y`, so the
+height axis runs from `0` to `-8` and its labels drop the sign:
+
+```ts
+const chartBox = axes3D().camera(camera);
+
+chartBox.data(spec).filter((wall) => !wall.ccw); // the back walls, with gridlines
+chartBox.axes(spec); // one axis per dimension, on the outline of the box
+```
+
+The walls and the axes are drawn before the bars, so the bars always sit in
+front of them. The box hangs on the same camera as the bars, so the drag
+turns the camera and both follow.
+
 ## The whole source
 
 The figure lives in
 [docs/examples/barChart.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/barChart.ts)
-in the repository. The complete file, ready to copy:
+in the repository, the drag it shares with the other rotating figures in
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+The complete file, ready to copy:
 
 <<< @/examples/barChart.ts
 
@@ -142,6 +174,44 @@ in the repository. The complete file, ready to copy:
 
 .bar-chart .bar-svg:active {
     cursor: grabbing;
+}
+
+.bar-chart .bar-svg {
+    color: var(--bc-stroke);
+}
+
+.bar-chart .bar-walls path {
+    fill: var(--bc-stroke);
+    fill-opacity: 0.04;
+    stroke: var(--bc-stroke);
+    stroke-opacity: 0.25;
+    stroke-width: 0.5;
+}
+
+.bar-chart .axis-line {
+    stroke-width: 1.5;
+}
+
+.bar-chart .tick-mark {
+    stroke: currentColor;
+    stroke-opacity: 0.6;
+}
+
+.bar-chart .tick-label,
+.bar-chart .axis-title {
+    font-family: system-ui, sans-serif;
+    dominant-baseline: central;
+}
+
+.bar-chart .tick-label {
+    font-size: 11px;
+    fill: currentColor;
+}
+
+.bar-chart .axis-title {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .bar-chart .text {

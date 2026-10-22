@@ -1,37 +1,161 @@
-import { drag, select } from 'd3';
-import type { DragBehavior, Selection } from 'd3';
+import { drag, select, timer } from 'd3';
+import type { DragBehavior, Selection, Timer } from 'd3';
+import type { Camera3DInstance } from '../../index';
 
 /*
- * The scaffold both rotating figures share: an SVG that turns on drag and an
+ * The scaffold the rotating figures share: an SVG that turns on drag and an
  * update button. The pointer distance becomes a yaw and a pitch, and the
- * distance of a finished drag is kept for the next one.
+ * distance of a finished drag is kept for the next one. A flick keeps the
+ * figure turning and lets it glide to a stop.
  */
 
 const DRAG_FACTOR = Math.PI / 230;
+/** The glide loses its speed with this time constant, in milliseconds. */
+const GLIDE_DECAY = 325;
+/** Below this speed, in pixels per millisecond, the figure stands still. */
+const GLIDE_MIN_SPEED = 0.01;
+/** A pointer that rests this long before the release has no speed left. */
+const GLIDE_REST = 50;
+/** A press that wanders less than this, in pixels, is a click, not a drag. */
+const CLICK_DISTANCE = 4;
 
-function dragRotate(
+/**
+ * The drag that turns a figure: hands `onRotate` the yaw and the pitch in
+ * radians, during the drag and during the glide after a flick.
+ */
+export function dragRotate<E extends Element = SVGSVGElement>(
     onRotate: (yaw: number, pitch: number) => void
-): DragBehavior<SVGSVGElement, unknown, unknown> {
+): DragBehavior<E, unknown, unknown> {
     let startX = 0;
     let startY = 0;
     let keptX = 0;
     let keptY = 0;
 
-    return drag<SVGSVGElement, unknown>()
-        .on('start', (event) => {
-            startX = event.x;
-            startY = event.y;
+    // The pointer speed, from the last two drag events.
+    let lastX = 0;
+    let lastY = 0;
+    let lastTime = 0;
+    let speedX = 0;
+    let speedY = 0;
+    let glide: Timer | undefined;
+    let figure: E | undefined;
+    let turning = false;
+
+    function glideFrom(release: number): void {
+        const still =
+            release - lastTime > GLIDE_REST || Math.hypot(speedX, speedY) < GLIDE_MIN_SPEED;
+
+        if (still || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        let previous = 0;
+
+        glide = timer((elapsed) => {
+            // A figure that was taken off the page stops turning.
+            if (!figure?.isConnected) {
+                glide?.stop();
+                return;
+            }
+            const dt = elapsed - previous;
+            const decay = Math.exp(-dt / GLIDE_DECAY);
+            previous = elapsed;
+
+            keptX += speedX * dt;
+            keptY += speedY * dt;
+            speedX *= decay;
+            speedY *= decay;
+            onRotate(keptX * DRAG_FACTOR, keptY * DRAG_FACTOR);
+
+            if (Math.hypot(speedX, speedY) < GLIDE_MIN_SPEED) {
+                glide?.stop();
+            }
+        });
+    }
+
+    // A press that wanders a few pixels is still a click, not a drag, so a
+    // shaky hand can still select what it points at. The figure does not
+    // turn either: a redraw re-sorts the elements, and the browser drops the
+    // click when the element it was pressed on moves in the DOM.
+    return drag<E, unknown>()
+        .clickDistance(CLICK_DISTANCE)
+        .on('start', function (event) {
+            figure = this;
+            glide?.stop();
+            turning = false;
+            startX = lastX = event.x;
+            startY = lastY = event.y;
+            lastTime = event.sourceEvent.timeStamp;
+            speedX = speedY = 0;
         })
         .on('drag', (event) => {
+            turning ||= Math.hypot(event.x - startX, event.y - startY) > CLICK_DISTANCE;
+            if (!turning) {
+                return;
+            }
+
+            const dt = event.sourceEvent.timeStamp - lastTime;
+
+            if (dt > 0) {
+                speedX = (event.x - lastX) / dt;
+                speedY = (event.y - lastY) / dt;
+                lastX = event.x;
+                lastY = event.y;
+                lastTime = event.sourceEvent.timeStamp;
+            }
+
             onRotate(
                 (event.x - startX + keptX) * DRAG_FACTOR,
                 (event.y - startY + keptY) * DRAG_FACTOR
             );
         })
         .on('end', (event) => {
+            if (!turning) {
+                return;
+            }
             keptX += event.x - startX;
             keptY += event.y - startY;
+            glideFrom(event.sourceEvent.timeStamp);
         });
+}
+
+/**
+ * Ends a mouse drag or brush that is under way. d3 follows the mouse on the
+ * window until the button comes up, so a figure taken off the page mid-drag
+ * would still hear the moves, and in Firefox an SVG element off the page has
+ * no screen matrix to place them with. A figure calls this first when it is
+ * removed, while it is still on the page.
+ */
+export function endDrags(): void {
+    window.dispatchEvent(new MouseEvent('mouseup', { view: window }));
+}
+
+/** Where a figure starts and how far it may tilt, in radians. */
+export interface Turn {
+    /** The turn around the vertical axis before any drag. */
+    yaw?: number;
+    /** The angle above the scene the camera looks down from before any drag. */
+    tilt?: number;
+    minTilt?: number;
+    maxTilt?: number;
+}
+
+/**
+ * Turns `camera` by the `yaw` and the `pitch` of `dragRotate`, from the
+ * start of `turn`, and returns the tilt. Every figure turns through here,
+ * so a drag turns all of them the same way: a drag down raises the tilt,
+ * and the camera looks down on the scene from higher above.
+ */
+export function turnCamera(
+    camera: Camera3DInstance,
+    yaw: number,
+    pitch: number,
+    turn: Turn = {}
+): number {
+    const { minTilt = -Infinity, maxTilt = Infinity } = turn;
+    const tilt = Math.max(minTilt, Math.min(maxTilt, (turn.tilt ?? 0) + pitch));
+    camera.rotateY((turn.yaw ?? 0) + yaw).rotateX(-tilt);
+    return tilt;
 }
 
 /**
@@ -58,4 +182,34 @@ export function rotatingFigure(
         group: svg.append('g'),
         button: select(host).select<HTMLButtonElement>('button')
     };
+}
+
+/**
+ * Turns the button of a figure into play and pause for a d3 timer. Every
+ * frame hands `step` the milliseconds since the last one. Returns `play`,
+ * which starts or stops the loop; the button names what a click does next.
+ */
+export function playback(
+    button: Selection<HTMLButtonElement, unknown, null, undefined>,
+    step: (elapsed: number) => void
+): (on: boolean) => void {
+    let loop: Timer | undefined;
+    let lastFrame = 0;
+
+    function frame(): void {
+        const now = performance.now();
+        step(now - lastFrame);
+        lastFrame = now;
+    }
+
+    function play(on: boolean): void {
+        loop?.stop();
+        loop = on ? timer(frame) : undefined;
+        lastFrame = performance.now();
+        button.text(on ? 'pause' : 'play');
+    }
+
+    button.on('click', () => play(!loop));
+
+    return play;
 }

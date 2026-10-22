@@ -22,6 +22,13 @@ export type TransformedPoint<T> = T & {
     projected: Point2D;
 };
 
+/**
+ * The fields a shape carries on its array besides its points, such as a
+ * `color` set with `Object.assign(points, { color })`. `.data` keeps them.
+ * The indices of a tuple are string keys, so `${number}` leaves them out.
+ */
+export type ShapeFields<Shape extends unknown[]> = Omit<Shape, keyof unknown[] | `${number}`>;
+
 export interface RotationAngles {
     x: number;
     y: number;
@@ -36,6 +43,8 @@ export interface TransformOptions<Datum> {
     rotateY: number;
     rotateZ: number;
     scale: number;
+    /** The distance of the eye from the rotation center; `Infinity`, the default, is orthographic. */
+    perspective?: number;
     x: (point: Datum) => number;
     y: (point: Datum) => number;
     z: (point: Datum) => number;
@@ -65,6 +74,24 @@ export interface IsoPlaneSpec {
     origin: Point3D;
     u: Point3D;
     v: Point3D;
+}
+
+/**
+ * One axis of a chart box in data units: its extent, from the first to the
+ * last value of `domain`, and the values of its ticks.
+ */
+export interface AxisSpec {
+    domain: number[];
+    ticks: number[];
+}
+
+/**
+ * The three axes of a chart box.
+ */
+export interface AxesSpec {
+    x: AxisSpec;
+    y: AxisSpec;
+    z: AxisSpec;
 }
 
 /**

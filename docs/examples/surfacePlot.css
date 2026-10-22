@@ -1,0 +1,110 @@
+.surface-plot {
+    --sp-stroke: #1b1e21;
+    --sp-button: #f0f1f1;
+    --sp-button-ink: #1b1e21;
+    --sp-button-line: #c4c7c9;
+    --sp-bg: #ffffff;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--sp-button-line);
+    border-radius: 12px;
+    background: var(--sp-bg);
+}
+
+.dark .surface-plot {
+    --sp-stroke: #e6e8e9;
+    --sp-button: #17181a;
+    --sp-button-ink: #e6e8e9;
+    --sp-button-line: #3d4144;
+    --sp-bg: #0c0d0e;
+}
+
+.surface-plot .surface-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.surface-plot .surface-svg:active {
+    cursor: grabbing;
+}
+
+.surface-plot .quad {
+    stroke: var(--sp-stroke);
+    stroke-opacity: 0.25;
+    stroke-width: 0.5;
+}
+
+/* The fill attribute loses to CSS, so the wireframe needs no redraw. */
+.surface-plot.is-wireframe .quad {
+    fill: none;
+    stroke-opacity: 0.6;
+    pointer-events: all;
+}
+
+.surface-plot .surface-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--sp-button-line);
+    border-radius: 8px;
+    background: var(--sp-button);
+    color: var(--sp-button-ink);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.surface-plot .surface-button:hover {
+    border-color: var(--sp-button-ink);
+}
+
+.surface-plot .surface-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--sp-button-line);
+    color: var(--sp-button-ink);
+    font-size: 0.85rem;
+}
+
+.surface-plot .surface-controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.surface-plot .surface-controls output {
+    min-width: 2.5em;
+    font-variant-numeric: tabular-nums;
+}
+
+.surface-plot .surface-controls select {
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--sp-button-line);
+    border-radius: 6px;
+    background: var(--sp-button);
+    color: var(--sp-button-ink);
+}
+
+.surface-plot .surface-tooltip {
+    position: absolute;
+    transform: translate(12px, 12px);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--sp-button-line);
+    border-radius: 6px;
+    background: var(--sp-button);
+    color: var(--sp-button-ink);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.surface-plot .surface-tooltip.is-left {
+    transform: translate(calc(-100% - 12px), 12px);
+}

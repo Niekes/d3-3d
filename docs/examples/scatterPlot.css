@@ -1,0 +1,245 @@
+.scatter-plot {
+    --se-ink: #1b1e21;
+    --se-wall: #888888;
+    --se-point-stroke: #1b1e21;
+    --se-button: #f0f1f1;
+    --se-button-line: #c4c7c9;
+    --se-bg: #ffffff;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--se-button-line);
+    border-radius: 12px;
+    background: var(--se-bg);
+    color: var(--se-ink);
+}
+
+.dark .scatter-plot {
+    --se-ink: #e6e8e9;
+    --se-point-stroke: #0c0d0e;
+    --se-button: #17181a;
+    --se-button-line: #3d4144;
+    --se-bg: #0c0d0e;
+}
+
+.scatter-plot .scatter-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.scatter-plot .scatter-svg.is-probing {
+    cursor: crosshair;
+}
+
+.scatter-plot .scatter-svg:active {
+    cursor: grabbing;
+}
+
+.scatter-plot .scatter-walls path {
+    fill: var(--se-wall);
+    fill-opacity: 0.06;
+    stroke: var(--se-wall);
+    stroke-opacity: 0.4;
+    stroke-width: 0.5;
+}
+
+.scatter-plot .axis-line {
+    stroke-width: 2;
+}
+
+.scatter-plot .tick-mark {
+    stroke: var(--se-ink);
+    stroke-opacity: 0.6;
+}
+
+.scatter-plot .tick-label,
+.scatter-plot .axis-title {
+    font-family: system-ui, sans-serif;
+    dominant-baseline: central;
+}
+
+.scatter-plot .tick-label {
+    font-size: 10px;
+    fill: var(--se-ink);
+}
+
+.scatter-plot .axis-title {
+    text-anchor: middle;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.scatter-plot .scatter-data circle {
+    stroke: var(--se-point-stroke);
+    stroke-opacity: 0.35;
+    stroke-width: 0.5;
+}
+
+.scatter-plot .scatter-data line {
+    stroke-width: 1.5;
+    pointer-events: none;
+}
+
+.scatter-plot .scatter-data line.is-dashed {
+    stroke-dasharray: 4 3;
+}
+
+.scatter-plot .scatter-probe {
+    pointer-events: none;
+}
+
+.scatter-plot .scatter-probe line {
+    stroke: var(--se-ink);
+    stroke-opacity: 0.5;
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+}
+
+.scatter-plot .scatter-probe line.is-drop {
+    stroke: var(--drop);
+    stroke-opacity: 1;
+    stroke-width: 1.5;
+    stroke-dasharray: none;
+}
+
+.scatter-plot .scatter-halo {
+    fill-opacity: 0.4;
+    pointer-events: none;
+}
+
+.scatter-plot .scatter-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--se-button-line);
+    border-radius: 8px;
+    background: var(--se-button);
+    color: var(--se-ink);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.scatter-plot .scatter-button:hover {
+    border-color: var(--se-ink);
+}
+
+.scatter-plot .scatter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--se-button-line);
+    font-size: 0.85rem;
+}
+
+.scatter-plot .scatter-controls label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.scatter-plot .scatter-controls output {
+    min-width: 2em;
+    font-variant-numeric: tabular-nums;
+}
+
+.scatter-plot .scatter-readout {
+    font-variant-numeric: tabular-nums;
+}
+
+.scatter-plot .scatter-controls select {
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--se-button-line);
+    border-radius: 6px;
+    background: var(--se-button);
+    color: var(--se-ink);
+}
+
+.scatter-plot .scatter-legend {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.scatter-plot .scatter-legend[hidden],
+.scatter-plot .scatter-colorbar[hidden] {
+    display: none;
+}
+
+.scatter-plot .scatter-legend button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--se-ink);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.scatter-plot .scatter-legend button::before {
+    content: '';
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--swatch);
+}
+
+.scatter-plot .scatter-legend button[aria-pressed='false'] {
+    opacity: 0.4;
+    text-decoration: line-through;
+}
+
+.scatter-plot .scatter-colorbar {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 3.75rem;
+    font-size: 0.8rem;
+}
+
+.scatter-plot .scatter-colorbar svg {
+    display: block;
+    margin-top: 0.25rem;
+    color: var(--se-ink);
+}
+
+.scatter-plot .scatter-tooltip {
+    position: absolute;
+    transform: translate(12px, 12px);
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--se-button-line);
+    border-radius: 6px;
+    background: var(--se-button);
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    white-space: pre;
+    pointer-events: none;
+}
+
+.scatter-plot .scatter-tooltip.is-left {
+    transform: translate(calc(-100% - 12px), 12px);
+}
+
+/* On a narrow screen the overlays would cover the box: they join the flow under it. */
+@media (max-width: 640px) {
+    .scatter-plot .scatter-legend,
+    .scatter-plot .scatter-colorbar {
+        position: static;
+        padding: 0 0.75rem 0.75rem;
+    }
+
+    .scatter-plot .scatter-legend {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}

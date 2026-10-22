@@ -1,30 +1,27 @@
-import { TransformedPoint, Point3D } from '../types';
+import { ShapeFields, TransformedPoint, Point3D } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { ccw } from '../counter-clockwise';
 import { centroid } from '../centroid';
-import { transform } from '../transform';
 import { drawTriangle } from '../draw/drawTriangle';
 
-export type Triangle<Datum> = TransformedPoint<Datum>[] & {
-    ccw: boolean;
-    centroid: Point3D;
-};
+export type Triangle<Datum, Shape extends Datum[] = Datum[]> = TransformedPoint<Datum>[] &
+    ShapeFields<Shape> & {
+        ccw: boolean;
+        centroid: Point3D;
+    };
 
 export interface Triangles3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
-    data(data: Datum[][]): Triangle<Datum>[];
-    draw(triangles: Datum[]): string;
+    data<Shape extends Datum[]>(data: Shape[]): Triangle<Datum, Shape>[];
+    draw(triangle: TransformedPoint<Datum>[]): string;
 }
 
 class Triangles3DRenderer<Datum = Point3D>
     extends ShapeRenderer<Datum>
     implements Triangles3DInstance<Datum>
 {
-    data(data: Datum[][]): Triangle<Datum>[] {
+    data<Shape extends Datum[]>(data: Shape[]): Triangle<Datum, Shape>[] {
         return data.map((triangle) => {
-            const transformedTriangles = transform(
-                triangle,
-                this.transformOptions()
-            ) as Triangle<Datum>;
+            const transformedTriangles = this.transformShape(triangle) as Triangle<Datum, Shape>;
 
             transformedTriangles.ccw = ccw(transformedTriangles);
             transformedTriangles.centroid = centroid(transformedTriangles);
@@ -33,8 +30,8 @@ class Triangles3DRenderer<Datum = Point3D>
         });
     }
 
-    draw(polygons: TransformedPoint<Datum>[]): string {
-        return drawTriangle(polygons);
+    draw(triangle: TransformedPoint<Datum>[]): string {
+        return drawTriangle(triangle);
     }
 }
 

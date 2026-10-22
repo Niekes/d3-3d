@@ -1,0 +1,5 @@
+/* The sky is dark in both themes: the stars add their light to it. */
+.point-cloud .canvas-figure-stage {
+    background: #07090f;
+    color: #e6e8e9;
+}
