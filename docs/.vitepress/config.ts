@@ -78,6 +78,7 @@ export default defineConfig({
                         { text: 'Overview', link: '/examples/' },
                         ...[
                             { text: 'Surface plot', link: '/examples/surface-plot' },
+                            { text: 'Terrain sculptor', link: '/examples/terrain-sculptor' },
                             { text: 'Bar chart', link: '/examples/bar-chart' },
                             { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },
                             { text: 'Voxel builder', link: '/examples/voxel-builder' },

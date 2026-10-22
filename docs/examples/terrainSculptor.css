@@ -1,0 +1,131 @@
+.terrain-sculptor {
+    --ts-stroke: #1b1e21;
+    --ts-ring: #1b1e21;
+    --ts-halo: #ffffff;
+    --ts-button: #f0f1f1;
+    --ts-button-ink: #1b1e21;
+    --ts-button-line: #c4c7c9;
+    --ts-muted: #5f6468;
+    --ts-bg: #ffffff;
+    margin: 1.5rem 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--ts-button-line);
+    border-radius: 12px;
+    background: var(--ts-bg);
+}
+
+.dark .terrain-sculptor {
+    --ts-stroke: #e6e8e9;
+    --ts-ring: #ffffff;
+    --ts-halo: #0c0d0e;
+    --ts-button: #17181a;
+    --ts-button-ink: #e6e8e9;
+    --ts-button-line: #3d4144;
+    --ts-muted: #a3a8ab;
+    --ts-bg: #0c0d0e;
+}
+
+/* The background turns the figure, the terrain takes the brush. */
+.terrain-sculptor .sculpt-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.terrain-sculptor .sculpt-svg:active {
+    cursor: grabbing;
+}
+
+/* The browser rings a focused SVG on every click: keep the ring for the keyboard. */
+.terrain-sculptor .sculpt-svg:focus {
+    outline: none;
+}
+
+.terrain-sculptor .sculpt-svg:focus-visible {
+    outline: 2px solid var(--ts-button-ink);
+    outline-offset: -4px;
+}
+
+.terrain-sculptor .quad {
+    stroke: var(--ts-stroke);
+    stroke-opacity: 0.2;
+    stroke-width: 0.5;
+    cursor: crosshair;
+}
+
+/* A halo under the ring keeps it legible on snow and on deep water alike. It
+   never takes the pointer, so the pointer always finds the quad below. */
+.terrain-sculptor .sculpt-ring {
+    fill: none;
+    stroke: var(--ts-ring);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    paint-order: stroke;
+    filter: drop-shadow(0 0 1px var(--ts-halo));
+    pointer-events: none;
+}
+
+.terrain-sculptor .sculpt-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.35rem 0.9rem;
+    border: 1px solid var(--ts-button-line);
+    border-radius: 8px;
+    background: var(--ts-button);
+    color: var(--ts-button-ink);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.terrain-sculptor .sculpt-button:hover {
+    border-color: var(--ts-button-ink);
+}
+
+.terrain-sculptor .sculpt-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid var(--ts-button-line);
+    color: var(--ts-button-ink);
+    font-size: 0.85rem;
+}
+
+.terrain-sculptor .sculpt-controls label,
+.terrain-sculptor .sculpt-controls fieldset {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.terrain-sculptor .sculpt-controls fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.terrain-sculptor .sculpt-controls legend {
+    float: left;
+    color: var(--ts-muted);
+}
+
+.terrain-sculptor .sculpt-controls output {
+    min-width: 2.5em;
+    font-variant-numeric: tabular-nums;
+}
+
+.terrain-sculptor .sculpt-readout {
+    flex: 1 1 16rem;
+    margin: 0;
+    color: var(--ts-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.terrain-sculptor .sculpt-readout span:nth-child(2) {
+    color: var(--ts-button-ink);
+}

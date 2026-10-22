@@ -29,18 +29,22 @@ export function sample(f: (x: number, z: number) => number): Point3D[] {
 
 /**
  * Renders the rotating figure into `host`, see `rotatingFigure`, and returns
- * the group, the button and `show`, which draws a sampled field. `color`
- * maps the mean height of a quad to its fill.
+ * the group, the button, `show`, which draws a sampled field, and the
+ * renderer, whose pose a figure can read or unproject with. `color` maps the
+ * mean height of a quad to its fill, and `onTurn` runs after every drag
+ * frame has redrawn the surface.
  */
 export function surfaceFigure(
     host: HTMLElement,
     prefix: string,
     label: string,
-    color: (height: number) => string
+    color: (height: number) => string,
+    onTurn?: () => void
 ): {
     group: Selection<SVGGElement, unknown, null, undefined>;
     button: Selection<HTMLButtonElement, unknown, null, undefined>;
     show: (field: Point3D[], duration?: number) => void;
+    surface: GridPlanes3DInstance<Point3D>;
 } {
     const surface: GridPlanes3DInstance<Point3D> = gridPlanes3D<Point3D>()
         .scale(10)
@@ -54,6 +58,7 @@ export function surfaceFigure(
     const { group, button } = rotatingFigure(host, prefix, label, (yaw, pitch) => {
         surface.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
         draw(surface.data(points), 0);
+        onTurn?.();
     });
 
     /**
@@ -99,5 +104,5 @@ export function surfaceFigure(
         draw(surface.data(points), duration);
     }
 
-    return { group, button, show };
+    return { group, button, show, surface };
 }

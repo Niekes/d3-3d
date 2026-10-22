@@ -3,6 +3,7 @@
 ## In the documentation
 
 - [Surface plot](/examples/surface-plot) — a ripple or a wave drawn with `gridPlanes3D`, with shape, amplitude, frequency, color and wireframe controls
+- [Terrain sculptor](/examples/terrain-sculptor) — a field of 32 × 32 samples drawn with `gridPlanes3D` that a brush raises and lowers; the brush lands on the hill under the pointer through `unproject`, and its ring is a `lineStrips3D`
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Exploded cube assembly](/examples/exploded-cubes) — a block of 64 cubes drawn with `cubes3D`, whose layers part on a slider; click a cube to inspect it
 - [Voxel builder](/examples/voxel-builder) — an 8 × 8 floor to build on with `cubes3D`, drawn with `planes3D` and `lines3D`; the cell under the pointer comes from `unproject`, and the faces that touch are never drawn
