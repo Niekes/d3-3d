@@ -21,7 +21,7 @@ The page teaches four things:
 
 1. **The selection lives in the data.** It is one set of ids. Each view only draws it, so a third view would need no wiring between the views. This is the main lesson.
 2. **One camera per view.** A renderer holds exactly one view: `camera` gives up the renderer's own view and shares the camera's (`src/shapes/shape.ts:146`). So each view gets its own renderers, hung on its own `camera3D` (`src/shapes/shape.ts:205`). The data array is shared, and every view projects it anew.
-3. **A brush is a query in world space.** The corners of the brush are unprojected onto the floor with `unproject` (`src/shapes/shape.ts:159`). The selection then compares world x and z, not pixels, so it would still be right if the map were turned.
+3. **A brush is a query in world space.** The corners of the brush are unprojected onto the floor with `unproject` (`src/shapes/shape.ts:159`). The selection then compares world x and z, not pixels, the same numbers the free view draws the rectangle with. Two corners are enough because the map looks straight down; a map turned about the vertical would need all four corners and a polygon test.
 4. **Where the other camera looks from.** `viewDirection` (`src/shapes/shape.ts:180`) of the free camera, flattened onto the floor, points the arrow in the top view.
 
 Assumptions:
