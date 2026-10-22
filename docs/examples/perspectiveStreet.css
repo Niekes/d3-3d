@@ -34,41 +34,27 @@
     --ps-wall-z: #8f532c;
 }
 
-/* All layers lie on one stage of the figure's aspect, the overlay on top. */
-.perspective-street .ps-stage {
-    position: relative;
-    aspect-ratio: 960 / 500;
-}
-
-.perspective-street .ps-stage > * {
-    position: absolute;
-    inset: 0;
+.perspective-street svg {
+    display: block;
     width: 100%;
-    height: 100%;
-}
-
-.perspective-street .ps-stage > [hidden] {
-    display: none;
-}
-
-.perspective-street .ps-overlay {
+    height: auto;
     cursor: grab;
     touch-action: none;
 }
 
-.perspective-street .ps-overlay:active {
+.perspective-street svg:active {
     cursor: grabbing;
 }
 
-.perspective-street .paint-sidewalk {
+.perspective-street .sidewalk {
     fill: var(--ps-sidewalk);
 }
 
-.perspective-street .paint-street {
+.perspective-street .street {
     fill: var(--ps-street);
 }
 
-.perspective-street .paint-street-alt {
+.perspective-street .street-alt {
     fill: var(--ps-street-alt);
 }
 
@@ -100,12 +86,14 @@
     stroke: var(--ps-accent);
     stroke-width: 2.5;
     stroke-linejoin: round;
+    pointer-events: none;
 }
 
 .perspective-street .ps-hit {
     fill: var(--ps-accent);
     stroke: var(--ps-bg);
     stroke-width: 1.5;
+    pointer-events: none;
 }
 
 .perspective-street .ps-controls {
@@ -123,10 +111,6 @@
     margin: 0;
     padding: 0;
     border: 0;
-}
-
-.perspective-street .ps-controls fieldset:disabled {
-    opacity: 0.5;
 }
 
 .perspective-street .ps-controls legend {
