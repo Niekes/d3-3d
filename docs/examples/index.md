@@ -4,6 +4,7 @@
 
 - [Surface plot](/examples/surface-plot) — a ripple or a wave drawn with `gridPlanes3D`, with shape, amplitude, frequency, color and wireframe controls
 - [Terrain sculptor](/examples/terrain-sculptor) — a field of 32 × 32 samples drawn with `gridPlanes3D` that a brush raises and lowers; the brush lands on the hill under the pointer through `unproject`, and its ring is a `lineStrips3D`
+- [Area chart](/examples/area-chart) — two series as hatched ribbons in a box, drawn with `polygons3D` and `axes3D`, that morph into new samples; the faces are painted in an exact order that follows from the planes separating them
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
 - [Bar field](/examples/bar-field) — a height map of up to 40,000 bars, projected by `.matrix()` and drawn on a 2D canvas in grid order or with WebGL instances and a depth buffer
 - [Exploded cube assembly](/examples/exploded-cubes) — a block of 64 cubes drawn with `cubes3D`, whose layers part on a slider; click a cube to inspect it
@@ -26,6 +27,8 @@ and cities by April Zhu.
 The scatter plot recreates the
 [3D scatter plot of matterviz](https://matterviz.janosh.dev/plot/scatter-plot-3d)
 by Janosh Riebesell.
+The area chart recreates the
+[multi-series 3D area chart with hatch fill of AnyChart](https://www.anychart.com/products/anychart/gallery/3D_Area_Charts/Multi-Series_3D_Area_Chart_with_HatchFill.php).
 
 ## On CodePen
 

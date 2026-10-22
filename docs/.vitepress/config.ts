@@ -79,6 +79,7 @@ export default defineConfig({
                         ...[
                             { text: 'Surface plot', link: '/examples/surface-plot' },
                             { text: 'Terrain sculptor', link: '/examples/terrain-sculptor' },
+                            { text: 'Area chart', link: '/examples/area-chart' },
                             { text: 'Bar chart', link: '/examples/bar-chart' },
                             { text: 'Bar field', link: '/examples/bar-field' },
                             { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },

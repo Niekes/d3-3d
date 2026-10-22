@@ -7,8 +7,8 @@ import {
     select
 } from 'd3';
 import { axes3D, cubes3D, sort } from '../../index';
-import type { AxesSpec, AxisWall, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
-import { drawAxisEdges } from './axisEdges';
+import type { AxesSpec, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
+import { drawChartBox } from './axisEdges';
 import { dragRotate } from './rotatingFigure';
 
 /*
@@ -111,18 +111,13 @@ export function mountBarChart(host: HTMLElement): () => void {
 
     /** Draws the walls that face away from the camera and the axes on the outline. */
     function drawBox(): void {
-        wallGroup
-            .selectAll<SVGPathElement, AxisWall>('path')
-            .data(box.data(SPEC).filter((wall) => !wall.ccw))
-            .join('path')
-            .attr('d', box.draw);
-
-        drawAxisEdges(
+        drawChartBox(
+            wallGroup,
             axisGroup,
-            box.axes(SPEC),
+            box,
+            SPEC,
             (axis, value) => String(axis === 'y' ? -value : value),
-            (axis) => AXIS_TITLES[axis],
-            () => 'currentColor'
+            (axis) => AXIS_TITLES[axis]
         );
     }
 

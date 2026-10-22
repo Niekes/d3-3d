@@ -1,5 +1,26 @@
 import type { Selection } from 'd3';
-import type { AxesSpec, AxisEdge } from '../../index';
+import type { Axes3DInstance, AxesSpec, AxisEdge, AxisWall } from '../../index';
+
+/**
+ * Draws the box of a chart: the walls that face away from the camera, with
+ * their gridlines, and the axes on its outline.
+ */
+export function drawChartBox(
+    walls: Selection<SVGGElement, unknown, null, undefined>,
+    axes: Selection<SVGGElement, unknown, null, undefined>,
+    box: Axes3DInstance,
+    spec: AxesSpec,
+    label: (axis: keyof AxesSpec, value: number) => string,
+    title: (axis: keyof AxesSpec) => string
+): void {
+    walls
+        .selectAll<SVGPathElement, AxisWall>('path')
+        .data(box.data(spec).filter((wall) => !wall.ccw))
+        .join('path')
+        .attr('d', box.draw);
+
+    drawAxisEdges(axes, box.axes(spec), label, title, () => 'currentColor');
+}
 
 /**
  * Draws the axes that axes3D puts on the outline of the box. The ticks and
