@@ -1,29 +1,18 @@
 import {
-    drag,
     easeCubicInOut,
     format,
     interpolateLab,
     interpolateNumber,
     least,
     piecewise,
-    polygonArea,
     polygonCentroid,
-    polygonContains,
     quantize,
     select,
     sum
 } from 'd3';
 import type { Selection } from 'd3';
 import { planes3D, points3D, polygons3D, sort } from '../../index';
-import type {
-    Plane,
-    Point,
-    Point2D,
-    Point3D,
-    Polygon,
-    ShapeInstance,
-    TransformedPoint
-} from '../../index';
+import type { Plane, Point, Point3D, Polygon, ShapeInstance, TransformedPoint } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 
 /*
@@ -32,9 +21,7 @@ import { rotatingFigure } from './rotatingFigure';
  * seats are taken. The spread is an offset in the y accessor, so the floors
  * part along the building's own axis. Every vertex carries its floor and its
  * room through the projection, so a click on a path knows what it hit. The
- * furniture is a flat footprint on its floor, and a drag moves it across the
- * plane of that floor. The figure brings its own styles, so the module works
- * without a stylesheet.
+ * figure brings its own styles, so the module works without a stylesheet.
  */
 
 const ORIGIN = { x: 480, y: 250 };
@@ -56,13 +43,6 @@ const LINE = 'light-dark(#c4c7c9, #3d4144)';
 const PAPER = 'light-dark(#ffffff, #0c0d0e)';
 const SLAB = 'light-dark(#e4e6e7, #26292b)';
 const BUTTON = 'light-dark(#f0f1f1, #17181a)';
-const ALERT = 'light-dark(#c4314b, #ff7b8a)';
-
-// Furniture snaps to a grid of a quarter metre. The placement check pulls
-// the corners of a footprint this far in, so one that touches a wall or
-// another footprint still fits.
-const GRID = 0.25;
-const INSET = 0.05;
 
 type Plan = [number, number][];
 
@@ -78,31 +58,11 @@ type FloorVertex = { x: number; z: number; floor: number };
 /** One vertex of a room: a slab vertex that also carries its room. */
 type RoomVertex = FloorVertex & { room: Room };
 
-/** Where a piece of furniture stands: its centre on the plan and its turn in degrees. */
-type Placement = { x: number; z: number; turn: 0 | 90 };
-
-/** A piece of furniture as it is written down: its kind, its size in metres and its place. */
-type ItemSpec = Placement & {
-    kind: 'desk' | 'table' | 'sofa' | 'shelf';
-    width: number;
-    depth: number;
-};
-
-/** A piece of furniture in the building: the spec, an id and the room it stands in. */
-type Item = ItemSpec & { id: string; room: Room };
-
-/** One corner of a footprint: a slab vertex that also carries its item. */
-type ItemVertex = FloorVertex & { item: Item };
-
-/** A drag of a footprint: the offset from the pointer, and whether the last move was refused. */
-type Grab = { item: Item; dx: number; dz: number; refused: boolean };
-
 /** One floor after the projection, sorted by the depth of its slab. */
 type FloorView = {
     floor: number;
     slab: Plane<FloorVertex>;
     rooms: Polygon<RoomVertex>[];
-    items: Polygon<ItemVertex>[];
     labels: Point<RoomVertex>[];
     corner: TransformedPoint<FloorVertex>;
     centroid: Point3D;
@@ -214,123 +174,6 @@ const ROOMS: Room[] = FLOORS.flatMap(({ rooms }, floor) =>
     rooms.map((spec, i) => ({ ...spec, id: `room-${floor}-${i}`, floor }))
 );
 
-// The furniture every room starts with, by floor and by room name. The
-// sizes are multiples of half a metre, so on the grid every corner lands on
-// a quarter metre, where the walls are.
-const FURNITURE: Record<string, ItemSpec[]>[] = [
-    {
-        Lobby: [
-            { kind: 'sofa', width: 2, depth: 1, x: -4.5, z: 3.25, turn: 0 },
-            { kind: 'table', width: 1, depth: 1, x: -4.5, z: 1.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: -5.5, z: -2.5, turn: 90 },
-            { kind: 'desk', width: 1.5, depth: 1, x: -2, z: 2, turn: 0 }
-        ],
-        Café: [
-            { kind: 'table', width: 1, depth: 1, x: 0, z: 2, turn: 0 },
-            { kind: 'table', width: 1, depth: 1, x: 2, z: 2, turn: 0 },
-            { kind: 'sofa', width: 2, depth: 1, x: 1, z: 3.5, turn: 0 }
-        ],
-        'Mail room': [
-            { kind: 'shelf', width: 2, depth: 0.5, x: 4.5, z: 3.5, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4.5, z: 1.75, turn: 0 }
-        ],
-        'Bike store': [
-            { kind: 'shelf', width: 2, depth: 0.5, x: -1, z: -3.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 0.5, z: -2, turn: 90 }
-        ],
-        Security: [
-            { kind: 'desk', width: 1.5, depth: 1, x: 2.5, z: -2.5, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4.5, z: -2.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 3.5, z: -3.5, turn: 0 }
-        ]
-    },
-    {
-        'Open office': [
-            { kind: 'desk', width: 1.5, depth: 1, x: 2, z: -3, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4, z: -3, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4.5, z: 1, turn: 90 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4.5, z: 3, turn: 90 }
-        ],
-        'Meeting A': [
-            { kind: 'table', width: 2, depth: 1, x: -4.5, z: -2.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: -4.5, z: -3.75, turn: 0 }
-        ],
-        'Meeting B': [
-            { kind: 'table', width: 3, depth: 1.5, x: -1, z: -2.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: -1, z: -3.75, turn: 0 }
-        ],
-        Kitchen: [
-            { kind: 'shelf', width: 2, depth: 0.5, x: -5, z: 3.75, turn: 0 },
-            { kind: 'table', width: 2, depth: 1, x: -4, z: 2, turn: 0 }
-        ],
-        'Quiet room': [
-            { kind: 'sofa', width: 2, depth: 1, x: -0.5, z: 3.5, turn: 0 },
-            { kind: 'table', width: 1, depth: 1, x: 0, z: 1.75, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 2.75, z: 2.5, turn: 90 }
-        ]
-    },
-    {
-        'Open office': [
-            { kind: 'desk', width: 1.5, depth: 1, x: -5, z: -3, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: -2.5, z: -3, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: -4.5, z: 1, turn: 90 },
-            { kind: 'desk', width: 1.5, depth: 1, x: -4.5, z: 3, turn: 90 }
-        ],
-        'Focus rooms': [
-            { kind: 'desk', width: 1.5, depth: 1, x: 0.5, z: -3.25, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 0.5, z: -1.5, turn: 0 }
-        ],
-        'Meeting C': [
-            { kind: 'table', width: 3, depth: 1.5, x: 4, z: -2.25, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 4, z: -3.75, turn: 0 }
-        ],
-        Library: [
-            { kind: 'shelf', width: 2, depth: 0.5, x: -1.5, z: 3.75, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 0.75, z: 3.75, turn: 0 },
-            { kind: 'table', width: 2, depth: 1, x: -0.5, z: 2, turn: 0 }
-        ],
-        Lab: [
-            { kind: 'desk', width: 1.5, depth: 1, x: 3.5, z: 2, turn: 0 },
-            { kind: 'table', width: 2, depth: 1, x: 3.5, z: 3.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 5.75, z: 2.5, turn: 90 }
-        ]
-    },
-    {
-        'Event space': [
-            { kind: 'table', width: 2, depth: 1, x: -3, z: 2, turn: 0 },
-            { kind: 'table', width: 2, depth: 1, x: 0, z: 2, turn: 0 },
-            { kind: 'sofa', width: 2, depth: 1, x: -5.25, z: 0.5, turn: 90 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: -1, z: 3.75, turn: 0 }
-        ],
-        'Board room': [
-            { kind: 'table', width: 3, depth: 1.5, x: 4, z: 2.25, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 4, z: 3.75, turn: 0 }
-        ],
-        Lounge: [
-            { kind: 'sofa', width: 2, depth: 1, x: -4.5, z: -3.25, turn: 0 },
-            { kind: 'sofa', width: 2, depth: 1, x: -1.5, z: -3.25, turn: 0 },
-            { kind: 'table', width: 1, depth: 1, x: -3, z: -1.75, turn: 0 }
-        ],
-        Studio: [
-            { kind: 'desk', width: 1.5, depth: 1, x: 1.5, z: -2.5, turn: 0 },
-            { kind: 'desk', width: 1.5, depth: 1, x: 4.5, z: -2.5, turn: 0 },
-            { kind: 'shelf', width: 2, depth: 0.5, x: 3, z: -3.75, turn: 0 }
-        ]
-    }
-];
-
-/** The four plan corners of a footprint, pulled `inset` towards its centre. */
-function footprint({ x, z, width, depth, turn }: ItemSpec, inset = 0): Plan {
-    const [w, d] = turn ? [depth, width] : [width, depth];
-    return rect(x - w / 2 + inset, z - d / 2 + inset, x + w / 2 - inset, z + d / 2 - inset);
-}
-
-/** Whether two footprints overlap. Both are axis-aligned, so their extents tell. */
-const overlaps = (a: Plan, b: Plan) =>
-    a[0][0] < b[2][0] && b[0][0] < a[2][0] && a[0][1] < b[2][1] && b[0][1] < a[2][1];
-
-const snap = (value: number) => Math.round(value / GRID) * GRID;
-
 const roomsOf = (floor: number) => ROOMS.filter((room) => room.floor === floor);
 
 const occupancy = (rooms: Room[]) =>
@@ -341,11 +184,6 @@ const occupancy = (rooms: Room[]) =>
 const roomVertex =
     (room: Room) =>
     ([x, z]: [number, number]): RoomVertex => ({ x, z, floor: room.floor, room });
-
-// The furniture moves, so its corners are built on every render.
-const itemVertex =
-    (item: Item) =>
-    ([x, z]: [number, number]): ItemVertex => ({ x, z, floor: item.room.floor, item });
 
 const SLABS: FloorVertex[][] = FLOORS.map((_, floor) =>
     FOOTPRINT.map(([x, z]) => ({ x, z, floor }))
@@ -364,25 +202,11 @@ const dark = piecewise(interpolateLab, [...BLUES].reverse());
 const shade = (t: number) => `light-dark(${light(t)}, ${dark(t)})`;
 
 const percent = format('.0%');
-const metres = format('.2~f');
 
-/**
- * What the inspector says about the selected floor, room or item. A room
- * tells the floor area its furniture leaves free, an item its size and place.
- */
-function describe(
-    floor: number | undefined,
-    room: Room | undefined,
-    items: Item[],
-    item?: Item
-): string {
+/** What the inspector says about the selected floor or room. */
+function describe(floor: number | undefined, room: Room | undefined): string {
     if (room) {
-        const area = Math.abs(polygonArea(room.plan));
-        const free = area - sum(items, (d) => (d.room === room ? d.width * d.depth : 0));
-        const prefix = item
-            ? `${item.kind[0].toUpperCase()}${item.kind.slice(1)}, ${metres(item.width)} × ${metres(item.depth)} m at x ${metres(item.x)}, z ${metres(item.z)}. `
-            : '';
-        return `${prefix}${FLOORS[room.floor].name}, ${room.name}: ${room.people} of ${room.seats} seats taken, ${percent(room.people / room.seats)} occupied, ${metres(free)} m² free of ${metres(area)} m².`;
+        return `${FLOORS[room.floor].name}, ${room.name}: ${room.people} of ${room.seats} seats taken, ${percent(room.people / room.seats)} occupied.`;
     }
     if (floor === undefined) {
         return 'Click a floor or a room to inspect it.';
@@ -410,36 +234,24 @@ const clamp = (value: number, min: number, max: number) => Math.max(min, Math.mi
 /** Every control of the figure, as listed under it. */
 const CONTROLS: [string, string][] = [
     ['Drag', 'rotate'],
-    ['Drag a piece of furniture', 'move it, also into another room of its floor'],
     ['<kbd>Shift</kbd> + drag', 'turn, keeping the building upright'],
     ['<kbd>Ctrl</kbd> / <kbd>⌘</kbd> + wheel, or pinch', 'zoom'],
     ['Point at a room', 'show its name'],
-    ['Click', 'select a room or a piece of furniture, or a floor by its corridor or its label'],
+    ['Click', 'select a room, or a floor by its corridor or its label'],
     ['<kbd>↑</kbd> <kbd>↓</kbd>', 'walk through the floors'],
     ['<kbd>←</kbd> <kbd>→</kbd>', 'walk through the rooms of a floor'],
-    ['Arrow keys, with furniture selected', 'move it by a quarter metre'],
-    ['<kbd>T</kbd>', 'turn the selected furniture by 90°'],
     ['<kbd>Shift</kbd> + arrow keys', 'rotate'],
     ['<kbd>+</kbd> <kbd>−</kbd>', 'zoom'],
     ['<kbd>S</kbd>', 'stack or spread the floors'],
     ['<kbd>R</kbd>', 'reset the rotation and the zoom'],
-    ['<kbd>Esc</kbd>', 'clear the furniture, then the selection']
+    ['<kbd>Esc</kbd>', 'clear the selection']
 ];
 
-/** The item a footprint under the pointer belongs to: every corner carries it. */
-const itemAt = (target: Element) =>
-    target.matches('.item')
-        ? select<Element, Polygon<ItemVertex>>(target).datum()[0].item
-        : undefined;
-
-/**
- * The room a path under the pointer belongs to: every vertex of a room
- * carries it, and a footprint stands in its item's room.
- */
+/** The room a path under the pointer belongs to: every vertex carries it. */
 const roomAt = (target: Element) =>
     target.matches('.room')
         ? select<Element, Polygon<RoomVertex>>(target).datum()[0].room
-        : itemAt(target)?.room;
+        : undefined;
 
 /**
  * Styles a group of room names. A halo in the page color keeps a name
@@ -469,13 +281,7 @@ export function mountFloorPlan(host: HTMLElement): () => void {
     let spread = 1;
     let floor: number | undefined;
     let room: Room | undefined;
-    let item: Item | undefined;
     let hovered: Room | undefined;
-    // The furniture moves, so every mount starts from its own copy.
-    const items: Item[] = ROOMS.flatMap((r) =>
-        FURNITURE[r.floor][r.name].map((spec, i) => ({ ...spec, id: `${r.id}-${i}`, room: r }))
-    );
-    let grab: Grab | undefined;
     // Whether Shift was down at the last pointer event, and the drag totals
     // the scaffold reported last.
     let shift = false;
@@ -487,11 +293,10 @@ export function mountFloorPlan(host: HTMLElement): () => void {
     const slabs3d = planes3D<FloorVertex>();
     const rooms3d = polygons3D<RoomVertex>();
     const anchors3d = points3D<RoomVertex>();
-    const items3d = polygons3D<ItemVertex>();
 
     // The spread lives in the y accessor, before the rotation, so the floors
     // part along the building's own axis. The screen y grows downwards.
-    const renderers: ShapeInstance<any>[] = [slabs3d, rooms3d, anchors3d, items3d];
+    const renderers: ShapeInstance<any>[] = [slabs3d, rooms3d, anchors3d];
     for (const renderer of renderers) {
         renderer.origin(ORIGIN).y((d: FloorVertex) => -elevation(d.floor));
     }
@@ -502,7 +307,7 @@ export function mountFloorPlan(host: HTMLElement): () => void {
     const { group, button } = rotatingFigure(
         host,
         'plan',
-        'Four floors of a building with their rooms colored by occupancy and their furniture. Drag it to rotate it, click a floor or a room to inspect it and drag a piece of furniture to move it. With the figure focused, the arrow keys move the selection or the selected furniture, T turns the furniture, Shift with the arrow keys rotates the building, plus and minus zoom, S stacks or spreads the floors and R resets the view.',
+        'Four floors of a building with their rooms colored by occupancy. Drag it to rotate it and click a floor or a room to inspect it. With the figure focused, the arrow keys move the selection, Shift with the arrow keys rotates the building, plus and minus zoom, S stacks or spreads the floors and R resets the view.',
         (dragYaw, dragPitch) => {
             turn(dragYaw - dragged.yaw, shift ? 0 : dragPitch - dragged.pitch);
             dragged = { yaw: dragYaw, pitch: dragPitch };
@@ -563,13 +368,11 @@ export function mountFloorPlan(host: HTMLElement): () => void {
         }
 
         const rooms = rooms3d.data(OUTLINES);
-        const footprints = items3d.data(items.map((d) => footprint(d).map(itemVertex(d))));
         const anchors = anchors3d.data(ANCHORS);
         const views: FloorView[] = slabs3d.data(SLABS).map((slab, f) => ({
             floor: f,
             slab,
             rooms: rooms.filter((d) => d[0].floor === f),
-            items: footprints.filter((d) => d[0].floor === f),
             labels: f === floor ? anchors.filter((d) => d.floor === f) : [],
             corner: least(slab, (p) => p.projected.x)!,
             centroid: slab.centroid
@@ -591,7 +394,6 @@ export function mountFloorPlan(host: HTMLElement): () => void {
                     .style('fill', SLAB)
                     .style('stroke', LINE);
                 g.append('g').attr('class', 'rooms').attr('stroke-linejoin', 'round');
-                g.append('g').attr('class', 'items').attr('stroke-linejoin', 'round');
                 g.append('g').attr('class', 'labels').call(roomNames);
                 g.append('text')
                     .attr('class', 'floor-label')
@@ -629,31 +431,6 @@ export function mountFloorPlan(host: HTMLElement): () => void {
             .style('stroke', (d) => (d[0].room === room ? INK : PAPER))
             .attr('d', rooms3d.draw);
 
-        // The furniture lies flat on its floor, after the rooms and before
-        // their names, so it needs no sort either. The selected item is
-        // drawn round in ink, and dashed in red while the pointer is where
-        // it does not fit.
-        const refused = (d: Polygon<ItemVertex>) => d[0].item === grab?.item && grab.refused;
-        floors
-            .select('.items')
-            .selectAll<SVGPathElement, Polygon<ItemVertex>>('path')
-            .data(
-                (d) => d.items,
-                (d) => d[0].item.id
-            )
-            .join((enter) =>
-                enter
-                    .append('path')
-                    .attr('class', (d) => `item ${d[0].item.kind}`)
-                    .style('fill', PAPER)
-                    .style('cursor', 'move')
-                    .call(dragItem)
-            )
-            .attr('stroke-width', (d) => (d[0].item === item ? 2 : 1))
-            .attr('stroke-dasharray', (d) => (refused(d) ? '4 2' : null))
-            .style('stroke', (d) => (d[0].item !== item ? MUTED : refused(d) ? ALERT : INK))
-            .attr('d', items3d.draw);
-
         // Only the selected floor names its rooms, so the labels never crowd.
         floors
             .select('.labels')
@@ -683,90 +460,13 @@ export function mountFloorPlan(host: HTMLElement): () => void {
             .text(name?.room.name ?? '');
     }
 
-    /**
-     * Selects a floor, a room on it, an item in that room, or nothing, and
-     * describes it. A drag describes its item on every event, so the text is
-     * only written when it changes, and a screen reader hears it once.
-     */
-    function inspect(nextFloor: number | undefined, nextRoom?: Room, nextItem?: Item): void {
+    /** Selects a floor, a room on it, or nothing, and describes it. */
+    function inspect(nextFloor: number | undefined, nextRoom?: Room): void {
         floor = nextFloor;
         room = nextRoom;
-        item = nextItem;
-        const text = describe(floor, room, items, item);
-        if (inspector.textContent !== text) {
-            inspector.textContent = text;
-        }
+        inspector.textContent = describe(floor, room);
         render();
     }
-
-    /** Selects an item with its room and its floor. */
-    const pick = (d: Item) => inspect(d.room.floor, d.room, d);
-
-    /**
-     * Moves an item to a new place if it fits there: every corner inside
-     * one room of its floor, and clear of the other footprints in that room.
-     * That room is the item's room from then on.
-     */
-    function place(target: Item, changes: Partial<Placement>): boolean {
-        const inner = footprint({ ...target, ...changes }, INSET);
-        const home = roomsOf(target.room.floor).find((r) =>
-            inner.every((corner) => polygonContains(r.plan, corner))
-        );
-        const fits =
-            home !== undefined &&
-            !items.some((d) => d !== target && d.room === home && overlaps(inner, footprint(d)));
-        if (fits) {
-            Object.assign(target, changes, { room: home });
-        }
-        return fits;
-    }
-
-    /** Moves or turns an item by the keys, if it fits, and describes it. */
-    function nudge(target: Item, changes: Partial<Placement>): void {
-        place(target, changes);
-        pick(target);
-    }
-
-    /**
-     * The point under the pointer on the plane of a floor. The plane lies
-     * at the height the y accessor gives the floor at the current spread,
-     * and its normal points up. The x and z accessors are the defaults, so
-     * the x and z of the hit are on the plan.
-     */
-    const pointOnFloor = (pointer: Point2D, f: number) =>
-        items3d.unproject(pointer, { x: 0, y: -elevation(f), z: 0 }, { x: 0, y: 1, z: 0 });
-
-    // A drag on a footprint moves it across its floor. d3.drag stops the
-    // press from reaching the drag of the figure, so moving furniture never
-    // turns the building. The subject is the pointer, so the events carry it
-    // in the units of the view box, the units `unproject` expects.
-    const dragItem = drag<SVGPathElement, Polygon<ItemVertex>>()
-        .subject((event) => ({ x: event.x, y: event.y }))
-        .on('start', (event, d) => {
-            const target = d[0].item;
-            // The offset keeps the footprint where it was grabbed, not
-            // centred under the pointer.
-            const hit = pointOnFloor(event, target.room.floor) ?? target;
-            grab = { item: target, dx: target.x - hit.x, dz: target.z - hit.z, refused: false };
-            pick(target);
-        })
-        .on('drag', (event) => {
-            // Every event asks for the plane at the current spread, so a
-            // floor that moves during the drag keeps up. A floor seen
-            // edge-on has no point under the pointer, and a drag let go of
-            // with Escape moves nothing.
-            const hit = grab && pointOnFloor(event, grab.item.room.floor);
-            if (!grab || !hit) {
-                return;
-            }
-            const target = grab.item;
-            grab.refused = !place(target, { x: snap(hit.x + grab.dx), z: snap(hit.z + grab.dz) });
-            pick(target);
-        })
-        .on('end', () => {
-            grab = undefined;
-            render();
-        });
 
     /** Turns the building, by the drag or by the keys. */
     function turn(dYaw: number, dPitch: number): void {
@@ -839,14 +539,14 @@ export function mountFloorPlan(host: HTMLElement): () => void {
         setSpread(slider.valueAsNumber);
     });
 
-    // A room path carries its room on every vertex, a footprint its item, a
-    // slab and its label their floor. d3.drag swallows the click that ends a
-    // drag, so turning the building never selects anything.
+    // A room path carries its room on every vertex, a slab and its label
+    // their floor. d3.drag swallows the click that ends a drag, so turning
+    // the building never selects anything.
     svg.on('click', (event: MouseEvent) => {
         const target = event.target as Element;
         const picked = roomAt(target);
         if (picked) {
-            inspect(picked.floor, picked, itemAt(target));
+            inspect(picked.floor, picked);
             return;
         }
         inspect(
@@ -893,21 +593,9 @@ export function mountFloorPlan(host: HTMLElement): () => void {
         { passive: false }
     );
 
-    /**
-     * What the other keys do while the figure has the focus. The first
-     * Escape lets go of the furniture, even in the middle of a drag, and
-     * keeps its room.
-     */
+    /** What the other keys do while the figure has the focus. */
     const actions: Record<string, () => void> = {
-        escape: () => {
-            grab = undefined;
-            if (item) {
-                inspect(floor, room);
-            } else {
-                inspect(undefined);
-            }
-        },
-        t: () => item && nudge(item, { turn: item.turn ? 0 : 90 }),
+        escape: () => inspect(undefined),
         '+': () => zoomBy(1.25),
         '=': () => zoomBy(1.25),
         '-': () => zoomBy(0.8),
@@ -915,28 +603,16 @@ export function mountFloorPlan(host: HTMLElement): () => void {
         r: resetView
     };
 
-    /**
-     * An arrow key: with Shift it turns the building, otherwise it moves the
-     * selected furniture by a grid step, ↑ away from the start view, or
-     * walks the selection.
-     */
-    function arrow([up, next]: [number, number], shiftKey: boolean): void {
-        if (shiftKey) {
-            turn(next * TURN, -up * TURN);
-        } else if (item) {
-            nudge(item, { x: item.x + next * GRID, z: item.z - up * GRID });
-        } else {
-            walk([up, next]);
-        }
-    }
-
-    // A key with Ctrl, ⌘ or Alt is left to the browser.
+    // The arrow keys walk the selection, and with Shift they turn the
+    // building. A key with Ctrl, ⌘ or Alt is left to the browser.
     svg.on('keydown', (event: KeyboardEvent) => {
         if (event.ctrlKey || event.metaKey || event.altKey) {
             return;
         }
         const step = STEPS[event.key];
-        const action = step ? () => arrow(step, event.shiftKey) : actions[event.key.toLowerCase()];
+        const action = step
+            ? () => (event.shiftKey ? turn(step[1] * TURN, -step[0] * TURN) : walk(step))
+            : actions[event.key.toLowerCase()];
         if (!action) {
             return;
         }
@@ -944,7 +620,7 @@ export function mountFloorPlan(host: HTMLElement): () => void {
         action();
     });
 
-    inspector.textContent = describe(floor, room, items);
+    inspector.textContent = describe(floor, room);
     setSpread(spread);
 
     return () => {
