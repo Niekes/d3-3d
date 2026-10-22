@@ -82,6 +82,7 @@ export default defineConfig({
                             { text: 'Area chart', link: '/examples/area-chart' },
                             { text: 'Bar chart', link: '/examples/bar-chart' },
                             { text: 'Bar field', link: '/examples/bar-field' },
+                            { text: 'Data-update stress test', link: '/examples/data-update' },
                             { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },
                             { text: 'Voxel builder', link: '/examples/voxel-builder' },
                             { text: 'Spline editor', link: '/examples/spline-editor' },

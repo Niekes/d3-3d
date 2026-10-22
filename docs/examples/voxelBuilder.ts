@@ -1,10 +1,9 @@
-import { pointer, range, select } from 'd3';
-import { box, camera3D, cubes3D, lines3D, planes3D, sort } from '../../index';
-import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
+import { pointer, select } from 'd3';
+import { box, camera3D, cubes3D, sort } from '../../index';
+import type { Cube, CubeFace, CubeFaceName, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
-import { pose } from './floorView';
+import { floorGrid, pose } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
-import { placeSegments } from './segments';
 
 /*
  * A voxel builder: unit cubes on an 8 × 8 floor. The floor is one plane and
@@ -75,27 +74,6 @@ const STARTER: Voxel[] = [
     { column: 3, layer: 2, row: 3, color: 4 }
 ];
 
-// The floor: one plane, and a grid line along every cell edge.
-const FLOOR: Point3D[][] = [
-    [
-        { x: -HALF, y: 0, z: -HALF },
-        { x: HALF, y: 0, z: -HALF },
-        { x: HALF, y: 0, z: HALF },
-        { x: -HALF, y: 0, z: HALF }
-    ]
-];
-
-const GRID: Point3D[][] = range(N + 1).flatMap((i) => [
-    [
-        { x: i - HALF, y: 0, z: -HALF },
-        { x: i - HALF, y: 0, z: HALF }
-    ],
-    [
-        { x: -HALF, y: 0, z: i - HALF },
-        { x: HALF, y: 0, z: i - HALF }
-    ]
-]);
-
 const keyOf = (cell: Cell) => `${cell.column},${cell.layer},${cell.row}`;
 
 const inside = (cell: Cell) =>
@@ -145,11 +123,9 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     let hovering: Pointer | undefined;
     let cursor: { column: number; row: number } | undefined;
 
-    // The cubes, the floor and the grid hang on one camera.
+    // The cubes and the floor hang on one camera.
     const camera = camera3D();
     const cubes = cubes3D<VoxelVertex>().camera(camera);
-    const floor = planes3D().camera(camera);
-    const grid = lines3D().camera(camera);
 
     const { group, button } = rotatingFigure(
         host,
@@ -186,7 +162,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
 
     const svg = select(host).select<SVGSVGElement>('svg').attr('tabindex', 0);
     // The floor goes in before the cubes, so it is always painted first.
-    const floorGroup = svg.insert('g', 'g').attr('class', 'voxel-floor');
+    const drawFloor = floorGrid(svg, 'voxel', camera, N);
     group.attr('class', 'voxel-cubes');
     const [floorText, status, tally] = Array.from(
         host.querySelectorAll<HTMLElement>('.voxel-readout span')
@@ -203,19 +179,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     /** Turns the scene, draws the floor and paints the cubes and the ghost back to front. */
     function render(): void {
         pose(camera, VIEW, yaw, pitch);
-
-        floorGroup
-            .selectAll('path')
-            .data(floor.data(FLOOR))
-            .join('path')
-            .attr('class', 'floor')
-            .attr('d', floor.draw);
-
-        floorGroup
-            .selectAll<SVGLineElement, Line<Point3D>>('line')
-            .data(grid.data(GRID))
-            .join('line')
-            .call(placeSegments);
+        drawFloor();
 
         const voxels = [...built.values()].map((voxel) => makeCube(voxel));
         if (target && !target.erase) {
