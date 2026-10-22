@@ -6,8 +6,8 @@ import './trajectoryExplorer.css';
 
 /*
  * A trajectory explorer: three paths through the Lorenz attractor whose
- * starts differ by 0.01 and by 0.00001. lineStrips3D draws the paths and
- * their fading trails, points3D the markers that run along them and axes3D
+ * starts differ by 0.01 and by 0.00001. lineStrips3D draws the fading
+ * trails, points3D the markers that run along the paths and axes3D
  * the back walls of the box. One playhead drives every renderer, so the
  * markers, the trails and the readout always show the same moment.
  */
@@ -18,6 +18,7 @@ const TICKS = 5;
 const START_YAW = Math.PI / 6;
 const START_TILT = Math.PI / 12;
 const MARKER_RADIUS = 5;
+const LABEL_GAP = 13;
 
 // The Lorenz system, integrated in small Euler steps of which every tenth is kept.
 const SIGMA = 10;
@@ -118,7 +119,6 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
     );
 
     const wallGroup = group.append('g').attr('class', 'trajectory-walls');
-    const pathGroup = group.append('g').attr('class', 'trajectory-paths');
     const dataGroup = group.append('g').attr('class', 'trajectory-data');
     const labelGroup = group.append('g').attr('class', 'trajectory-labels');
 
@@ -144,9 +144,9 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
 
     const color = (id: string) => TRAJECTORIES.find((d) => d.id === id)!.color;
 
-    /** Highlights the selected trajectory and dims the others, or leaves all as they are. */
-    const state = (id: string) =>
-        !selected ? null : id === selected ? 'is-selected' : 'is-dimmed';
+    /** Whether two markers lie so close that their labels would overlap. */
+    const near = (a: Point<Sample>, b: Point<Sample>) =>
+        Math.hypot(a.projected.x - b.projected.x, a.projected.y - b.projected.y) < LABEL_GAP;
 
     /** Where a path is at the playhead, between its two nearest samples. */
     function head(samples: Sample[]): Sample {
@@ -177,22 +177,17 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
             renderer.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
         }
 
-        const heads = TRAJECTORIES.map((d) => head(d.samples));
+        // A selected trajectory is drawn alone.
+        const shown = TRAJECTORIES.filter((d) => !selected || d.id === selected);
+        const heads = shown.map((d) => head(d.samples));
         const markers = markers3d.data(heads);
         const walls = box3d.data(spec).filter((wall) => !wall.ccw);
-        const paths = strips3d.data(TRAJECTORIES.map((d) => d.samples));
-        const trails = strips3d.data(TRAJECTORIES.flatMap((d, k) => trail(d.samples, heads[k])));
+        const trails = strips3d.data(shown.flatMap((d, k) => trail(d.samples, heads[k])));
 
         joinPaths(wallGroup, walls, (wall) => box3d.draw(wall));
 
-        // The whole paths lie under everything else and are never sorted.
-        joinPaths(pathGroup, paths, (strip) => strips3d.draw(strip))
-            .attr('class', (d) => state(d[0].id))
-            .style('stroke', (d) => color(d[0].id));
-
         // Every strip of a trail fades with the age of its newest sample.
         joinPaths(dataGroup, trails, (strip) => strips3d.draw(strip))
-            .attr('class', (d) => state(d[0].id))
             .style('stroke', (d) => color(d[0].id))
             .attr('stroke-opacity', (d) => 1 - (t - d[0].t) / TRAIL);
 
@@ -200,7 +195,6 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
             .selectAll<SVGCircleElement, Point<Sample>>('circle')
             .data(markers)
             .join('circle')
-            .attr('class', (d) => state(d.id))
             .style('fill', (d) => color(d.id))
             .attr('cx', (d) => d.projected.x)
             .attr('cy', (d) => d.projected.y)
@@ -208,14 +202,18 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
 
         dataGroup.selectAll<SVGElement, HasCentroid>('path, circle').sort(sort);
 
-        // The labels stack beside the markers, so they stay apart while the paths overlap.
+        // A label steps down past the labels of the markers it overlaps, so the
+        // labels stay apart while the paths overlap and sit on their markers after.
         labelGroup
             .selectAll<SVGTextElement, Point<Sample>>('text')
             .data(markers)
             .join('text')
-            .attr('class', (d) => state(d.id))
             .attr('x', (d) => d.projected.x + MARKER_RADIUS + 5)
-            .attr('y', (d, k) => d.projected.y + (k - 1) * 13)
+            .attr(
+                'y',
+                (d, k) =>
+                    d.projected.y + LABEL_GAP * markers.slice(0, k).filter((e) => near(e, d)).length
+            )
             .text((d) => d.id);
 
         scrub.valueAsNumber = t;

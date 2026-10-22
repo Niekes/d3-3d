@@ -24,8 +24,8 @@ onBeforeUnmount(() => {
 
 **Drag the figure** to rotate it. The button pauses and resumes the
 playback, and the slider scrubs through time. The radio buttons pick a
-trajectory: its whole path comes forward, the others step back, and its
-position is read out under the figure.
+trajectory: it is drawn alone and its position is read out under the
+figure.
 
 The three paths run through the
 [Lorenz attractor](https://en.wikipedia.org/wiki/Lorenz_system). Their
@@ -62,7 +62,7 @@ fractional sample index that the timer advances and the slider sets.
 ## One playhead, three renderers
 
 `axes3D` draws the back walls of the box, and
-`lineStrips3D` the paths and their trails.
+`lineStrips3D` the trails.
 `points3D` draws the markers. All three get the same
 scale, origin and accessors, and every draw turns them by the same angles,
 so they project into one scene:
@@ -85,11 +85,11 @@ The marker sits on the head and the trail ends at it, so the two cannot
 drift apart:
 
 ```ts
-const heads = TRAJECTORIES.map((d) => head(d.samples));
+const shown = TRAJECTORIES.filter((d) => !selected || d.id === selected);
+const heads = shown.map((d) => head(d.samples));
 const markers = markers3d.data(heads);
 const walls = box3d.data(spec).filter((wall) => !wall.ccw);
-const paths = strips3d.data(TRAJECTORIES.map((d) => d.samples));
-const trails = strips3d.data(TRAJECTORIES.flatMap((d, k) => trail(d.samples, heads[k])));
+const trails = strips3d.data(shown.flatMap((d, k) => trail(d.samples, heads[k])));
 ```
 
 `interpolateObject` mixes the two samples field by field, `t` included, so
@@ -120,9 +120,6 @@ its newest sample, from 1 at the marker to 0 at the end of the trail:
 ```ts
 .attr('stroke-opacity', (d) => 1 - (t - d[0].t) / TRAIL);
 ```
-
-The whole paths are drawn faintly in a group under the trails and are
-never sorted.
 
 ## One loop, stopped on pause and on leave
 

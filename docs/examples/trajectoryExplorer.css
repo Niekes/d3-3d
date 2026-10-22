@@ -47,24 +47,10 @@
     stroke-width: 0.5;
 }
 
-.trajectory-explorer .trajectory-paths path {
-    fill: none;
-    stroke-width: 1;
-    stroke-opacity: 0.25;
-}
-
-.trajectory-explorer .trajectory-paths path.is-selected {
-    stroke-opacity: 0.6;
-}
-
 .trajectory-explorer .trajectory-data path {
     fill: none;
     stroke-width: 2;
     stroke-linejoin: round;
-}
-
-.trajectory-explorer .trajectory-data path.is-selected {
-    stroke-width: 3;
 }
 
 .trajectory-explorer .trajectory-data circle {
@@ -78,10 +64,6 @@
     font-weight: 600;
     fill: var(--te-ink);
     dominant-baseline: central;
-}
-
-.trajectory-explorer .is-dimmed {
-    opacity: 0.25;
 }
 
 .trajectory-explorer .trajectory-button {
