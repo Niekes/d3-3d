@@ -17,8 +17,8 @@ describe('box', () => {
 
     test('gives cubes3D a box whose faces are named after their sides', () => {
         const [cube] = cubes3D().data([box({ x: 0, y: 0, z: 0, width: 1, height: 1, depth: 1 })]);
-        const top = cube.faces!.find((face) => face.face === 'top')!;
-        const front = cube.faces!.find((face) => face.face === 'front')!;
+        const top = cube.faces.find((face) => face.face === 'top')!;
+        const front = cube.faces.find((face) => face.face === 'front')!;
 
         expect(normal(top).y).toBeCloseTo(-1, 12);
         expect(normal(front).z).toBeCloseTo(1, 12);

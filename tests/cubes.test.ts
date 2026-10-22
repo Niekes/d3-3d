@@ -23,14 +23,17 @@ describe('cubes3D', () => {
 
         const result = cubes.data(data);
 
-        expect(result[0]).toBeDefined();
-
-        expect(result[0]?.faces?.[0]?.face).toBe('front');
-        expect(result[0]?.faces?.[1]?.face).toBe('back');
-        expect(result[0]?.faces?.[2]?.face).toBe('left');
-        expect(result[0]?.faces?.[3]?.face).toBe('right');
-        expect(result[0]?.faces?.[4]?.face).toBe('top');
-        expect(result[0]?.faces?.[5]?.face).toBe('bottom');
+        // Every cube carries its six faces and its centroid, so neither needs
+        // a check before use.
+        expect(result[0].faces.map((face) => face.face)).toEqual([
+            'front',
+            'back',
+            'left',
+            'right',
+            'top',
+            'bottom'
+        ]);
+        expect(result[0].centroid).toEqual({ x: 0.5, y: 0.5, z: 0.5 });
     });
 
     test('cube rotation works correctly', () => {
@@ -107,6 +110,6 @@ describe('cubes3D', () => {
 
         const result = cubes.data(data);
 
-        expect(cubes.draw?.(result[0].faces![0])).toBe('M0,0L0,1L1,1L1,0Z');
+        expect(cubes.draw?.(result[0].faces[0])).toBe('M0,0L0,1L1,1L1,0Z');
     });
 });

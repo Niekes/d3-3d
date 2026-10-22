@@ -14,8 +14,8 @@ export type CubeFace<Datum = Point3D> = TransformedPoint<Datum>[] & {
 };
 
 export type Cube<Datum = Point3D> = TransformedPoint<Datum>[] & {
-    faces?: CubeFace<Datum>[];
-    centroid?: Point3D;
+    faces: CubeFace<Datum>[];
+    centroid: Point3D;
 };
 
 export interface Cubes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {

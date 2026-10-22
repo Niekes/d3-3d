@@ -47,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ccw` reads the winding of the `projected` points instead of the `rotated`
   ones, so that it holds in perspective. The result is the same for an
   orthographic projection.
+- `Cube`: `faces` and `centroid` are no longer optional, since `cubes3D`
+  always sets both. Code that reads them needs no `!` or `?.` any more; code
+  that builds a `Cube` by hand has to set them.
 
 ### Fixed
 

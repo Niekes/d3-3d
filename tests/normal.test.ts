@@ -24,7 +24,7 @@ describe('normal', () => {
             bottom: [0, 1, 0]
         };
 
-        for (const face of cubes3D().data([cube])[0].faces!) {
+        for (const face of cubes3D().data([cube])[0].faces) {
             const n = normal(face);
             expect([n.x, n.y, n.z].map((v) => v + 0)).toEqual(outwards[face.face]);
         }
@@ -34,7 +34,7 @@ describe('normal', () => {
         const camera = camera3D().rotateX(0.7).rotateY(-2.1).rotateZ(0.4);
         const v = camera.viewDirection();
 
-        for (const face of cubes3D().camera(camera).data([cube])[0].faces!) {
+        for (const face of cubes3D().camera(camera).data([cube])[0].faces) {
             const n = normal(face);
             expect(n.x * v.x + n.y * v.y + n.z * v.z > 0).toBe(face.ccw);
         }
