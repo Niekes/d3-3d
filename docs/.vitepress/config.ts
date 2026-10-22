@@ -95,6 +95,7 @@ export default defineConfig({
                             { text: 'Projection playground', link: '/examples/projection-playground' },
                             { text: 'Coordinate explorer', link: '/examples/coordinate-explorer' },
                             { text: 'Perspective street', link: '/examples/perspective-street' },
+                            { text: 'Depth-ordering lab', link: '/examples/depth-ordering' },
                             { text: 'Solar system', link: '/examples/solar-system' },
                             { text: 'Mesh inspector', link: '/examples/mesh-inspector' },
                             { text: 'Office tower', link: '/examples/iso-tower' }

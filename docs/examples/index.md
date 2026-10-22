@@ -20,6 +20,7 @@
 - [Projection playground](/examples/projection-playground) — rotation, scale, origin and rotation center of one cube, with the renderer call and its vertices beside the SVG and twelve presets from isometric to a corner pivot
 - [Perspective street](/examples/perspective-street) — sixteen houses along a street seen through `.perspective()`, drawn with `cubes3D` and `planes3D`; a dolly zoom moves the eye, and a toggle shows why `ccw` and not the view direction tells the faces that show
 - [Coordinate explorer](/examples/coordinate-explorer) — one point among three axes from −3 to 3, drawn with `lines3D` and `points3D` on one `camera3D`; sliders place it, a walk along x, y and z and a box of drop lines lead to it, and a checkbox flips y up through the accessors
+- [Depth-ordering lab](/examples/depth-ordering) — four small scenes of `planes3D` quads and a `cubes3D` cube, each built to break an order of whole faces; every pair of faces is tested where it overlaps through `.unproject()`, and the pairs that `sort` or another order paints the wrong way round are outlined, with and without `.perspective()`
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer
 - [Mesh inspector](/examples/mesh-inspector) — a vase of triangles drawn with `triangles3D` and its normals with `lines3D`; toggle the faces, edges, normals and back faces, click a face to inspect it
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
