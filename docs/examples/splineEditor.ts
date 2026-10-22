@@ -1,5 +1,5 @@
 import { drag, leastIndex, pairs, pointer, range, select, sum } from 'd3';
-import { lineStrips3D, lines3D, points3D, sort } from '../../index';
+import { catmullRom, lineStrips3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
 import { pose, tiltOf } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
@@ -117,29 +117,6 @@ const describe = (knot: Point3D) =>
     `x ${knot.x.toFixed(2)}, height ${(-knot.y).toFixed(2)}, z ${knot.z.toFixed(2)}`;
 
 /**
- * The uniform Catmull–Rom spline through the knots, STEPS samples per
- * segment. The end knots stand in for their missing neighbors, so the curve
- * starts and ends on a knot.
- */
-function spline(knots: Point3D[]): Point3D[] {
-    const last = knots.length - 1;
-    const at = (i: number) => knots[clamp(i, 0, last)];
-    const samples = range(last * STEPS).map((s) => {
-        const i = Math.floor(s / STEPS);
-        const t = (s % STEPS) / STEPS;
-        const [p0, p1, p2, p3] = [at(i - 1), at(i), at(i + 1), at(i + 2)];
-        const blend = (k: keyof Point3D) =>
-            0.5 *
-            (2 * p1[k] +
-                (p2[k] - p0[k]) * t +
-                (2 * p0[k] - 5 * p1[k] + 4 * p2[k] - p3[k]) * t ** 2 +
-                (3 * p1[k] - p0[k] - 3 * p2[k] + p3[k]) * t ** 3);
-        return { x: blend('x'), y: blend('y'), z: blend('z') };
-    });
-    return [...samples, at(last)];
-}
-
-/**
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountSplineEditor(host: HTMLElement): () => void {
@@ -232,7 +209,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
             .join('line')
             .call(placeSegments);
 
-        const samples = spline(knots);
+        const samples = catmullRom(knots, STEPS);
         const [curve, controls] = strips.data([samples, knots]);
         curvePath.attr('d', strips.draw(curve));
         curveHit.attr('d', strips.draw(curve));
@@ -364,7 +341,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     /** The index of the curve sample nearest the pointer. */
     function sampleAt(event: MouseEvent): number {
         const [x, y] = pointer(event, group.node());
-        const curve = strips.data([spline(knots)])[0];
+        const curve = strips.data([catmullRom(knots, STEPS)])[0];
         return leastIndex(curve, (p) => (p.projected.x - x) ** 2 + (p.projected.y - y) ** 2)!;
     }
 
@@ -379,7 +356,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     curveHit.on('dblclick', (event: MouseEvent) => {
         const i = sampleAt(event);
         ghost = undefined;
-        insert(Math.min(Math.floor(i / STEPS), knots.length - 2), spline(knots)[i]);
+        insert(Math.min(Math.floor(i / STEPS), knots.length - 2), catmullRom(knots, STEPS)[i]);
     });
 
     // A click selects the point under it, or clears the selection. d3.drag
@@ -439,7 +416,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
             render();
         } else if (key === 'a' && knot) {
             const segment = Math.min(index, knots.length - 2);
-            insert(segment, spline(knots)[segment * STEPS + STEPS / 2]);
+            insert(segment, catmullRom(knots, STEPS)[segment * STEPS + STEPS / 2]);
         } else if ((key === 'delete' || key === 'backspace') && knot) {
             note = knots.length > 2 ? '' : ' The curve keeps at least two points.';
             remove(index);

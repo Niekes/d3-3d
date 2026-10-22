@@ -28,21 +28,19 @@ and the back faces. The button resets them and clears the selection.
 
 ## A vase of triangles
 
-The vase is a profile turned around the y axis: a list of rings from the
-foot to the lip, each a height and a radius. Between two rings every quad
-becomes two triangles, and the foot is a fan around its centre. The top is
-left open, so the inside of the vase shows:
+The vase is a profile turned around the y axis by `lathe`: a list of rings
+from the middle of the foot to the lip, each a radius and a height. Between
+two rings every quad becomes two triangles. The first ring has no radius,
+so the foot is a fan around its centre; the top is left open, so the inside
+of the vase shows:
 
 ```ts
-const a = ring(PROFILE[k], j);
-const b = ring(PROFILE[k], j + 1);
-const c = ring(PROFILE[k + 1], j + 1);
-const d = ring(PROFILE[k + 1], j);
-triangles.push([a, d, c], [a, c, b]);
+const MESH = lathe(PROFILE, SEGMENTS);
 ```
 
-The order of the three points is the point of it: every triangle runs
-counter-clockwise when it is seen from outside the vase.
+The order of the three points of a triangle is the point of it: `lathe`
+winds every triangle counter-clockwise when it is seen from outside the
+vase.
 
 ## Front or back
 

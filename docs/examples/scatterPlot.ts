@@ -17,7 +17,7 @@ import {
     timer
 } from 'd3';
 import type { Timer } from 'd3';
-import { axes3D, camera3D, lines3D, points3D, sort } from '../../index';
+import { axes3D, axisSpec, camera3D, lines3D, points3D, sort, strips } from '../../index';
 import type {
     AxesSpec,
     AxisWall,
@@ -333,9 +333,9 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             .join('path')
             .attr('d', box3d.draw);
 
-        // The floor is the drawn wall whose corners share one data z. A level
-        // view sees both horizontal walls edge-on and has no floor.
-        const floors = walls.filter((wall) => wall.every((corner) => corner.z === wall[0].z));
+        // The floor is the drawn wall across data z. A level view sees both
+        // horizontal walls edge-on and has no floor.
+        const floors = walls.filter((wall) => wall.axis === 'z');
         floorZ = floors.length === 1 ? floors[0][0].z : undefined;
     }
 
@@ -344,8 +344,10 @@ export function mountScatterPlot(host: HTMLElement): () => void {
         return dataset.series
             .filter((s) => s.line)
             .flatMap((s) => {
-                const run = shown.filter((p) => p.series === s.name);
-                return run.slice(1).map((p, i) => [run[i], p]);
+                return strips(
+                    shown.filter((p) => p.series === s.name),
+                    2
+                );
             });
     }
 
@@ -583,11 +585,11 @@ export function mountScatterPlot(host: HTMLElement): () => void {
             const domain = a === 'z' && next.zDomain ? next.zDomain : extent(all, (p) => p[a]);
             scales[a].domain(domain as [number, number]).nice(TICKS);
         }
-        const axis = (a: keyof AxesSpec) => ({
-            domain: scales[a].domain(),
-            ticks: scales[a].ticks(TICKS)
-        });
-        spec = { x: axis('x'), y: axis('y'), z: axis('z') };
+        spec = {
+            x: axisSpec(scales.x, TICKS),
+            y: axisSpec(scales.y, TICKS),
+            z: axisSpec(scales.z, TICKS)
+        };
         valueScale.domain(extent(all, (p) => p.value) as [number, number]);
         sizeScale.domain([0, Math.max(...all.map((p) => p.size ?? 0))]);
 

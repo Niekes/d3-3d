@@ -30,28 +30,21 @@ block and <kbd>Esc</kbd> clears it.
 
 ## An assembly is 64 cubes
 
-The block is a 4 × 4 × 4 grid of unit cubes, and every cube is eight
-vertices handed to `cubes3D`. Each vertex carries the id and the grid
-position of its cube, so the cube can still be told apart after the
+The block is a 4 × 4 × 4 grid of unit cubes, and every cube is the eight
+corners of a `box` handed to `cubes3D`. Each vertex carries the id and the
+grid position of its cube, so the cube can still be told apart after the
 projection:
 
 ```ts
 function makeCube(layer, row, column) {
     const id = `cube-${layer}-${row}-${column}`;
-    const v = (dx, dy, dz) => ({
-        x: column - 1.5 + dx / 2,
-        y: 1.5 - layer + dy / 2,
-        z: row - 1.5 + dz / 2,
-        id,
-        layer,
-        row,
-        column
-    });
-    return [v(-1, -1, 1), v(-1, 1, 1) /* ...the other six corners */];
+    return box({ x: column - 1.5, y: 2 - layer, z: row - 1.5, width: 1, height: 1, depth: 1 })
+        .map((corner) => ({ ...corner, id, layer, row, column }));
 }
 ```
 
-The screen y grows downwards, so the top layer has the smallest `y`.
+The screen y grows downwards, so the top layer has the smallest `y`, and a
+box stands on its bottom and rises towards a smaller `y`.
 
 ## Explode before you rotate
 

@@ -1,5 +1,5 @@
 import { format, polygonHull, randomInt, randomLcg, range, select } from 'd3';
-import { cubes3D, normal, polygons3D, sort } from '../../index';
+import { box, cubes3D, normal, polygons3D, sort } from '../../index';
 import type { CubeFace, Point3D, Polygon, ShapeInstance } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import './miniCity.css';
@@ -131,8 +131,8 @@ function makeBuilding(row: number, col: number): Building {
 
     /**
      * One piece: a hexahedron centred on the lot, w × d at the height y0 and
-     * topW × topD at the height y1, its eight vertices in the order cubes3D
-     * expects. A top of zero width is a ridge, a top of zero size an apex.
+     * topW × topD at the height y1. A top of zero width is a ridge, a top of
+     * zero size an apex. The screen y grows downwards, so up is negative.
      */
     const piece = (
         part: Part,
@@ -142,26 +142,17 @@ function makeBuilding(row: number, col: number): Building {
         d: number,
         topW = w,
         topD = d
-    ): CityVertex[] => {
-        // The screen y grows downwards, so up is negative.
-        const v = (sx: number, top: boolean, sz: number): CityVertex => ({
-            x: building.cx + (sx * (top ? topW : w)) / 2,
-            y: -(top ? y1 : y0),
-            z: building.cz + (sz * (top ? topD : d)) / 2,
-            building,
-            part
-        });
-        return [
-            v(-1, true, 1), // front top left
-            v(-1, false, 1), // front bottom left
-            v(1, false, 1), // front bottom right
-            v(1, true, 1), // front top right
-            v(-1, true, -1), // back top left
-            v(-1, false, -1), // back bottom left
-            v(1, false, -1), // back bottom right
-            v(1, true, -1) // back top right
-        ];
-    };
+    ): CityVertex[] =>
+        box({
+            x: building.cx,
+            y: -y0,
+            z: building.cz,
+            width: w,
+            height: y1 - y0,
+            depth: d,
+            topWidth: topW,
+            topDepth: topD
+        }).map((corner) => ({ ...corner, building, part }));
 
     const s = kind.size;
     const h = floors * STOREY;

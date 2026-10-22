@@ -100,17 +100,15 @@ a head carries its own place on the playhead.
 A line strip comes back with one centroid, the depth that the
 `sort` utility reads. A whole trail drawn as
 one strip would paint above or below every marker as a single piece. The
-trail is cut into strips of six samples that share their end points
-instead, and each strip sorts on its own depth. A trail can pass behind
+trail is cut by `strips` into strips of six samples that share their end
+points instead, and each strip sorts on its own depth. A trail can pass behind
 one marker and in front of another:
 
 ```ts
 function trail(samples, tip) {
     const end = Math.floor(t);
     const points = [tip, ...samples.slice(Math.max(0, end - TRAIL), end + 1).reverse()];
-    return range(0, points.length - 1, CHUNK - 1).map((from) =>
-        points.slice(from, from + CHUNK)
-    );
+    return strips(points, CHUNK);
 }
 ```
 

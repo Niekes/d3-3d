@@ -1,7 +1,13 @@
 import { interpolateRgb, range } from 'd3';
-import { lineStrips3D, sort, triangles3D } from '../../index';
+import { lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
 import { playback, rotatingFigure } from './rotatingFigure';
-import type { LineStrips3DInstance, Point3D, Triangle, Triangles3DInstance } from '../../index';
+import type {
+    HasCentroid,
+    LineStrips3DInstance,
+    Point3D,
+    Triangle,
+    Triangles3DInstance
+} from '../../index';
 
 /*
  * The solar system: every body is a sphere of triangles, all of them go
@@ -14,6 +20,8 @@ const ORIGIN = { x: 480, y: 250 };
 const SUN: Point3D = { x: 0, y: 0, z: 0 };
 const TILT = Math.PI / 6;
 const ORBIT_POINTS = 64;
+// The points of an orbit per strip: every strip sorts on its own depth.
+const ORBIT_STRIP = 5;
 const NIGHT = 0.3;
 // Some seconds into the animation, so the planets do not start in a row.
 const START = 40;
@@ -48,28 +56,17 @@ const BODIES: Body[] = [
 /** A projected triangle with the index it was built at, the key of the join, and its shaded fill. */
 type Facet = Triangle<Point3D> & { id: number; fill: string };
 
-/** A sphere of `radius` around the origin: `segments` bands from pole to pole, two triangles per quad. */
+/**
+ * A sphere of `radius` around the origin: a half circle from the bottom pole
+ * to the top one, turned around the y axis by `lathe`. The poles lie on the
+ * axis, so the bands next to them close in fans.
+ */
 function sphere(radius: number, segments: number): Point3D[][] {
-    const vertex = (theta: number, phi: number): Point3D => ({
-        x: radius * Math.cos(phi) * Math.sin(theta),
-        y: radius * Math.cos(theta),
-        z: radius * Math.sin(phi) * Math.sin(theta)
+    const profile = range(1, segments).map((i) => {
+        const theta = (i / segments) * Math.PI;
+        return { x: radius * Math.sin(theta), y: radius * Math.cos(theta) };
     });
-
-    const triangles: Point3D[][] = [];
-    for (let i = 0; i < segments; i += 1) {
-        const theta1 = (i / segments) * Math.PI;
-        const theta2 = ((i + 1) / segments) * Math.PI;
-        for (let j = 0; j < segments; j += 1) {
-            const phi1 = (j / segments) * Math.PI * 2;
-            const phi2 = ((j + 1) / segments) * Math.PI * 2;
-            triangles.push(
-                [vertex(theta1, phi1), vertex(theta1, phi2), vertex(theta2, phi1)],
-                [vertex(theta2, phi1), vertex(theta1, phi2), vertex(theta2, phi2)]
-            );
-        }
-    }
-    return triangles;
+    return lathe([{ x: 0, y: radius }, ...profile, { x: 0, y: -radius }], segments);
 }
 
 /** Where `body` is after `t` seconds: on a circle in the x-z plane around `center`. */
@@ -84,15 +81,14 @@ function orbit(body: Body, t: number, center: Point3D): Point3D {
 
 /**
  * How much sunlight a triangle of a sphere at `center` gets: the cosine
- * between its normal and the way to the sun, never darker than NIGHT. The
- * sphere is built around the origin, so the centroid of the untranslated
- * triangle points along its normal.
+ * between its outward normal and the way to the sun at the origin, never
+ * darker than NIGHT.
  */
 function sunlight(triangle: Point3D[], center: Point3D): number {
-    const n = triangle.reduce((s, p) => ({ x: s.x + p.x, y: s.y + p.y, z: s.z + p.z }), SUN);
+    const n = normal(triangle);
     const cos =
         -(n.x * center.x + n.y * center.y + n.z * center.z) /
-        (Math.hypot(n.x, n.y, n.z) * Math.hypot(center.x, center.y, center.z));
+        Math.hypot(center.x, center.y, center.z);
     return Math.max(NIGHT, cos);
 }
 
@@ -101,14 +97,18 @@ function sunlight(triangle: Point3D[], center: Point3D): number {
  */
 export function mountSolarSystem(host: HTMLElement): () => void {
     const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>();
-    const strips: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>();
-    for (const shape of [triangles, strips]) shape.origin(ORIGIN).rotateX(-TILT);
+    const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>();
+    for (const shape of [triangles, orbits3d]) shape.origin(ORIGIN).rotateX(-TILT);
 
     const meshes = BODIES.map((body) => sphere(body.radius, body.segments));
     const shades = BODIES.map((body) => interpolateRgb('#000', body.color));
     // The planets' orbits never move, the moon's travels with the earth.
-    const orbits = BODIES.filter((body) => body.distance && !body.around).map((body) =>
-        range(ORBIT_POINTS + 1).map((i) => orbit(body, (i / ORBIT_POINTS) * body.period, SUN))
+    // Cut into strips, an orbit passes in front of the sun and behind it.
+    const orbits = BODIES.filter((body) => body.distance && !body.around).flatMap((body) =>
+        strips(
+            range(ORBIT_POINTS + 1).map((i) => orbit(body, (i / ORBIT_POINTS) * body.period, SUN)),
+            ORBIT_STRIP
+        )
     );
 
     let t = START;
@@ -118,17 +118,16 @@ export function mountSolarSystem(host: HTMLElement): () => void {
         'solar-system',
         'The sun, the planets and the moon, made of triangles. Drag the figure to rotate it.',
         (yaw, pitch) => {
-            for (const shape of [triangles, strips]) shape.rotateY(yaw).rotateX(-pitch - TILT);
+            for (const shape of [triangles, orbits3d]) shape.rotateY(yaw).rotateX(-pitch - TILT);
             draw();
         }
     );
 
-    // ponytail: the orbits are always painted behind the bodies, so an orbit
-    // passing in front of the sun is drawn under it. Sort them in if it shows.
-    const orbitGroup = group.append('g');
-    const bodyGroup = group.append('g');
 
-    /** Places every body at `t`, joins all triangles in one go and repaints them back to front. */
+    /**
+     * Places every body at `t`, joins all triangles and the strips of the
+     * orbits, and repaints them back to front in one list.
+     */
     function draw(): void {
         const centers = new Map<string, Point3D>();
         const mesh: Point3D[][] = [];
@@ -148,21 +147,22 @@ export function mountSolarSystem(host: HTMLElement): () => void {
         // stamped on after the projection.
         const facets = triangles.data(mesh).map((d, i) => Object.assign(d, { id: i, fill: fills[i] }));
 
-        const paths = bodyGroup.selectAll<SVGPathElement, Facet>('path').data(facets, (d) => d.id);
-
-        paths
-            .enter()
-            .append('path')
-            .attr('class', 'facet')
-            .merge(paths)
+        // A face that turns away keeps its element and is only hidden.
+        group
+            .selectAll<SVGPathElement, Facet>('path.facet')
+            .data(facets, (d) => d.id)
+            .join((enter) => enter.append('path').attr('class', 'facet'))
+            .attr('visibility', (d) => (d.ccw ? null : 'hidden'))
             .style('fill', (d) => d.fill)
             .attr('d', triangles.draw);
 
-        paths.exit().remove();
+        group
+            .selectAll('path.orbit')
+            .data(orbits3d.data(orbits))
+            .join((enter) => enter.append('path').attr('class', 'orbit'))
+            .attr('d', orbits3d.draw);
 
-        bodyGroup.selectAll<SVGPathElement, Facet>('path').sort(sort);
-
-        orbitGroup.selectAll('path').data(strips.data(orbits)).join('path').attr('class', 'orbit').attr('d', strips.draw);
+        group.selectAll<SVGPathElement, HasCentroid>('path').sort(sort);
     }
 
     // One frame of the animation: the clock moves on by the time since the last one.

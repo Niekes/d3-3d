@@ -1,7 +1,7 @@
 import { easeCubicInOut, interpolateNumber, range, select } from 'd3';
-import { cubes3D, sort } from '../../index';
+import { box, cubes3D, sort } from '../../index';
 import type { Cube, CubeFace, Point3D } from '../../index';
-import { cubeCorners, joinFaces } from './cubeFaces';
+import { joinFaces } from './cubeFaces';
 import { rotatingFigure } from './rotatingFigure';
 
 /*
@@ -36,17 +36,16 @@ type AssemblyCube = Cube<CubeVertex> & { faces: CubeFace<CubeVertex>[]; centroid
 function makeCube(layer: number, row: number, column: number): CubeVertex[] {
     const id = `cube-${layer}-${row}-${column}`;
     const mid = (N - 1) / 2;
-    // The screen y grows downwards, so the top layer has the smallest y.
-    const v = (dx: number, dy: number, dz: number): CubeVertex => ({
-        x: column - mid + dx / 2,
-        y: mid - layer + dy / 2,
-        z: row - mid + dz / 2,
-        id,
-        layer,
-        row,
-        column
-    });
-    return cubeCorners(v);
+    // The screen y grows downwards, so the top layer has the smallest y and
+    // a cube stands on its largest.
+    return box({
+        x: column - mid,
+        y: mid - layer + 0.5,
+        z: row - mid,
+        width: 1,
+        height: 1,
+        depth: 1
+    }).map((corner) => ({ ...corner, id, layer, row, column }));
 }
 
 /** The block, layer by layer from the bottom, then row by row, then column by column. */

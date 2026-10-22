@@ -471,10 +471,7 @@ export function mountProjectionPlayground(host: HTMLElement): () => void {
             .data(axes)
             .join('path')
             .attr('class', (_, k) => `axis-${'xyz'[k]}`)
-            .attr(
-                'd',
-                ([a, b]) => `M${a.projected.x},${a.projected.y}L${b.projected.x},${b.projected.y}`
-            );
+            .attr('d', (axis) => axes3d.draw(axis));
         axisGroup
             .selectAll('text')
             .data(axes)

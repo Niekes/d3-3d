@@ -63,8 +63,9 @@ piece('roof', h, h + ROOF, eave, eave, eave, 0);
 piece('spire', h, h + SPIRE, 0.4 * s, 0.4 * s, 0, 0);
 ```
 
-The vertices come in the order `cubes3D` expects, the same as for a
-[cube](/examples/exploded-cubes), so every face keeps its winding, and `ccw`
+`piece` hands its sizes to `box`, whose `topWidth` and `topDepth` size the
+top apart from the base, so the vertices come in the order `cubes3D`
+expects, the same as for a [cube](/examples/exploded-cubes), so every face keeps its winding, and `ccw`
 still tells the faces that face the camera from those that turn away. A
 gable roof has a front and a back slope, its left and right faces are the
 gables, and its top has collapsed into the ridge. A face without area is

@@ -57,8 +57,11 @@ for (const renderer of renderers) {
         .z((d) => scales.y(d.y));
 }
 
-const axis = (a) => ({ domain: scales[a].domain(), ticks: scales[a].ticks(TICKS) });
-spec = { x: axis('x'), y: axis('y'), z: axis('z') };
+spec = {
+    x: axisSpec(scales.x, TICKS),
+    y: axisSpec(scales.y, TICKS),
+    z: axisSpec(scales.z, TICKS)
+};
 ```
 
 Data z is up, as in matterviz. The screen y grows downwards, so the
@@ -108,17 +111,15 @@ axisGroup
 
 The painter's algorithm sorts every element by one depth. A whole curve
 drawn as one line strip would share a single depth and paint above or
-below every point. Cut into segments, one per pair of consecutive samples,
-each piece sorts on its own and the curves weave between the points:
+below every point. `strips` cuts it into segments, one per pair of
+consecutive samples, so each piece sorts on its own and the curves weave
+between the points:
 
 ```ts
 function segments() {
     return dataset.series
         .filter((s) => s.line)
-        .flatMap((s) => {
-            const run = shown.filter((p) => p.series === s.name);
-            return run.slice(1).map((p, i) => [run[i], p]);
-        });
+        .flatMap((s) => strips(shown.filter((p) => p.series === s.name), 2));
 }
 ```
 
@@ -162,13 +163,13 @@ screen, each with a different x, y and z. A plane picks one of them: the
 line behind the pointer meets it in exactly one place.
 
 A chart has such a plane at hand, its floor. The floor is the horizontal
-wall that is drawn, the one of the walls facing away whose four corners
-share one data z. Seen from above that is the bottom of the box; turned
+wall that is drawn: the one of the walls facing away that stands across
+data z, as its `axis` says. Seen from above that is the bottom of the box; turned
 upside down, it is the top. A view that is exactly level sees both
 horizontal walls edge-on, and there is no floor to read.
 
 ```ts
-const floors = walls.filter((wall) => wall.every((corner) => corner.z === wall[0].z));
+const floors = walls.filter((wall) => wall.axis === 'z');
 floorZ = floors.length === 1 ? floors[0][0].z : undefined;
 ```
 

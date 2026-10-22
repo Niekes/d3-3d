@@ -1,5 +1,5 @@
 import { extent, format, interpolateObject, range, scaleLinear } from 'd3';
-import { axes3D, lineStrips3D, points3D, sort } from '../../index';
+import { axes3D, axisSpec, lineStrips3D, points3D, sort, strips } from '../../index';
 import type { AxesSpec, HasCentroid, Point, Point3D, ShapeInstance } from '../../index';
 import { playback, rotatingFigure } from './rotatingFigure';
 import './trajectoryExplorer.css';
@@ -78,9 +78,9 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
         scaleLinear(extent(all, (p) => p[key]) as [number, number], [-1, 1]).nice(TICKS)
     );
     const spec: AxesSpec = {
-        x: { domain: scaleX.domain(), ticks: scaleX.ticks(TICKS) },
-        y: { domain: scaleY.domain(), ticks: scaleY.ticks(TICKS) },
-        z: { domain: scaleZ.domain(), ticks: scaleZ.ticks(TICKS) }
+        x: axisSpec(scaleX, TICKS),
+        y: axisSpec(scaleY, TICKS),
+        z: axisSpec(scaleZ, TICKS)
     };
     const fmt = format('.3~g');
     const fmtTime = format('.1f');
@@ -161,9 +161,7 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
     function trail(samples: Sample[], tip: Sample): Sample[][] {
         const end = Math.floor(t);
         const points = [tip, ...samples.slice(Math.max(0, end - TRAIL), end + 1).reverse()];
-        return range(0, points.length - 1, CHUNK - 1).map((from) =>
-            points.slice(from, from + CHUNK)
-        );
+        return strips(points, CHUNK);
     }
 
     /** Joins one path per datum into `parent`, drawn by `draw`. */

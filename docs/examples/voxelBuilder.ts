@@ -1,7 +1,7 @@
 import { pointer, range, select } from 'd3';
-import { cubes3D, lines3D, planes3D, sort } from '../../index';
+import { box, cubes3D, lines3D, planes3D, sort } from '../../index';
 import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
-import { cubeCorners, joinFaces } from './cubeFaces';
+import { joinFaces } from './cubeFaces';
 import { pose, tiltOf } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
@@ -119,15 +119,14 @@ function makeCube(voxel: Voxel, ghost = false): VoxelVertex[] {
     const key = ghost ? 'ghost' : keyOf(voxel);
     // A cell spans one unit from its corner; the screen y grows downwards,
     // so the layers rise towards a negative y.
-    const v = (dx: number, dy: number, dz: number): VoxelVertex => ({
-        ...voxel,
-        x: voxel.column - HALF + (1 + dx) / 2,
-        y: -voxel.layer - (1 - dy) / 2,
-        z: voxel.row - HALF + (1 + dz) / 2,
-        key,
-        ghost
-    });
-    return cubeCorners(v);
+    return box({
+        x: voxel.column - HALF + 0.5,
+        y: -voxel.layer,
+        z: voxel.row - HALF + 0.5,
+        width: 1,
+        height: 1,
+        depth: 1
+    }).map((corner) => ({ ...voxel, ...corner, key, ghost }));
 }
 
 /**

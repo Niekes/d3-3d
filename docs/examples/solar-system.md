@@ -28,13 +28,18 @@ that all eight planets fit on the page and Neptune still moves.
 
 ## Every body is a sphere of triangles
 
-A body is cut into bands from pole to pole and every band into quads. Every
-quad becomes two triangles, so a body is a plain list of point triples built
-around the origin - the sun from 16 bands, the moon from 6:
+A body is a half circle from pole to pole, turned around the y axis by
+`lathe`. Between two rings every quad becomes two triangles, and next to a
+pole, where the ring has no radius, one. So a body is a plain list of point
+triples built around the origin - the sun from 16 bands, the moon from 6:
 
 ```ts
-const meshes = BODIES.map((body) => sphere(body.radius, body.segments));
+lathe([{ x: 0, y: radius }, ...halfCircle, { x: 0, y: -radius }], segments);
 ```
+
+`lathe` winds every triangle counter-clockwise as seen from outside, so
+the `ccw` flag of a projected triangle tells the near side of a body from
+the far side. The far side is hidden, which halves the painted paths.
 
 ## One join for all bodies
 
@@ -60,13 +65,13 @@ group.selectAll('path').sort(sort);
 ## Lit by the sun
 
 The side of a planet that faces the sun is bright, the other side dark. The
-light of a triangle is the cosine between its normal and the way to the sun,
-taken in world space before the projection, so the drag does not change it.
-A sphere is built around the origin, so the centroid of a triangle points
-along its normal:
+light of a triangle is the cosine between its `normal` and the way to the
+sun, taken in world space before the projection, so the drag does not
+change it:
 
 ```ts
-const cos = -dot(n, center) / (length(n) * length(center));
+const n = normal(triangle);
+const cos = -dot(n, center) / length(center);
 const fill = interpolateRgb('#000', body.color)(Math.max(NIGHT, cos));
 ```
 
@@ -80,7 +85,17 @@ const angle = (t / body.period) * Math.PI * 2;
 ```
 
 The orbits are `lineStrips3D` circles that share the rotation of the
-triangles. With `prefers-reduced-motion` the figure starts paused.
+triangles. `sort` orders a strip by its middle, so a whole orbit would sit at
+the depth of the sun. `strips` cuts every orbit into short pieces that go
+into the painter's list with the triangles, so an orbit passes in front of
+the sun and behind it:
+
+```ts
+strips(orbitPoints, ORBIT_STRIP);
+group.selectAll('path').sort(sort);
+```
+
+With `prefers-reduced-motion` the figure starts paused.
 
 ## The whole source
 

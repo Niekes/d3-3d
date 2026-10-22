@@ -160,9 +160,9 @@ The shadow names the place on the floor, and the length of the line names
 the height. Only the points are sorted by depth: they always paint above the
 curve, because an editor has to keep its handles in reach.
 
-The curve is a uniform Catmull–Rom spline through the points, with the end
-points doubled, sampled at 20 steps per segment and drawn with
-`lineStrips3D`. It passes through every point, so moving a point moves the
+The curve is `catmullRom(knots, 20)`: the uniform Catmull–Rom spline
+through the points, with the end points doubled, sampled at 20 steps per
+segment and drawn with `lineStrips3D`. It passes through every point, so moving a point moves the
 curve through it. A double-click on the curve adds a point at the sample
 nearest the pointer. Hovering the curve finds that sample with the same
 function and draws a ghost there, with its own drop line, so the new point

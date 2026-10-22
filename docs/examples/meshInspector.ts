@@ -1,5 +1,5 @@
 import { format, interpolateLab, select } from 'd3';
-import { lines3D, sort, triangles3D } from '../../index';
+import { lathe, lines3D, normal, sort, triangles3D } from '../../index';
 import type { HasCentroid, Line, Point3D, ShapeInstance, Triangle } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
@@ -21,17 +21,19 @@ const START_TILT = Math.PI / 5;
 const SEGMENTS = 12;
 const NORMAL = 0.25;
 
-// The profile of the vase from the foot to the lip: the height and the
-// radius of every ring. The screen y grows downwards, so the lip has the
-// smallest y.
-const PROFILE: [number, number][] = [
-    [1, 0.45],
-    [0.7, 0.8],
-    [0.3, 0.95],
-    [-0.1, 0.75],
-    [-0.45, 0.38],
-    [-0.75, 0.4],
-    [-1, 0.65]
+// The profile of the vase from the middle of the foot to the lip: the
+// radius and the height of every ring. The screen y grows downwards, so the
+// lip has the smallest y. The first ring has no radius, so the foot is
+// closed and the top is left open.
+const PROFILE = [
+    { x: 0, y: 1 },
+    { x: 0.45, y: 1 },
+    { x: 0.8, y: 0.7 },
+    { x: 0.95, y: 0.3 },
+    { x: 0.75, y: -0.1 },
+    { x: 0.38, y: -0.45 },
+    { x: 0.4, y: -0.75 },
+    { x: 0.65, y: -1 }
 ];
 
 // The colors of both themes. `light-dark()` follows the color-scheme of the
@@ -60,48 +62,9 @@ const TOGGLES: [string, string, boolean][] = [
 /** A projected face with the index it was built at, the key of the join, and the z of its normal. */
 type Facet = Triangle<Point3D> & { id: number; nz: number };
 
-const minus = (a: Point3D, b: Point3D): Point3D => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
-
-/**
- * The unit normal on the side a triangle is wound counter-clockwise from.
- * The frame is left-handed - x to the right, y down, z towards the viewer -
- * so it is the second edge crossed with the first.
- */
-function normal([a, b, c]: Point3D[]): Point3D {
-    const u = minus(c, a);
-    const v = minus(b, a);
-    const n = { x: u.y * v.z - u.z * v.y, y: u.z * v.x - u.x * v.z, z: u.x * v.y - u.y * v.x };
-    const length = Math.hypot(n.x, n.y, n.z);
-    return { x: n.x / length, y: n.y / length, z: n.z / length };
-}
-
-/**
- * The vase: the profile turned around the y axis, two triangles per quad
- * between two rings and a fan for the foot. Every triangle runs
- * counter-clockwise when it is seen from outside.
- */
-function lathe(): Point3D[][] {
-    const ring = ([y, r]: [number, number], j: number): Point3D => {
-        const phi = (j / SEGMENTS) * Math.PI * 2;
-        return { x: r * Math.cos(phi), y, z: r * Math.sin(phi) };
-    };
-    const foot = { x: 0, y: PROFILE[0][0], z: 0 };
-
-    const triangles: Point3D[][] = [];
-    for (let j = 0; j < SEGMENTS; j += 1) {
-        triangles.push([foot, ring(PROFILE[0], j), ring(PROFILE[0], j + 1)]);
-        for (let k = 0; k < PROFILE.length - 1; k += 1) {
-            const a = ring(PROFILE[k], j);
-            const b = ring(PROFILE[k], j + 1);
-            const c = ring(PROFILE[k + 1], j + 1);
-            const d = ring(PROFILE[k + 1], j);
-            triangles.push([a, d, c], [a, c, b]);
-        }
-    }
-    return triangles;
-}
-
-const MESH = lathe();
+// The vase: the profile turned around the y axis. `lathe` winds every
+// triangle counter-clockwise as seen from outside.
+const MESH = lathe(PROFILE, SEGMENTS);
 
 // The normals never change in model space: they turn with the mesh.
 const NORMALS = MESH.map(normal);
