@@ -12,6 +12,7 @@
 - [Scatter plot](/examples/scatter-plot) — six datasets in a box with gridlines, colored and sized by value, drawn with `axes3D`, `points3D` and `lines3D`
 - [Point cloud](/examples/point-cloud) — a spiral galaxy of up to a million stars, projected by `.matrix()` and drawn on a 2D canvas with `projectPositions` or with WebGL
 - [Trajectory explorer](/examples/trajectory-explorer) — three paths through the Lorenz attractor with moving markers and fading trails, drawn with `lineStrips3D`, `points3D` and `axes3D`
+- [Spline editor](/examples/spline-editor) — a curve through six points above a floor, drawn with `lineStrips3D`, its points and their shadows with `points3D` and the floor and drop lines with `lines3D`; a drag moves a point in the plane that faces the camera through `unproject`, Shift only up and Alt only across the floor
 - [Network explorer](/examples/network-explorer) — 45 nodes in three clusters, drawn with `points3D` and `lines3D`; click a node to highlight its neighbors, filter the clusters
 - [Projection playground](/examples/projection-playground) — rotation, scale, origin and rotation center of one cube, with the renderer call and its vertices beside the SVG and twelve presets from isometric to a corner pivot
 - [Solar system](/examples/solar-system) — the sun, eight planets and the moon, 2200 triangles in one `triangles3D`, lit by the sun and animated with a d3 timer

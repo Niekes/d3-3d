@@ -124,6 +124,8 @@ The figure and its styles live in
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG and the drag live in
 [docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+the camera in
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts),
 the cube corners and the face join in
 [docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts)
 and the grid lines in

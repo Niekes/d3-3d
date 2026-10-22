@@ -1,7 +1,8 @@
 import { pointer, range, select } from 'd3';
 import { cubes3D, lines3D, planes3D, sort } from '../../index';
-import type { Cube, CubeFace, CubeFaceName, Line, Point3D, ShapeInstance } from '../../index';
+import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
 import { cubeCorners, joinFaces } from './cubeFaces';
+import { pose, tiltOf } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
@@ -18,18 +19,10 @@ import { placeSegments } from './segments';
 const N = 8;
 const H = 6;
 const HALF = N / 2;
-const SCALE = 38;
-// The scene turns around the middle of the space a build can fill. A turn
-// leaves its pivot in place, so the origin moves the pivot to the middle of
-// the 960 × 500 view box.
-const CENTER = { x: 0, y: -H / 2, z: 0 };
-const ORIGIN = { x: 480, y: 250 - CENTER.y * SCALE };
-const START_YAW = Math.PI / 5;
-const START_TILT = 0.6;
-// The camera stays between 10 and 85 degrees above the floor, so the floor
-// is behind every cube and needs no place in the sort.
-const MIN_TILT = Math.PI / 18;
-const MAX_TILT = (17 * Math.PI) / 36;
+// The scene turns around the middle of the space a build can fill. The
+// camera stays above the floor, so the floor is behind every cube and needs
+// no place in the sort.
+const VIEW = { scale: 38, center: { x: 0, y: -H / 2, z: 0 } };
 
 const COLORS = ['blue', 'orange', 'green', 'yellow', 'purple', 'red'];
 
@@ -121,16 +114,6 @@ function neighborOf(cell: Cell, face: CubeFaceName): Cell {
     return { column: cell.column + dc, layer: cell.layer + dl, row: cell.row + dr };
 }
 
-/** Poses a renderer: every renderer of the figure shares the projection and the turn. */
-function pose<Datum>(shape: ShapeInstance<Datum>, yaw: number, tilt: number): void {
-    shape
-        .scale(SCALE)
-        .origin(ORIGIN)
-        .rotationCenter(CENTER)
-        .rotateY(yaw + START_YAW)
-        .rotateX(-tilt);
-}
-
 /** The eight vertices of the cube in a cell, in the order cubes3D expects. */
 function makeCube(voxel: Voxel, ghost = false): VoxelVertex[] {
     const key = ghost ? 'ghost' : keyOf(voxel);
@@ -218,10 +201,10 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
 
     /** Turns the scene, draws the floor and paints the cubes and the ghost back to front. */
     function render(): void {
-        const tilt = Math.max(MIN_TILT, Math.min(MAX_TILT, pitch + START_TILT));
-        pose(cubes, yaw, tilt);
-        pose(floor, yaw, tilt);
-        pose(grid, yaw, tilt);
+        const tilt = tiltOf(pitch);
+        pose(cubes, VIEW, yaw, tilt);
+        pose(floor, VIEW, yaw, tilt);
+        pose(grid, VIEW, yaw, tilt);
 
         floorGroup
             .selectAll('path')

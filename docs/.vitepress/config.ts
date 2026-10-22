@@ -82,6 +82,7 @@ export default defineConfig({
                             { text: 'Bar chart', link: '/examples/bar-chart' },
                             { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },
                             { text: 'Voxel builder', link: '/examples/voxel-builder' },
+                            { text: 'Spline editor', link: '/examples/spline-editor' },
                             { text: 'Mini city', link: '/examples/mini-city' },
                             { text: 'Floor-plan explorer', link: '/examples/floor-plan' },
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
