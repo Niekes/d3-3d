@@ -10,3 +10,4 @@ npm-debug.log
 .opencode/
 docs/.vitepress/dist/
 docs/.vitepress/cache/
+plans/
