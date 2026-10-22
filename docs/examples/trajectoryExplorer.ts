@@ -1,7 +1,7 @@
 import { extent, format, interpolateObject, range, scaleLinear } from 'd3';
 import { axes3D, axisSpec, camera3D, lineStrips3D, points3D, sort, strips } from '../../index';
 import type { AxesSpec, HasCentroid, Point, Point3D, ShapeInstance } from '../../index';
-import { playback, rotatingFigure } from './rotatingFigure';
+import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
 import './trajectoryExplorer.css';
 
 /*
@@ -172,7 +172,7 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
 
     /** Turns the camera by the drag and draws the scene at the playhead. */
     function drawScene(): void {
-        camera.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
+        turnCamera(camera, dragYaw, dragPitch, { yaw: START_YAW, tilt: START_TILT });
 
         // A selected trajectory is drawn alone.
         const shown = TRAJECTORIES.filter((d) => !selected || d.id === selected);

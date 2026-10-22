@@ -2,7 +2,7 @@ import { pointer, range, select } from 'd3';
 import { box, camera3D, cubes3D, lines3D, planes3D, sort } from '../../index';
 import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
-import { pose, tiltOf } from './floorView';
+import { pose } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
@@ -202,7 +202,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
 
     /** Turns the scene, draws the floor and paints the cubes and the ghost back to front. */
     function render(): void {
-        pose(camera, VIEW, yaw, tiltOf(pitch));
+        pose(camera, VIEW, yaw, pitch);
 
         floorGroup
             .selectAll('path')

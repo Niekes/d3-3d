@@ -19,8 +19,8 @@ import './pixelSpace.css';
 
 const SCALE = 200;
 const COUNTS = [10_000, 40_000, 160_000];
-/** The floor leans towards the reader by this angle, in radians. */
-const TILT = -0.6;
+/** The camera looks down on the floor from this angle, in radians. */
+const TILT = 0.6;
 const BACKGROUND = '#121417';
 const INK = '#e6e8e9';
 /** The rise from black to white in the relief. */

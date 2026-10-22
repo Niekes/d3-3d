@@ -2,7 +2,7 @@ import { easeCubicInOut, interpolateNumber, range, select } from 'd3';
 import { box, cubes3D, sort } from '../../index';
 import type { Cube, CubeFace, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 
 /*
  * An exploded assembly: a block of 64 cubes whose four layers move apart.
@@ -126,7 +126,7 @@ export function mountExplodedCubes(host: HTMLElement): () => void {
 
     /** Projects the block, shows the faces that face the camera and paints the cubes back to front. */
     function render(): void {
-        cubes.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+        turnCamera(cubes, yaw, pitch, { yaw: START_ANGLE, tilt: START_ANGLE });
 
         const cubeGroups = group
             .selectAll<SVGGElement, AssemblyCube>('g.cube')

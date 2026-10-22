@@ -75,7 +75,7 @@ the selected cube - and calls the one function that does:
 
 ```ts
 function render() {
-    cubes.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+    turnCamera(cubes, yaw, pitch, { yaw: START_ANGLE, tilt: START_ANGLE });
     // ...join and sort the cubes, see below
 }
 ```

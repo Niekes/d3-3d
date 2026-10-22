@@ -1,7 +1,7 @@
 import { groups, least, pointer, randomLcg, randomNormal, range, select } from 'd3';
 import { camera3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -327,7 +327,7 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
 
     /** Turns the camera by the drag and draws the shown nodes and the edges between them. */
     function drawScene(): void {
-        camera.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
+        turnCamera(camera, dragYaw, dragPitch, { yaw: START_YAW, tilt: START_TILT });
 
         // The edges lie under the nodes, so an edge never covers its own ends.
         edgeGroup

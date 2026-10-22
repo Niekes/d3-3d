@@ -1,7 +1,7 @@
 import { drag, leastIndex, pairs, pointer, range, select, sum } from 'd3';
 import { camera3D, catmullRom, lineStrips3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
-import { pose, tiltOf } from './floorView';
+import { pose } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
@@ -180,8 +180,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
 
     /** Turns the scene and draws the floor, the depth cues, the curve and the points. */
     function render(): void {
-        const tilt = tiltOf(pitch);
-        pose(camera, VIEW, yaw, tilt);
+        const tilt = pose(camera, VIEW, yaw, pitch);
         // The view box shrinks with a narrow page; the handles keep their
         // size on the screen.
         const unit = 960 / (svg.node()!.getBoundingClientRect().width || 960);

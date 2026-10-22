@@ -14,8 +14,8 @@ import type { Draw } from './canvasFigure';
 
 const SCALE = 260;
 const COUNTS = [2_500, 10_000, 40_000];
-/** The field leans towards the reader by this angle, in radians. */
-const TILT = -0.6;
+/** The camera looks down on the field from this angle, in radians. */
+const TILT = 0.6;
 /** The share of a cell that is left free between two bars. */
 const GAP = 0.2;
 

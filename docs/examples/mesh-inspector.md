@@ -85,7 +85,7 @@ const camera = camera3D().scale(SCALE).origin(ORIGIN);
 const faces3d = triangles3D().camera(camera);
 const normals3d = lines3D().camera(camera);
 
-camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
+turnCamera(camera, yaw, pitch, { yaw: START_YAW, tilt: START_TILT });
 ```
 
 ## One painter's list

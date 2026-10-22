@@ -1,7 +1,7 @@
 import { format, interpolateLab, select } from 'd3';
 import { camera3D, lathe, lines3D, normal, sort, triangles3D } from '../../index';
 import type { HasCentroid, Line, Point3D, Triangle } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -143,7 +143,7 @@ export function mountMeshInspector(host: HTMLElement): () => void {
 
     /** Projects the faces and the normals, styles them from the toggles and paints them back to front. */
     function render(): void {
-        camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
+        turnCamera(camera, yaw, pitch, { yaw: START_YAW, tilt: START_TILT });
 
         // The projected triangles are new arrays, so the key and the normal
         // in view space are stamped on after the projection. Its z is the

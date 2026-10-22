@@ -1,6 +1,6 @@
 import { select, timer } from 'd3';
 import type { Camera3DInstance } from '../../index';
-import { dragRotate } from './rotatingFigure';
+import { dragRotate, turnCamera } from './rotatingFigure';
 import './canvasFigure.css';
 
 /*
@@ -25,7 +25,7 @@ export interface CanvasFigure {
     label: string;
     counts: number[];
     count: number;
-    /** The lean of the figure towards the reader, in radians. */
+    /** The angle above the figure the camera looks down from, in radians. */
     tilt: number;
     /** The camera that holds the scale and the origin of the figure. */
     camera: Camera3DInstance;
@@ -160,8 +160,7 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
             since = elapsed;
         }
 
-        // Turn the figure around its vertical axis first, then lean it.
-        figure.camera.rotateY(spin + yaw).rotateX(figure.tilt + pitch);
+        turnCamera(figure.camera, spin + yaw, pitch, { tilt: figure.tilt });
         (draw[renderer] ?? draw.canvas)(count, figure.camera);
     });
 

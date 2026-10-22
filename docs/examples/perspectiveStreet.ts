@@ -3,7 +3,8 @@ import type { Timer } from 'd3';
 import { box, camera3D, cubes3D, normal, perspective, planes3D, points3D, sort } from '../../index';
 import type { Camera3DInstance, Cube, CubeFace, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
-import { dragRotate } from './rotatingFigure';
+import { ABOVE_FLOOR } from './floorView';
+import { dragRotate, turnCamera } from './rotatingFigure';
 import './perspectiveStreet.css';
 
 /*
@@ -23,9 +24,6 @@ const FAR = 80;
 const START = 20;
 /** The camera looks down on the street from this angle above the floor, in radians. */
 const TILT = 0.22;
-/** The camera stays between 10 and 85 degrees above the floor, as in the floor figures. */
-const MIN_TILT = Math.PI / 18;
-const MAX_TILT = (17 * Math.PI) / 36;
 /** The length of a dolly zoom, in milliseconds. */
 const DOLLY = 2400;
 
@@ -274,7 +272,7 @@ export function mountPerspectiveStreet(host: HTMLElement): () => void {
     }
 
     function render(): void {
-        camera.rotateY(yaw).rotateX(-Math.max(MIN_TILT, Math.min(MAX_TILT, TILT + pitch)));
+        turnCamera(camera, yaw, pitch, { tilt: TILT, ...ABOVE_FLOOR });
 
         const houses = project();
         drawStreet(houses);

@@ -2,7 +2,7 @@ import { color, interpolateNumber, randomUniform, scaleOrdinal, schemeDark2, sel
 import { axes3D, box, camera3D, cubes3D, orthographic, sort } from '../../index';
 import type { AxesSpec, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
 import { drawChartBox } from './axisEdges';
-import { dragRotate } from './rotatingFigure';
+import { dragRotate, turnCamera } from './rotatingFigure';
 
 /*
  * A bar chart: cubes3D turns the eight vertices of each bar into six named
@@ -52,11 +52,9 @@ function makeBar(id: string, height: number, x: number, z: number): BarVertex[] 
  */
 export function mountBarChart(host: HTMLElement): () => void {
     // The bars and the box hang on one camera, so turning it turns both.
-    const camera = camera3D()
-        .scale(SCALE)
-        .origin(ORIGIN)
-        .rotateY(START_ANGLE)
-        .rotateX(-START_ANGLE);
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
+    const start = { yaw: START_ANGLE, tilt: START_ANGLE };
+    turnCamera(camera, 0, 0, start);
     const cubes: Cubes3DInstance<BarVertex> = cubes3D<BarVertex>().camera(camera);
     const chartBox = axes3D().camera(camera);
 
@@ -212,7 +210,7 @@ export function mountBarChart(host: HTMLElement): () => void {
 
     svg.call(
         dragRotate((yaw, pitch) => {
-            camera.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+            turnCamera(camera, yaw, pitch, start);
             draw(project(), 0);
         })
     );

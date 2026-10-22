@@ -13,7 +13,7 @@ import {
 import type { Selection } from 'd3';
 import { camera3D, planes3D, points3D, polygons3D, sort } from '../../index';
 import type { Plane, Point, Point3D, Polygon, ShapeInstance, TransformedPoint } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 
 /*
  * A layered floor plan: four floors of one building, each a slab drawn with
@@ -362,10 +362,7 @@ export function mountFloorPlan(host: HTMLElement): () => void {
 
     /** Projects the floors and paints them back to front, the rooms on their slab. */
     function render(): void {
-        camera
-            .scale(SCALE * zoom)
-            .rotateY(yaw + START_YAW)
-            .rotateX(-pitch - START_TILT);
+        turnCamera(camera.scale(SCALE * zoom), yaw, pitch, { yaw: START_YAW, tilt: START_TILT });
 
         const rooms = rooms3d.data(OUTLINES);
         const anchors = anchors3d.data(ANCHORS);

@@ -1,7 +1,7 @@
 import { format, polygonHull, randomInt, randomLcg, range, select } from 'd3';
 import { box, camera3D, cubes3D, normal, polygons3D, sort } from '../../index';
 import type { CubeFace, Point3D, Polygon } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import './miniCity.css';
 
 /*
@@ -326,7 +326,7 @@ export function mountMiniCity(host: HTMLElement): () => void {
 
     /** Projects the city, lights it and paints the buildings back to front. */
     function render(): void {
-        camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
+        turnCamera(camera, yaw, pitch, { yaw: START_YAW, tilt: START_TILT });
         const sun = sunAt(hour);
 
         // A low sun shines warmer, and the CSS mixes that in everywhere.

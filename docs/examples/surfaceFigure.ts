@@ -1,7 +1,7 @@
 import { rgb } from 'd3';
 import type { Selection } from 'd3';
 import { gridPlanes3D, sort } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import type { GridPlane, GridPlanes3DInstance, Point3D } from '../../index';
 
 /*
@@ -49,14 +49,14 @@ export function surfaceFigure(
     const surface: GridPlanes3DInstance<Point3D> = gridPlanes3D<Point3D>()
         .scale(10)
         .origin(ORIGIN)
-        .rotateY(START_ANGLE)
-        .rotateX(-START_ANGLE)
         .rows(POINTS_PER_ROW);
+    const start = { yaw: START_ANGLE, tilt: START_ANGLE };
+    turnCamera(surface, 0, 0, start);
 
     let points: Point3D[] = [];
 
     const { group, button } = rotatingFigure(host, prefix, label, (yaw, pitch) => {
-        surface.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+        turnCamera(surface, yaw, pitch, start);
         draw(surface.data(points), 0);
         onTurn?.();
     });

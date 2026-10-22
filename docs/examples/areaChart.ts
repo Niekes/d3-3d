@@ -3,7 +3,7 @@ import type { Selection } from 'd3';
 import { axes3D, camera3D, iso3D, polygons3D, sort } from '../../index';
 import type { AxesSpec, Point2D, Point3D, Polygon } from '../../index';
 import { drawChartBox } from './axisEdges';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import './areaChart.css';
 
 /*
@@ -283,7 +283,7 @@ export function mountAreaChart(host: HTMLElement): () => void {
 
     /** Turns the camera, and with it all three renderers, and repaints. */
     function pose(yaw: number, pitch: number): void {
-        camera.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+        turnCamera(camera, yaw, pitch, { yaw: START_ANGLE, tilt: START_ANGLE });
         draw();
     }
 

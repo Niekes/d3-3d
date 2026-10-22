@@ -27,7 +27,7 @@ import type {
     Point3D,
     ShapeInstance
 } from '../../index';
-import { rotatingFigure } from './rotatingFigure';
+import { rotatingFigure, turnCamera } from './rotatingFigure';
 import { placeSegments } from './segments';
 import { drawAxisEdges } from './axisEdges';
 import './scatterPlot.css';
@@ -458,7 +458,7 @@ export function mountScatterPlot(host: HTMLElement): () => void {
 
     /** Turns the scene by the drag and the auto-rotation and draws it. */
     function drawScene(): void {
-        camera.rotateY(dragYaw + autoYaw + START_YAW).rotateX(-dragPitch - START_TILT);
+        turnCamera(camera, dragYaw + autoYaw, dragPitch, { yaw: START_YAW, tilt: START_TILT });
         drawWalls();
         drawAxisEdges(
             axisGroup,

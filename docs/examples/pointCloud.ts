@@ -16,8 +16,8 @@ const SCALE = 230;
 const COUNTS = [10_000, 100_000, 1_000_000];
 const ARMS = 3;
 const TWIST = 5;
-/** The disk leans towards the reader by this angle, in radians. */
-const TILT = -0.6;
+/** The camera looks down on the disk from this angle, in radians. */
+const TILT = 0.6;
 const POINT_SIZE = 1.5;
 const BACKGROUND = '#07090f';
 /** From the core outwards: one color per ring of the disk. */

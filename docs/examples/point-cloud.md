@@ -43,8 +43,8 @@ positions[3 * i + 2] = z;
 
 ## One matrix, two renderers
 
-The projection of d3-3d is orthographic, so a rotation, a scale and an
-origin make one affine map, and one 4×4 matrix carries all of it.
+Without a perspective, a rotation, a scale and an origin make one affine
+map, and one 4×4 matrix carries all of it.
 A [`camera3D`](/api/#camera) holds the settings without any data, and its
 [`.matrix()`](/api/#matrix) returns that matrix, so the galaxy is turned
 with the same calls as any other shape:
@@ -53,10 +53,8 @@ with the same calls as any other shape:
 const camera = camera3D()
     .scale(SCALE)
     .origin({ x: WIDTH / 2, y: HEIGHT / 2 });
-const matrix = camera
-    .rotateY(spin + yaw)
-    .rotateX(TILT + pitch)
-    .matrix();
+turnCamera(camera, spin + yaw, pitch, { tilt: TILT });
+const matrix = camera.matrix();
 ```
 
 ## Canvas: project into a buffer

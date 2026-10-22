@@ -1,4 +1,6 @@
 import type { Camera3DInstance, Point3D } from '../../index';
+import { turnCamera } from './rotatingFigure';
+import type { Turn } from './rotatingFigure';
 
 /*
  * The camera of the figures built on a floor. The scene turns around a pivot
@@ -8,32 +10,27 @@ import type { Camera3DInstance, Point3D } from '../../index';
  * everything that stands on it.
  */
 
-const START_YAW = Math.PI / 5;
-const START_TILT = 0.6;
-const MIN_TILT = Math.PI / 18;
-const MAX_TILT = (17 * Math.PI) / 36;
+/** The tilts a camera above a floor may take. */
+export const ABOVE_FLOOR: Turn = { minTilt: Math.PI / 18, maxTilt: (17 * Math.PI) / 36 };
 
-/** The tilt of the camera above the floor for the pitch of a drag. */
-export function tiltOf(pitch: number): number {
-    return Math.max(MIN_TILT, Math.min(MAX_TILT, pitch + START_TILT));
-}
+const START = { yaw: Math.PI / 5, tilt: 0.6, ...ABOVE_FLOOR };
 
 /**
  * Poses the camera that every renderer of a figure hangs on: the projection
- * and the turn. `view` holds the scale of the figure and the pivot of its
- * scene.
+ * and the turn for the yaw and the pitch of a drag. `view` holds the scale
+ * of the figure and the pivot of its scene. Returns the tilt of the camera
+ * above the floor.
  */
 export function pose(
     camera: Camera3DInstance,
     view: { scale: number; center: Point3D },
     yaw: number,
-    tilt: number
-): void {
+    pitch: number
+): number {
     const { scale, center } = view;
     camera
         .scale(scale)
         .origin({ x: 480 - center.x * scale, y: 250 - center.y * scale })
-        .rotationCenter(center)
-        .rotateY(yaw + START_YAW)
-        .rotateX(-tilt);
+        .rotationCenter(center);
+    return turnCamera(camera, yaw, pitch, START);
 }

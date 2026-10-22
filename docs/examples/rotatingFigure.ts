@@ -1,5 +1,6 @@
 import { drag, select, timer } from 'd3';
 import type { DragBehavior, Selection, Timer } from 'd3';
+import type { Camera3DInstance } from '../../index';
 
 /*
  * The scaffold the rotating figures share: an SVG that turns on drag and an
@@ -116,6 +117,34 @@ export function dragRotate<E extends Element = SVGSVGElement>(
             keptY += event.y - startY;
             glideFrom(event.sourceEvent.timeStamp);
         });
+}
+
+/** Where a figure starts and how far it may tilt, in radians. */
+export interface Turn {
+    /** The turn around the vertical axis before any drag. */
+    yaw?: number;
+    /** The angle above the scene the camera looks down from before any drag. */
+    tilt?: number;
+    minTilt?: number;
+    maxTilt?: number;
+}
+
+/**
+ * Turns `camera` by the `yaw` and the `pitch` of `dragRotate`, from the
+ * start of `turn`, and returns the tilt. Every figure turns through here,
+ * so a drag turns all of them the same way: a drag down raises the tilt,
+ * and the camera looks down on the scene from higher above.
+ */
+export function turnCamera(
+    camera: Camera3DInstance,
+    yaw: number,
+    pitch: number,
+    turn: Turn = {}
+): number {
+    const { minTilt = -Infinity, maxTilt = Infinity } = turn;
+    const tilt = Math.max(minTilt, Math.min(maxTilt, (turn.tilt ?? 0) + pitch));
+    camera.rotateY((turn.yaw ?? 0) + yaw).rotateX(-tilt);
+    return tilt;
 }
 
 /**

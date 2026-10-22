@@ -1,6 +1,6 @@
 import { interpolateRgb, range } from 'd3';
 import { camera3D, lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
-import { playback, rotatingFigure } from './rotatingFigure';
+import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
 import type {
     HasCentroid,
     LineStrips3DInstance,
@@ -97,7 +97,8 @@ function sunlight(triangle: Point3D[], center: Point3D): number {
  */
 export function mountSolarSystem(host: HTMLElement): () => void {
     // The bodies and the orbits hang on one camera, so turning it turns both.
-    const camera = camera3D().origin(ORIGIN).rotateX(-TILT);
+    const camera = camera3D().origin(ORIGIN);
+    turnCamera(camera, 0, 0, { tilt: TILT });
     const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>().camera(camera);
     const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>().camera(camera);
 
@@ -119,7 +120,7 @@ export function mountSolarSystem(host: HTMLElement): () => void {
         'solar-system',
         'The sun, the planets and the moon, made of triangles. Drag the figure to rotate it.',
         (yaw, pitch) => {
-            camera.rotateY(yaw).rotateX(-pitch - TILT);
+            turnCamera(camera, yaw, pitch, { tilt: TILT });
             draw();
         }
     );
