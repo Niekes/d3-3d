@@ -93,6 +93,7 @@ export default defineConfig({
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Network explorer', link: '/examples/network-explorer' },
                             { text: 'Projection playground', link: '/examples/projection-playground' },
+                            { text: 'Coordinate explorer', link: '/examples/coordinate-explorer' },
                             { text: 'Perspective street', link: '/examples/perspective-street' },
                             { text: 'Solar system', link: '/examples/solar-system' },
                             { text: 'Mesh inspector', link: '/examples/mesh-inspector' },
