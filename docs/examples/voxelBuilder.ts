@@ -3,7 +3,8 @@ import { box, camera3D, cubes3D } from '../../index';
 import type { CubeFace, CubeFaceName, Point3D } from '../../index';
 import { joinCells, keyOf, neighborOf, STEPS } from './cubeFaces';
 import type { Cell } from './cubeFaces';
-import { floorGrid, pose } from './floorView';
+import { floorGrid, followPointer, pose } from './floorView';
+import type { Pointer } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 
 /*
@@ -51,9 +52,6 @@ const MARKS: Record<Action, string> = {
 
 /** Where the next click lands: a free cell to build in, or a cube to erase, paint or pick. */
 type Target = Cell & { action: Action };
-
-/** A pointer position in client pixels, kept so the target can follow a glide. */
-type Pointer = { clientX: number; clientY: number; shiftKey: boolean };
 
 const FACES = Object.keys(STEPS) as CubeFaceName[];
 
@@ -474,19 +472,11 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     }
 
     // The pointer is kept while no button is down, so the target follows the
-    // scene through a glide; during a drag there is no target.
-    function hover(event: PointerEvent): void {
-        hovering = event.buttons
-            ? undefined
-            : { clientX: event.clientX, clientY: event.clientY, shiftKey: event.shiftKey };
-        cursor = undefined;
-        retarget();
-    }
-
-    svg.on('pointermove', hover).on('pointerup', hover);
-
-    svg.on('pointerleave', () => {
-        hovering = undefined;
+    // scene through a glide; during a drag there is no target. A move takes
+    // over from the keyboard's cursor.
+    followPointer(svg, (at, left) => {
+        hovering = at;
+        cursor = left ? cursor : undefined;
         retarget();
     });
 

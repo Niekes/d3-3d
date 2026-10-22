@@ -12,8 +12,12 @@ import { placeSegments } from './segments';
  * place, so the origin moves the pivot to the middle of the 960 × 500 view
  * box. The camera stays between 10 and 85 degrees above the floor, so the
  * floor is behind everything that stands on it. The keys move a point the
- * same way in every figure that edits one.
+ * same way in every figure that edits one, and the pointer picks a target
+ * the same way in every figure that builds on the floor.
  */
+
+/** A pointer position in client pixels, kept so a target can follow a glide. */
+export type Pointer = { clientX: number; clientY: number; shiftKey: boolean };
 
 /** The start and the tilt limits of every figure built on a floor. */
 export const FLOOR_TURN: Required<Turn> = {
@@ -54,6 +58,28 @@ export function pose(
         .origin({ x: 480 - center.x * scale, y: 250 - center.y * scale })
         .rotationCenter(center);
     return turnCamera(camera, yaw, pitch, FLOOR_TURN);
+}
+
+/**
+ * Follows the pointer over `svg` for a figure that picks a target under it.
+ * `onHover` gets the pointer while it rests with no button down, so the
+ * target can follow a glide, and undefined during a drag, when there is no
+ * target, and once the pointer leaves the figure, with `left` set.
+ */
+export function followPointer(
+    svg: Selection<SVGSVGElement, unknown, null, undefined>,
+    onHover: (at: Pointer | undefined, left: boolean) => void
+): void {
+    const hover = (event: PointerEvent) =>
+        onHover(
+            event.buttons
+                ? undefined
+                : { clientX: event.clientX, clientY: event.clientY, shiftKey: event.shiftKey },
+            false
+        );
+    svg.on('pointermove', hover)
+        .on('pointerup', hover)
+        .on('pointerleave', () => onHover(undefined, true));
 }
 
 /**

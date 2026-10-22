@@ -145,7 +145,10 @@ The faces have to be split along the line where they cross or along a
 plane that cuts the cycle, or a depth buffer has to decide per pixel, as
 WebGL does in the [bar field](./bar-field). The
 [area chart](./area-chart) shows the other way out: geometry built so that
-planes separate it, which gives an exact order without a test per pair.
+planes separate it, which gives an exact order without a test per pair. The
+[packing playground](./packing-playground) takes it for boxes of mixed
+sizes: it cuts each box into unit cubes on a grid, which `sort` orders
+exactly.
 
 ## The whole source
 

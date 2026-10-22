@@ -86,6 +86,7 @@ export default defineConfig({
                             { text: 'Sorting sculpture', link: '/examples/sorting-sculpture' },
                             { text: 'Exploded cube assembly', link: '/examples/exploded-cubes' },
                             { text: 'Voxel builder', link: '/examples/voxel-builder' },
+                            { text: 'Packing playground', link: '/examples/packing-playground' },
                             { text: 'Cellular automaton', link: '/examples/cellular-automaton' },
                             { text: 'Spline editor', link: '/examples/spline-editor' },
                             { text: 'Mini city', link: '/examples/mini-city' },
