@@ -101,6 +101,7 @@ export default defineConfig({
                             { text: 'Perspective street', link: '/examples/perspective-street' },
                             { text: 'Depth-ordering lab', link: '/examples/depth-ordering' },
                             { text: 'Rotation order', link: '/examples/rotation-order' },
+                            { text: 'Rotation pivot', link: '/examples/rotation-pivot' },
                             { text: 'Solar system', link: '/examples/solar-system' },
                             { text: 'Space-time cube', link: '/examples/space-time-cube' },
                             { text: 'Mesh inspector', link: '/examples/mesh-inspector' },

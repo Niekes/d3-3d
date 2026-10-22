@@ -3,6 +3,7 @@ import type { Selection } from 'd3';
 import { lines3D, planes3D } from '../../index';
 import type { Camera3DInstance, Line, Point3D } from '../../index';
 import { turnCamera } from './rotatingFigure';
+import type { Turn } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -10,10 +11,30 @@ import { placeSegments } from './segments';
  * around a pivot in the space above the floor; a turn leaves its pivot in
  * place, so the origin moves the pivot to the middle of the 960 × 500 view
  * box. The camera stays between 10 and 85 degrees above the floor, so the
- * floor is behind everything that stands on it.
+ * floor is behind everything that stands on it. The keys move a point the
+ * same way in every figure that edits one.
  */
 
-const START = { yaw: Math.PI / 5, tilt: 0.6, minTilt: Math.PI / 18, maxTilt: (17 * Math.PI) / 36 };
+/** The start and the tilt limits of every figure built on a floor. */
+export const FLOOR_TURN: Required<Turn> = {
+    yaw: Math.PI / 5,
+    tilt: 0.6,
+    minTilt: Math.PI / 18,
+    maxTilt: (17 * Math.PI) / 36
+};
+
+/**
+ * How the keys move a point over the floor, as a step in x, y and z: the
+ * arrow keys across the floor, Page Up and Page Down up and down.
+ */
+export const FLOOR_MOVES: Record<string, [number, number, number]> = {
+    ArrowLeft: [-1, 0, 0],
+    ArrowRight: [1, 0, 0],
+    ArrowUp: [0, 0, -1],
+    ArrowDown: [0, 0, 1],
+    PageUp: [0, -1, 0],
+    PageDown: [0, 1, 0]
+};
 
 /**
  * Poses the camera that every renderer of a figure hangs on: the projection
@@ -32,7 +53,7 @@ export function pose(
         .scale(scale)
         .origin({ x: 480 - center.x * scale, y: 250 - center.y * scale })
         .rotationCenter(center);
-    return turnCamera(camera, yaw, pitch, START);
+    return turnCamera(camera, yaw, pitch, FLOOR_TURN);
 }
 
 /**

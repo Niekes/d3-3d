@@ -1,7 +1,8 @@
 import { drag, leastIndex, pairs, pointer, range, select, sum } from 'd3';
 import { camera3D, catmullRom, lineStrips3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
-import { pose } from './floorView';
+import { FLOOR_MOVES, pose } from './floorView';
+import { enterHandles, placeHandles } from './handles';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
@@ -50,16 +51,6 @@ const START: Point3D[] = [
     { x: 3, y: -1.5, z: -2.5 },
     { x: 4, y: -3, z: 2.5 }
 ];
-
-/** How the keys move the selected point, as a step in x, y and z. */
-const MOVES: Record<string, [number, number, number]> = {
-    ArrowLeft: [-1, 0, 0],
-    ArrowRight: [1, 0, 0],
-    ArrowUp: [0, 0, -1],
-    ArrowDown: [0, 0, 1],
-    PageUp: [0, -1, 0],
-    PageDown: [0, 1, 0]
-};
 
 // The floor: a grid line at every unit of the editing space.
 const GRID: Point3D[][] = range(-HALF, HALF + 1).flatMap((i) => [
@@ -244,17 +235,9 @@ export function mountSplineEditor(host: HTMLElement): () => void {
         pointGroup
             .selectAll<SVGGElement, Point<Knot>>('g')
             .data(dots.data(knots), (d) => d.id)
-            .join((enter) =>
-                enter
-                    .append('g')
-                    .call((g) => g.append('circle').attr('class', 'hit'))
-                    .call((g) => g.append('circle').attr('class', 'dot'))
-                    .call(dragKnot)
-            )
+            .join((enter) => enterHandles(enter).call(dragKnot))
             .attr('class', (d) => `spline-point${d.id === selected ? ' is-selected' : ''}`)
-            .attr('transform', (d) => `translate(${d.projected.x},${d.projected.y})`)
-            .call((g) => g.select('.hit').attr('r', HIT * unit))
-            .call((g) => g.select('.dot').attr('r', DOT * unit))
+            .call(placeHandles, DOT * unit, HIT * unit)
             .sort(sort);
 
         const knot = knots.find((k) => k.id === selected);
@@ -399,7 +382,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
         }
         const index = knots.findIndex((k) => k.id === selected);
         const knot = knots[index];
-        const move = MOVES[event.key];
+        const move = FLOOR_MOVES[event.key];
         const key = event.key.toLowerCase();
         let note = '';
         if (key === '[' || key === ']') {
