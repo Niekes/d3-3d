@@ -2,10 +2,16 @@ import { describe, test, expect } from 'vite-plus/test';
 import { lines3D } from '../index';
 
 describe('lines3D', () => {
-    test("doesn't have a draw function", () => {
-        const lines = lines3D();
-        // @ts-expect-error
-        expect(lines.draw).toBeUndefined();
+    test('draws a line from its projected ends', () => {
+        const lines = lines3D().scale(10).origin({ x: 100, y: 50 });
+        const [line] = lines.data([
+            [
+                { x: 0, y: 0, z: 0 },
+                { x: 1, y: -2, z: 3 }
+            ]
+        ]);
+
+        expect(lines.draw(line)).toBe('M110,30L100,50');
     });
 
     test('calculates centroid correctly', () => {

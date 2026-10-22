@@ -22,6 +22,10 @@ export { ccw } from './src/counter-clockwise';
 export { centroid } from './src/centroid';
 export { normal } from './src/normal';
 export { box } from './src/box';
+export { lathe } from './src/lathe';
+export { strips } from './src/strips';
+export { catmullRom } from './src/catmull-rom';
+export { axisSpec } from './src/axis-spec';
 export { transform } from './src/transform';
 export { orthographic } from './src/projection-orthographic';
 export { projectPositions } from './src/projection-matrix';
@@ -30,6 +34,7 @@ export { projectPositions } from './src/projection-matrix';
 export * from './src/types';
 export type { HasCentroid } from './src/sort';
 export type { OrthographicOptions } from './src/projection-orthographic';
+export type { TickScale } from './src/axis-spec';
 
 // The shape contract that every shape instance implements.
 export type { Camera3DInstance, ShapeInstance } from './src/shapes/shape';

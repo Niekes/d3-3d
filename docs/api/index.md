@@ -18,7 +18,8 @@ Points. `.data` takes a list of points and returns one point per datum.
 
 ### `lines3D()` {#lines3d}
 
-Lines. `.data` takes a list of point pairs and returns one line per pair.
+Lines. `.data` takes a list of point pairs and returns one line per pair;
+`.draw` draws one as a path, or put a `<line>` on its projected ends.
 
 ### `lineStrips3D()` {#linestrips3d}
 
@@ -59,7 +60,7 @@ Transform and compute properties for your data.
 
 ### `.draw(shape)` {#draw}
 
-Draw the SVG path for a shape. Not on `points3D` and `lines3D`.
+Draw the SVG path for a shape. Not on `points3D`.
 
 ### `.unproject(point, planePoint, planeNormal)` {#unproject}
 
@@ -137,6 +138,12 @@ Set the points per row (`gridPlanes3D` only).
 Sort shapes by depth (painter's algorithm): a comparator for anything with a
 `centroid`.
 
+Things that stand on one floor, bars or buildings, sort by their footprint:
+give each the `centroid` of its `bottom` face. The centre of a tall box sits
+high up, so seen from above it would paint over a short box in front of it.
+A long line sorts by its middle; cut it with [`strips`](#strips) so every
+piece sorts on its own depth.
+
 ### `ccw(polygon)` {#ccw}
 
 Whether a transformed polygon winds counter-clockwise, which means it faces
@@ -170,6 +177,44 @@ faces of `cubes3D`, along `viewDirection` where a face faces the camera.
 
 The eight corners of a box in the order `cubes3D` expects, standing on
 `{ x, y, z }` with its `width`, `depth` and `height`, upwards towards -y.
+`topWidth` and `topDepth` taper the top: zero width makes a ridge, zero size
+an apex.
+
+### `lathe(profile, segments)` {#lathe}
+
+The triangles of a surface of revolution, for `triangles3D`. The profile is a
+list of `{ x, y }`, the radius and the height, turned around the y axis in
+`segments` steps. A point with radius 0 closes the surface there, so a
+profile from the axis to the axis is a solid. Run it upwards, from a large y
+to a small one, and every triangle faces outwards: its `normal` points out
+and `ccw` tells the outside from the inside.
+
+```typescript
+// A sphere: a half circle from the bottom pole to the top pole.
+const profile = [{ x: 0, y: r }];
+for (let i = 1; i < 12; i += 1) {
+    profile.push({ x: r * Math.sin((i / 12) * Math.PI), y: r * Math.cos((i / 12) * Math.PI) });
+}
+profile.push({ x: 0, y: -r });
+
+triangles3D().data(lathe(profile, 24));
+```
+
+### `strips(points, size)` {#strips}
+
+Cut a polyline into strips of `size` points that share their end points, so
+every piece of a long line sorts on its own depth. A `size` of 2 gives the
+segments, for `lines3D`.
+
+### `catmullRom(points, steps)` {#catmullrom}
+
+The Catmull–Rom spline through 3D points, `steps` samples per segment, for
+`lineStrips3D`. It starts on the first point and ends on the last.
+
+### `axisSpec(scale, count?)` {#axisspec-function}
+
+One axis of [`axes3D`](#axes3d) from a d3 scale: its domain and about
+`count` of its ticks.
 
 ## Isometric scenes
 
@@ -231,7 +276,7 @@ ticks of every axis, and give it the same accessors as the shapes it
 frames, so the box and the data turn as one.
 
 ```typescript
-import { axes3D } from 'd3-3d';
+import { axes3D, axisSpec } from 'd3-3d';
 import { scaleLinear } from 'd3';
 
 // Every axis spans the box from -1 to 1.
@@ -246,11 +291,7 @@ const box = axes3D()
     .y((d) => -z(d.z)) // data z is up, the screen y grows downwards
     .z((d) => y(d.y));
 
-const spec = {
-    x: { domain: x.domain(), ticks: x.ticks(5) },
-    y: { domain: y.domain(), ticks: y.ticks(5) },
-    z: { domain: z.domain(), ticks: z.ticks(5) }
-};
+const spec = { x: axisSpec(x, 5), y: axisSpec(y, 5), z: axisSpec(z, 5) };
 
 // The walls behind the data, with their gridlines.
 svg.selectAll('path.wall')
@@ -291,7 +332,9 @@ See the [scatter plot](/examples/scatter-plot) for a complete chart.
 ### `.data(spec)` {#axes-data}
 
 The six walls, `x` lo and hi, `y` lo and hi, `z` lo and hi, with `ccw`,
-`centroid` and `grid`.
+`centroid` and `grid`. Every wall names the `axis` it stands across and its
+`side`, 0 at the first value of the domain and 1 at the last, so the floor
+of a chart whose data z is up is the wall with `axis === 'z'`.
 
 ### `.draw(wall)` {#axes-draw}
 

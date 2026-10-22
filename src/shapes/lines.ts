@@ -2,6 +2,7 @@ import { TransformedPoint, Point3D } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { centroid } from '../centroid';
 import { transform } from '../transform';
+import { drawPolyline } from '../draw/drawPolyline';
 
 export type Line<Datum> = TransformedPoint<Datum>[] & {
     centroid: Point3D;
@@ -9,6 +10,7 @@ export type Line<Datum> = TransformedPoint<Datum>[] & {
 
 export interface Lines3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Line<Datum>[];
+    draw(line: TransformedPoint<Datum>[]): string;
 }
 
 class Lines3DRenderer<Datum = Point3D>
@@ -23,6 +25,10 @@ class Lines3DRenderer<Datum = Point3D>
 
             return transformedLine;
         });
+    }
+
+    draw(line: TransformedPoint<Datum>[]): string {
+        return drawPolyline(line);
     }
 }
 

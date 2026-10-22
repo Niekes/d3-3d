@@ -135,6 +135,10 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 - [projectPositions()](#projectpositions) - project a packed point cloud through a matrix.
 - [normal()](#normal) - the unit normal of a polygon, for back faces and lighting.
 - [box()](#box) - the eight corners of a box, in the order `cubes3D` expects.
+- [lathe()](#lathe) - the triangles of a surface of revolution, such as a vase or a sphere.
+- [strips()](#strips) - cut a long line into pieces that sort on their own depth.
+- [catmullRom()](#catmullrom) - a smooth 3D curve through points.
+- [axisSpec()](#axisspec) - one axis of `axes3D` from a d3 scale.
 
 ### Overview
 
@@ -236,7 +240,7 @@ All shapes share the same API for configuration, but differ in their input data 
 | Shape            | SVG Element | Input Format                           | `.draw()` | `ccw` Property |
 | ---------------- | ----------- | -------------------------------------- | --------- | -------------- |
 | **points3D**     | `<circle>`  | `Datum[]` - Array of points            | ❌        | ❌             |
-| **lines3D**      | `<line>`    | `Datum[][]` - Array of line pairs      | ❌        | ❌             |
+| **lines3D**      | `<line>`    | `Datum[][]` - Array of line pairs      | ✅        | ❌             |
 | **lineStrips3D** | `<path>`    | `Datum[][]` - Array of point arrays    | ✅        | ❌             |
 | **triangles3D**  | `<path>`    | `Datum[][]` - Array of 3-point arrays  | ✅        | ✅             |
 | **planes3D**     | `<path>`    | `Datum[][]` - Array of 4-point arrays  | ✅        | ✅             |
@@ -250,7 +254,7 @@ All shapes share the same API for configuration, but differ in their input data 
 
 - All shapes compute `centroid`, `rotated`, and `projected` properties
 - `ccw` (counter-clockwise) is computed for polygon-based shapes to detect front/back faces
-- Shapes without `.draw()` method (`points3D`, `lines3D`) can be rendered directly with SVG elements using the `projected` coordinates
+- `points3D` has no `.draw()` method: render it, or a `lines3D` as `<line>` elements, directly from the `projected` coordinates
 
 **Input Data Details:**
 
@@ -324,7 +328,7 @@ ticks of every axis, and give it the same accessors as the shapes it
 frames, so the box and the data turn as one.
 
 ```typescript
-import { axes3D } from 'd3-3d';
+import { axes3D, axisSpec } from 'd3-3d';
 import { scaleLinear } from 'd3';
 
 // Every axis spans the box from -1 to 1.
@@ -339,11 +343,7 @@ const box = axes3D()
     .y((d) => -z(d.z)) // data z is up, the screen y grows downwards
     .z((d) => y(d.y));
 
-const spec = {
-    x: { domain: x.domain(), ticks: x.ticks(5) },
-    y: { domain: y.domain(), ticks: y.ticks(5) },
-    z: { domain: z.domain(), ticks: z.ticks(5) }
-};
+const spec = { x: axisSpec(x, 5), y: axisSpec(y, 5), z: axisSpec(z, 5) };
 
 // The walls behind the data, with their gridlines.
 svg.selectAll('path.wall')
@@ -373,8 +373,10 @@ svg.selectAll('text.tick')
 | `.draw(wall)` | The path of a wall: its outline and its gridlines                                          |
 | `.axes(spec)` | The three axes `x`, `y`, `z`, each a list of ticks with its `axis` and `normal`            |
 
-A spec holds one `{ domain, ticks }` per axis. A wall is the list of its
-four corners. It has `ccw` set when it faces the camera, so the walls
+A spec holds one `{ domain, ticks }` per axis; [`axisSpec`](#axisspec)
+builds one from a d3 scale. A wall is the list of its four corners, with the
+`axis` it stands across and its `side`, 0 at the first value of the domain
+and 1 at the last. It has `ccw` set when it faces the camera, so the walls
 behind the data are the ones without it. `axes3D` winds the corners for the
 accessors, so this holds whatever the accessors and the domains: a negated
 axis or a reversed domain mirrors the box, and the winding follows.
@@ -490,7 +492,7 @@ result[0].ccw;       // ✓ boolean
 
 Constructs an SVG `<path>` element string based on the transformed shape data.
 
-**Available on:** `lineStrips3D`, `triangles3D`, `planes3D`, `polygons3D`, `gridPlanes3D`, `cubes3D`
+**Available on:** `lines3D`, `lineStrips3D`, `triangles3D`, `planes3D`, `polygons3D`, `gridPlanes3D`, `cubes3D`
 
 **Parameters:**
 
@@ -778,6 +780,8 @@ interface HasCentroid {
 }
 ```
 
+**Things on a floor:** bars or buildings that stand on one floor sort by their footprint. Give each the `centroid` of its `bottom` face: the centre of a tall box sits high up, so seen from above it would paint over a short box in front of it. A long line sorts by its middle; cut it with [`strips()`](#strips) so every piece sorts on its own depth.
+
 ### projectPositions()
 
 Projects packed x, y, z triples through a [`.matrix()`](#matrix) into a `Float32Array`: screen x, screen y and depth, three numbers per point. Pass the same `out` buffer every frame and a canvas can redraw a large point cloud without allocating.
@@ -834,7 +838,7 @@ function normal(polygon: ReadonlyArray<Point3D>): Point3D;
 
 ### box()
 
-Returns the eight corners of a box in the order `cubes3D` expects. The box stands on the point (_x_, _y_, _z_): its footprint is centered on _x_ and _z_, _width_ along x and _depth_ along z, and it rises _height_ upwards, towards -y as on the screen.
+Returns the eight corners of a box in the order `cubes3D` expects. The box stands on the point (_x_, _y_, _z_): its footprint is centered on _x_ and _z_, _width_ along x and _depth_ along z, and it rises _height_ upwards, towards -y as on the screen. _topWidth_ and _topDepth_ size the top apart from the footprint: a tapered shaft, a ridge with a top of zero width, an apex with a top of zero size.
 
 **Usage:**
 
@@ -855,7 +859,101 @@ function box(spec: {
     width: number;
     height: number;
     depth: number;
+    topWidth?: number;
+    topDepth?: number;
 }): Point3D[];
+```
+
+### lathe()
+
+Returns the triangles of a surface of revolution, ready for `triangles3D`. The profile is a list of `{ x, y }`, the radius and the height, turned around the y axis in `segments` steps. A point with radius 0 lies on the axis and closes the surface there, so a profile from the axis to the axis is a solid. Run the profile upwards, from a large y to a small one as on the screen, and every triangle faces outwards: its [`normal()`](#normal) points out and `ccw` tells the outside from the inside.
+
+**Usage:**
+
+```typescript
+import { lathe, triangles3D } from 'd3-3d';
+
+// A sphere: a half circle from the bottom pole to the top pole.
+const r = 1;
+const profile = [{ x: 0, y: r }];
+for (let i = 1; i < 12; i += 1) {
+    const theta = (i / 12) * Math.PI;
+    profile.push({ x: r * Math.sin(theta), y: r * Math.cos(theta) });
+}
+profile.push({ x: 0, y: -r });
+
+const triangles = triangles3D();
+const sphere = triangles.data(lathe(profile, 24)).filter((t) => t.ccw);
+svg.selectAll('path').data(sphere).join('path').attr('d', triangles.draw);
+```
+
+**Type Signature:**
+
+```typescript
+function lathe(profile: ReadonlyArray<Point2D>, segments: number): Point3D[][];
+```
+
+### strips()
+
+Cuts a polyline into strips of _size_ points that share their end points, the last one shorter if the points run out. `sort` orders a line by the depth of its middle, so a long line that passes in front of a shape and behind it again is painted wrong as a whole; cut into strips, every piece sorts on its own depth. A _size_ of 2 gives the segments, for `lines3D`.
+
+**Usage:**
+
+```typescript
+import { lineStrips3D, sort, strips } from 'd3-3d';
+
+const orbit = lineStrips3D().data(strips(points, 6));
+svg.selectAll('path').data([...orbit, ...planets].sort(sort)).join('path');
+```
+
+**Type Signature:**
+
+```typescript
+function strips<T>(points: ReadonlyArray<T>, size: number): T[][];
+```
+
+### catmullRom()
+
+Returns the uniform Catmull–Rom spline through 3D points, _steps_ samples per segment: a smooth curve through every point, for `lineStrips3D`. The end points stand in for their missing neighbours, so the curve starts on the first point and ends on the last.
+
+**Usage:**
+
+```typescript
+import { catmullRom, lineStrips3D } from 'd3-3d';
+
+const curve = lineStrips3D();
+path.attr('d', curve.draw(curve.data([catmullRom(knots, 16)])[0]));
+```
+
+**Type Signature:**
+
+```typescript
+function catmullRom(points: ReadonlyArray<Point3D>, steps: number): Point3D[];
+```
+
+### axisSpec()
+
+Returns one axis of [`axes3D`](#axes) from a scale: its domain and about _count_ of its ticks. Call `.nice()` on the scale first, so the box ends on a tick.
+
+**Usage:**
+
+```typescript
+import { axisSpec } from 'd3-3d';
+import { scaleLinear } from 'd3';
+
+const x = scaleLinear().domain([0, 10]).range([-1, 1]).nice();
+const spec = { x: axisSpec(x, 5), y: axisSpec(y, 5), z: axisSpec(z, 5) };
+```
+
+**Type Signature:**
+
+```typescript
+function axisSpec(scale: TickScale, count?: number): AxisSpec;
+
+interface TickScale {
+    domain(): number[];
+    ticks(count?: number): number[];
+}
 ```
 
 ### Computed Properties

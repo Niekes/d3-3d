@@ -23,4 +23,26 @@ describe('box', () => {
         expect(normal(top).y).toBeCloseTo(-1, 12);
         expect(normal(front).z).toBeCloseTo(1, 12);
     });
+
+    test('tapers the top to a ridge or an apex', () => {
+        const ridge = box({ x: 0, y: 0, z: 0, width: 2, height: 1, depth: 4, topWidth: 0 });
+        const apex = box({ x: 0, y: 0, z: 0, width: 2, height: 1, depth: 4, topWidth: 0, topDepth: 0 });
+        const tops = [0, 3, 4, 7];
+
+        expect(tops.map((i) => ridge[i].x + 0)).toEqual([0, 0, 0, 0]);
+        expect(tops.map((i) => ridge[i].z)).toEqual([2, 2, -2, -2]);
+        expect(tops.map((i) => [apex[i].x + 0, apex[i].z + 0])).toEqual([
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0]
+        ]);
+        // The footprint keeps its size.
+        expect([1, 2, 5, 6].map((i) => [ridge[i].x, ridge[i].z])).toEqual([
+            [-1, 2],
+            [1, 2],
+            [-1, -2],
+            [1, -2]
+        ]);
+    });
 });

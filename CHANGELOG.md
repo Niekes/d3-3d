@@ -26,6 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   their gridlines and `ccw`, `.draw(wall)` their paths, and `.axes(spec)` the
   three axes on the outline of the box, with their ticks and the direction
   that points away from the box.
+- `lathe(profile, segments)`: the triangles of a surface of revolution, every
+  one wound to face outwards; a point of the profile on the axis closes it.
+- `strips(points, size)`: a polyline cut into strips that share their ends,
+  so every piece of a long line sorts on its own depth.
+- `catmullRom(points, steps)`: the Catmull–Rom spline through 3D points.
+- `axisSpec(scale, count)`: one axis of `axes3D` from a d3 scale.
+- `.draw()` on `lines3D`.
+- `axis` and `side` on the walls of `axes3D`.
+- `topWidth` and `topDepth` on `box`, for tapered shafts, ridges and apexes.
 
 ### Fixed
 

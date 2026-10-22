@@ -8,9 +8,13 @@ import { drawPolyline } from '../draw/drawPolyline';
 
 /**
  * One wall of the chart box: its four corners, whether it faces the camera
- * and its gridlines, one segment per tick inside the box.
+ * and its gridlines, one segment per tick inside the box. `axis` is the axis
+ * the wall stands across and `side` the end of its domain the wall sits at,
+ * 0 at the first value and 1 at the last.
  */
 export type AxisWall = TransformedPoint<Point3D>[] & {
+    axis: keyof AxesSpec;
+    side: 0 | 1;
     ccw: boolean;
     centroid: Point3D;
     grid: TransformedPoint<Point3D>[][];
@@ -74,7 +78,7 @@ class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
         });
     }
 
-    private wall(spec: AxesSpec, a: Axis, side: number, mirrored: boolean): AxisWall {
+    private wall(spec: AxesSpec, a: Axis, side: 0 | 1, mirrored: boolean): AxisWall {
         const [b, c] = SPAN[a];
         const va = ends(spec[a])[side];
         const [b0, b1] = ends(spec[b]);
@@ -92,6 +96,8 @@ class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
             (side === 1) !== mirrored ? corners.reverse() : corners
         ) as AxisWall;
 
+        wall.axis = a;
+        wall.side = side;
         wall.ccw = ccw(wall);
         wall.centroid = centroid(wall);
         wall.grid = [

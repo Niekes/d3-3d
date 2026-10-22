@@ -69,6 +69,23 @@ describe('axes3D', () => {
         ]);
     });
 
+    test('names the axis and the side of every wall', () => {
+        const walls = tilted().data(SPEC);
+
+        expect(walls.map((wall) => [wall.axis, wall.side])).toEqual([
+            ['x', 0],
+            ['x', 1],
+            ['y', 0],
+            ['y', 1],
+            ['z', 0],
+            ['z', 1]
+        ]);
+        for (const wall of walls) {
+            const value = SPEC[wall.axis].domain[wall.side];
+            expect(wall.every((corner) => corner[wall.axis] === value)).toBe(true);
+        }
+    });
+
     test('draws the outline and one gridline per inner tick', () => {
         const box = tilted();
         const [xLo] = box.data(SPEC);
