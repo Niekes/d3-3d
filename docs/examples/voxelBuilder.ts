@@ -32,8 +32,25 @@ type Voxel = Cell & { color: number };
 /** One vertex of a cube: a point that carries its cube, so the cube survives the projection. */
 type VoxelVertex = Point3D & Voxel & { key: string; ghost: boolean };
 
-/** Where the next click lands: a free cell to build in, or a cube to erase. */
-type Target = Cell & { erase: boolean };
+/** What a click does in each mode of the mode radio. */
+type Mode = 'build' | 'erase' | 'paint';
+
+/** What a click does: the mode, or with Shift its counterpart. Pick takes the color of a cube. */
+type Action = Mode | 'pick';
+
+/** Shift turns every mode into its counterpart. */
+const SHIFTED: Record<Mode, Action> = { build: 'erase', erase: 'build', paint: 'pick' };
+
+/** The class that marks the cube a click would act on. The ghost marks a build. */
+const MARKS: Record<Action, string> = {
+    build: '',
+    erase: ' is-target',
+    paint: ' is-paint',
+    pick: ' is-pick'
+};
+
+/** Where the next click lands: a free cell to build in, or a cube to erase, paint or pick. */
+type Target = Cell & { action: Action };
 
 /** A pointer position in client pixels, kept so the target can follow a glide. */
 type Pointer = { clientX: number; clientY: number; shiftKey: boolean };
@@ -69,6 +86,96 @@ const inside = (cell: Cell) =>
 
 const clamp = (i: number) => Math.max(0, Math.min(N - 1, i));
 
+const plural = (count: number) => `${count} cube${count === 1 ? '' : 's'}`;
+
+// A saved build: its format, its version and the most text it may hold.
+// 384 cubes of JSON take about 35 KB.
+const FORMAT = 'd3-3d-voxels';
+const VERSION = 1;
+const MAX_TEXT = 64 * 1024;
+
+/** The build as the text of a saved file, its cubes in layer, row and column order. */
+function writeBuild(voxels: Voxel[]): string {
+    const cubes = [...voxels]
+        .sort((a, b) => a.layer - b.layer || a.row - b.row || a.column - b.column)
+        .map(({ column, layer, row, color }) => ({ column, layer, row, color: COLORS[color] }));
+    const size = { columns: N, layers: H, rows: N };
+    return JSON.stringify({ format: FORMAT, version: VERSION, size, cubes }, null, 2);
+}
+
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
+
+/** Whether `value` is a whole number from 0 to `count - 1`. */
+const isIndex = (value: unknown, count: number): value is number =>
+    typeof value === 'number' && Number.isInteger(value) && value >= 0 && value < count;
+
+const outOf = (i: number, field: string, count: number) =>
+    `Cube ${i}: ${field} must be a whole number from 0 to ${count - 1}.`;
+
+/**
+ * Reads the text of a saved file, which may hold anything. Returns all of
+ * its cubes, or the message that names the first thing wrong with it. Every
+ * cube is a new object of its four checked fields, so no other key of the
+ * file reaches the figure, and the color becomes a palette index.
+ */
+function readBuild(text: string): Voxel[] | string {
+    if (text.length > MAX_TEXT) {
+        return 'The build is over 64 KB.';
+    }
+    let file: unknown;
+    try {
+        file = JSON.parse(text);
+    } catch {
+        return 'Not valid JSON.';
+    }
+    if (!isRecord(file)) {
+        return 'The build must be a JSON object.';
+    }
+    if (file.format !== FORMAT) {
+        return `The format must be "${FORMAT}".`;
+    }
+    if (file.version !== VERSION) {
+        return `The version must be ${VERSION}.`;
+    }
+    if (!Array.isArray(file.cubes)) {
+        return 'The cubes must be an array.';
+    }
+    const entries: unknown[] = file.cubes;
+    if (entries.length > N * H * N) {
+        return `A build holds at most ${N * H * N} cubes, one per cell.`;
+    }
+
+    const voxels: Voxel[] = [];
+    const cells = new Map<string, number>();
+    for (const [i, cube] of entries.entries()) {
+        if (!isRecord(cube)) {
+            return `Cube ${i} must be an object.`;
+        }
+        const { column, layer, row } = cube;
+        if (!isIndex(column, N)) {
+            return outOf(i, 'column', N);
+        }
+        if (!isIndex(layer, H)) {
+            return outOf(i, 'layer', H);
+        }
+        if (!isIndex(row, N)) {
+            return outOf(i, 'row', N);
+        }
+        const color = COLORS.findIndex((name) => name === cube.color);
+        if (color < 0) {
+            return `Cube ${i}: color must be one of ${COLORS.join(', ')}.`;
+        }
+        const key = keyOf({ column, layer, row });
+        if (cells.has(key)) {
+            return `Cube ${i} is in the same cell as cube ${cells.get(key)}.`;
+        }
+        cells.set(key, i);
+        voxels.push({ column, layer, row, color });
+    }
+    return voxels;
+}
+
 /** The eight vertices of the cube in a cell, in the order cubes3D expects. */
 function makeCube(voxel: Voxel, ghost = false): VoxelVertex[] {
     const key = ghost ? 'ghost' : keyOf(voxel);
@@ -91,7 +198,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     // The state: every input writes it, and `render` reads it.
     const built = new Map<string, Voxel>();
     let color = 0;
-    let erasing = false;
+    let mode: Mode = 'build';
     let yaw = 0;
     let pitch = 0;
     let target: Target | undefined;
@@ -99,6 +206,8 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     // no button down, otherwise the keyboard's cursor column.
     let hovering: Pointer | undefined;
     let cursor: { column: number; row: number } | undefined;
+    // The blob URL of the last export, revoked by the next one and on dispose.
+    let fileUrl = '';
 
     // The cubes and the floor hang on one camera.
     const camera = camera3D();
@@ -107,7 +216,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     const { group, button } = rotatingFigure(
         host,
         'voxel',
-        'An 8 by 8 floor to build on with cubes. Drag it to rotate it, click the floor or a cube to place a cube and shift-click a cube to remove it, or focus it and build with the arrow keys and Enter.',
+        'An 8 by 8 floor to build on with cubes. Drag it to rotate it, click the floor or a cube to place a cube and shift-click a cube to remove it, in paint mode click a cube to recolor it and shift-click it to pick its color, or focus it and build with the arrow keys and Enter.',
         (dragYaw, dragPitch) => {
             yaw = dragYaw;
             pitch = dragPitch;
@@ -132,8 +241,20 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
                 <legend>mode</legend>
                 <label><input type="radio" name="voxel-mode" value="build" checked> build</label>
                 <label><input type="radio" name="voxel-mode" value="erase"> erase</label>
+                <label><input type="radio" name="voxel-mode" value="paint"> paint</label>
             </fieldset>
             <p class="voxel-readout"><span></span> <span aria-live="polite"></span> <span></span></p>
+            <details class="voxel-save">
+                <summary>save and load</summary>
+                <label>build as JSON <textarea rows="8" spellcheck="false" aria-describedby="voxel-save-fault"></textarea></label>
+                <p class="voxel-save-fault" id="voxel-save-fault"></p>
+                <div class="voxel-save-actions">
+                    <button type="button">export</button>
+                    <button type="button">load</button>
+                    <label>or a file <input type="file" accept=".json,application/json"></label>
+                    <a download="voxels.json" hidden>download voxels.json</a>
+                </div>
+            </details>
         </div>`
     );
 
@@ -146,6 +267,13 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     );
     const colorInputs = Array.from(host.querySelectorAll<HTMLInputElement>('[name=voxel-color]'));
     const modeInputs = Array.from(host.querySelectorAll<HTMLInputElement>('[name=voxel-mode]'));
+    const field = host.querySelector<HTMLTextAreaElement>('.voxel-save textarea')!;
+    const fault = host.querySelector<HTMLElement>('.voxel-save-fault')!;
+    const [exportButton, loadButton] = Array.from(
+        host.querySelectorAll<HTMLButtonElement>('.voxel-save button')
+    );
+    const fileInput = host.querySelector<HTMLInputElement>('.voxel-save [type=file]')!;
+    const download = host.querySelector<HTMLAnchorElement>('.voxel-save a')!;
 
     /** Whether the face of a cell in this direction shows: no cube and no floor behind it. */
     function isOpen(cell: Cell, face: CubeFaceName): boolean {
@@ -159,24 +287,26 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
         drawFloor();
 
         const voxels = [...built.values()].map((voxel) => makeCube(voxel));
-        if (target && !target.erase) {
+        const action = target?.action;
+        if (target && action === 'build') {
             voxels.push(makeCube({ ...target, color }, true));
         }
-        const erased = target?.erase ? keyOf(target) : undefined;
+        const marked = target && action !== 'build' ? keyOf(target) : undefined;
 
         // A face against another cube or the floor is dropped, so the DOM
-        // only holds the surface of the build.
-        joinCells(group, cubes, voxels, isOpen).attr(
-            'class',
-            (d) =>
-                `cube color-${d[0].color}${d[0].ghost ? ' ghost' : ''}${d[0].key === erased ? ' is-target' : ''}`
-        );
+        // only holds the surface of the build. The cube a click would erase,
+        // paint or pick carries a mark, and a paint shows the color it gives.
+        joinCells(group, cubes, voxels, isOpen).attr('class', (d) => {
+            const mark = d[0].key === marked ? action : undefined;
+            const shown = mark === 'paint' ? color : d[0].color;
+            return `cube color-${shown}${d[0].ghost ? ' ghost' : ''}${mark ? MARKS[mark] : ''}`;
+        });
 
         const faces = [...built.values()].reduce(
             (sum, voxel) => sum + FACES.filter((face) => isOpen(voxel, face)).length,
             0
         );
-        tally.textContent = `${built.size} cube${built.size === 1 ? '' : 's'} · ${faces} faces drawn`;
+        tally.textContent = `${plural(built.size)} · ${faces} faces drawn`;
     }
 
     /** The point of the floor plane under a pointer, in world units, or null when it misses. */
@@ -185,54 +315,54 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
         return cubes.unproject({ x, y }, { x: 0, y: 0, z: 0 }, { x: 0, y: 1, z: 0 });
     }
 
-    /** The first free cell of a column to build in, or its top cube to erase. */
-    function columnTarget(column: number, row: number, erase: boolean): Target | undefined {
+    /** The first free cell of a column to build in, or its top cube to erase, paint or pick. */
+    function columnTarget(column: number, row: number, action: Action): Target | undefined {
         let layer = 0;
         while (layer < H && built.has(keyOf({ column, layer, row }))) {
             layer += 1;
         }
-        if (erase) {
-            return layer > 0 ? { column, layer: layer - 1, row, erase } : undefined;
+        if (action !== 'build') {
+            return layer > 0 ? { column, layer: layer - 1, row, action } : undefined;
         }
-        return layer < H ? { column, layer, row, erase } : undefined;
+        return layer < H ? { column, layer, row, action } : undefined;
     }
 
     /**
      * Where a click at the pointer would land. Over a face the face names the
-     * cell: the cube itself to erase it, its neighbor to build. Anywhere
-     * else the floor plane under the pointer names the column.
+     * cell: the cube itself to erase, paint or pick it, its neighbor to
+     * build. Anywhere else the floor plane under the pointer names the column.
      */
     function targetAt(at: Pointer): Target | undefined {
-        const erase = erasing !== at.shiftKey;
+        const action = at.shiftKey ? SHIFTED[mode] : mode;
         const hit = document.elementFromPoint(at.clientX, at.clientY);
 
         if (hit && hit.matches('.face') && host.contains(hit)) {
             const face = select<Element, CubeFace<VoxelVertex>>(hit).datum();
             const { column, layer, row } = face[0];
-            if (erase) {
-                return { column, layer, row, erase };
+            if (action !== 'build') {
+                return { column, layer, row, action };
             }
             const next = neighborOf(face[0], face.face);
-            return inside(next) && !built.has(keyOf(next)) ? { ...next, erase } : undefined;
+            return inside(next) && !built.has(keyOf(next)) ? { ...next, action } : undefined;
         }
 
         const point = floorAt(at);
         const column = point ? Math.floor(point.x + HALF) : -1;
         const row = point ? Math.floor(point.z + HALF) : -1;
-        if (erase || !inside({ column, layer: 0, row })) {
+        if (action !== 'build' || !inside({ column, layer: 0, row })) {
             return undefined;
         }
-        return columnTarget(column, row, false);
+        return columnTarget(column, row, action);
     }
 
     /** Picks the target again from the pointer or the cursor, and draws it if it moved. */
     function retarget(): void {
-        const targetKey = (t: Target | undefined) => (t ? `${keyOf(t)} ${t.erase}` : '');
+        const targetKey = (t: Target | undefined) => (t ? `${keyOf(t)} ${t.action}` : '');
         const previous = target;
         target = hovering
             ? targetAt(hovering)
             : cursor
-              ? columnTarget(cursor.column, cursor.row, erasing)
+              ? columnTarget(cursor.column, cursor.row, mode)
               : undefined;
         const point = hovering ? floorAt(hovering) : null;
         floorText.textContent = point
@@ -243,16 +373,39 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
         }
     }
 
-    /** Builds or erases the cube of a target and tells what happened. */
+    /**
+     * Builds, erases, paints or picks the cube of a target and tells what
+     * happened. A paint or a pick changes no cell, so it adds or removes no
+     * element: the paint only swaps the class of the cube's group.
+     */
     function apply(change: Target): void {
         const key = keyOf(change);
-        const name = COLORS[change.erase ? built.get(key)!.color : color];
-        if (change.erase) {
-            built.delete(key);
-        } else {
-            built.set(key, { column: change.column, layer: change.layer, row: change.row, color });
+        const cube = built.get(key);
+        const where = `column ${change.column + 1}, row ${change.row + 1}, layer ${change.layer + 1}`;
+        if (change.action === 'pick') {
+            setColor(cube!.color);
+            status.textContent = `Picked ${COLORS[color]}.`;
+            return;
         }
-        status.textContent = `${change.erase ? 'Removed' : 'Placed'} ${/^[aeiou]/.test(name) ? 'an' : 'a'} ${name} cube at column ${change.column + 1}, row ${change.row + 1}, layer ${change.layer + 1}. ${built.size} cube${built.size === 1 ? '' : 's'}.`;
+        if (change.action === 'paint') {
+            // A new object, so the starter build keeps its colors for a reset.
+            built.set(key, { ...cube!, color });
+            status.textContent = `Painted the cube at ${where} ${COLORS[color]}, was ${COLORS[cube!.color]}.`;
+        } else {
+            const erase = change.action === 'erase';
+            const name = COLORS[erase ? cube!.color : color];
+            if (erase) {
+                built.delete(key);
+            } else {
+                built.set(key, {
+                    column: change.column,
+                    layer: change.layer,
+                    row: change.row,
+                    color
+                });
+            }
+            status.textContent = `${erase ? 'Removed' : 'Placed'} ${/^[aeiou]/.test(name) ? 'an' : 'a'} ${name} cube at ${where}. ${plural(built.size)}.`;
+        }
         target = undefined;
         retarget();
         render();
@@ -264,20 +417,60 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
         render();
     }
 
-    function setMode(erase: boolean): void {
-        erasing = erase;
-        modeInputs[erase ? 1 : 0].checked = true;
+    function setMode(next: Mode): void {
+        mode = next;
+        for (const input of modeInputs) {
+            input.checked = input.value === next;
+        }
         retarget();
     }
 
-    function reset(): void {
+    function reset(voxels = STARTER): void {
         built.clear();
-        for (const voxel of STARTER) {
+        for (const voxel of voxels) {
             built.set(keyOf(voxel), voxel);
         }
         target = undefined;
         retarget();
         render();
+    }
+
+    /** Shows the message of a load that failed on the field, or clears it. */
+    function showFault(message: string): void {
+        fault.textContent = message;
+        if (message) {
+            field.setAttribute('aria-invalid', 'true');
+            status.textContent = message;
+        } else {
+            field.removeAttribute('aria-invalid');
+        }
+    }
+
+    /** Writes the build into the field and points the download link at it. */
+    function save(): void {
+        const text = writeBuild([...built.values()]);
+        field.value = text;
+        showFault('');
+        if (fileUrl) {
+            URL.revokeObjectURL(fileUrl);
+        }
+        fileUrl = URL.createObjectURL(new Blob([text], { type: 'application/json' }));
+        download.href = fileUrl;
+        download.hidden = false;
+        status.textContent = `Exported ${plural(built.size)}.`;
+    }
+
+    /** Loads the text of a saved file: all of its cubes, or nothing at all. */
+    function load(text: string): void {
+        const voxels = readBuild(text);
+        if (typeof voxels === 'string') {
+            showFault(voxels);
+            return;
+        }
+        showFault('');
+        cursor = undefined;
+        reset(voxels);
+        status.textContent = `Loaded ${plural(voxels.length)}.`;
     }
 
     // The pointer is kept while no button is down, so the target follows the
@@ -308,7 +501,8 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     });
 
     // The arrow keys walk a cursor column over the floor; Enter builds on
-    // top of it and Delete takes its top cube away.
+    // top of it, or erases or paints its top cube, and Delete takes its top
+    // cube away.
     svg.on('keydown', (event: KeyboardEvent) => {
         const move = MOVES[event.key];
         if (move) {
@@ -317,7 +511,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
             cursor = cursor
                 ? { column: clamp(cursor.column + move[0]), row: clamp(cursor.row + move[1]) }
                 : { column: HALF, row: HALF };
-            const height = columnTarget(cursor.column, cursor.row, true)?.layer ?? -1;
+            const height = columnTarget(cursor.column, cursor.row, 'erase')?.layer ?? -1;
             status.textContent = `Column ${cursor.column + 1}, row ${cursor.row + 1}: ${height + 1} high.`;
             retarget();
             return;
@@ -327,14 +521,16 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
             apply(target);
         } else if ((event.key === 'Delete' || event.key === 'Backspace') && cursor) {
             event.preventDefault();
-            const top = columnTarget(cursor.column, cursor.row, true);
+            const top = columnTarget(cursor.column, cursor.row, 'erase');
             if (top) {
                 apply(top);
             }
         } else if (Number(event.key) >= 1 && Number(event.key) <= COLORS.length) {
             setColor(Number(event.key) - 1);
         } else if (event.key === 'e' || event.key === 'E') {
-            setMode(!erasing);
+            setMode(mode === 'erase' ? 'build' : 'erase');
+        } else if (event.key === 'p' || event.key === 'P') {
+            setMode(mode === 'paint' ? 'build' : 'paint');
         } else if (event.key === 'Escape') {
             cursor = undefined;
             retarget();
@@ -346,8 +542,28 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     }
 
     for (const input of modeInputs) {
-        input.addEventListener('change', () => setMode(input.value === 'erase'));
+        input.addEventListener('change', () => setMode(input.value as Mode));
     }
+
+    exportButton.addEventListener('click', save);
+    loadButton.addEventListener('click', () => load(field.value));
+
+    // A file goes through the same loader as a pasted text. Its size is
+    // checked before it is read, and its text lands in the field.
+    fileInput.addEventListener('change', async () => {
+        const file = fileInput.files?.[0];
+        fileInput.value = '';
+        if (!file) {
+            return;
+        }
+        if (file.size > MAX_TEXT) {
+            showFault('The file is over 64 KB.');
+            return;
+        }
+        const text = await file.text();
+        field.value = text;
+        load(text);
+    });
 
     button.text('reset').on('click', () => {
         reset();
@@ -357,6 +573,9 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     reset();
 
     return () => {
+        if (fileUrl) {
+            URL.revokeObjectURL(fileUrl);
+        }
         host.innerHTML = '';
         host.classList.remove('voxel-builder');
     };
@@ -496,10 +715,20 @@ const STYLES = `
     stroke-width: 1.5;
 }
 
-.voxel-builder .voxel-button {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
+/* A paint shows the color it gives under a dashed outline, a pick has a solid one. */
+.voxel-builder .is-paint .face {
+    stroke: var(--vb-ink);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 3;
+}
+
+.voxel-builder .is-pick .face {
+    stroke: var(--vb-ink);
+    stroke-width: 2.5;
+}
+
+.voxel-builder .voxel-button,
+.voxel-builder .voxel-save button {
     padding: 0.35rem 0.9rem;
     border: 1px solid var(--vb-line);
     border-radius: 8px;
@@ -509,7 +738,14 @@ const STYLES = `
     cursor: pointer;
 }
 
-.voxel-builder .voxel-button:hover {
+.voxel-builder .voxel-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+}
+
+.voxel-builder .voxel-button:hover,
+.voxel-builder .voxel-save button:hover {
     border-color: var(--vb-ink);
 }
 
@@ -567,5 +803,84 @@ const STYLES = `
 
 .voxel-builder .voxel-readout span:nth-child(2) {
     color: var(--vb-ink);
+}
+
+/* The save panel keeps the row short while it is closed, and takes a line of its own when open. */
+.voxel-builder .voxel-save[open] {
+    flex-basis: 100%;
+}
+
+.voxel-builder .voxel-save summary {
+    color: var(--vb-muted);
+    cursor: pointer;
+}
+
+.voxel-builder .voxel-save > label {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
+    color: var(--vb-muted);
+}
+
+.voxel-builder .voxel-save textarea {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--vb-line);
+    border-radius: 8px;
+    background: var(--vb-bg);
+    color: var(--vb-ink);
+    font-family: var(--vp-font-family-mono, monospace);
+    font-size: 0.8rem;
+    resize: vertical;
+}
+
+.voxel-builder .voxel-save textarea[aria-invalid='true'] {
+    border-color: var(--vb-erase);
+    outline: 1px solid var(--vb-erase);
+}
+
+.voxel-builder .voxel-save-fault {
+    margin: 0.25rem 0 0;
+    color: var(--vb-erase);
+}
+
+.voxel-builder .voxel-save-fault:empty {
+    display: none;
+}
+
+.voxel-builder .voxel-save-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    margin-top: 0.5rem;
+}
+
+.voxel-builder .voxel-save-actions label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    max-width: 100%;
+    color: var(--vb-muted);
+}
+
+.voxel-builder .voxel-save [type='file'] {
+    max-width: 100%;
+    color: var(--vb-muted);
+    font: inherit;
+}
+
+.voxel-builder .voxel-save a {
+    color: var(--vb-ink);
+    text-decoration: underline;
+}
+
+/* At phone width the panel takes a line of its own, open or closed. */
+@media (max-width: 640px) {
+    .voxel-builder .voxel-save {
+        flex-basis: 100%;
+    }
 }
 `;

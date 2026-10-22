@@ -49,9 +49,10 @@ export function joinFaces<Datum, Parent extends BaseType, ParentDatum>(
 /**
  * Joins one group per cube of a grid, keyed by the key on its vertices, and
  * paints the groups back to front: equal cubes on a grid sort exactly by
- * their centers. Of every cube only the faces that `isOpen` keeps are
- * joined, so a face against another cube or the floor never reaches the
- * DOM. Returns the groups.
+ * their centers. The cubes are sorted before the join, so a group only
+ * moves in the DOM when the order changes. Of every cube only the faces
+ * that `isOpen` keeps are joined, so a face against another cube or the
+ * floor never reaches the DOM. Returns the groups.
  */
 export function joinCells<Datum extends Point3D & Cell & { key: string }>(
     group: Selection<SVGGElement, unknown, null, undefined>,
@@ -61,9 +62,8 @@ export function joinCells<Datum extends Point3D & Cell & { key: string }>(
 ): Selection<SVGGElement, CellCube<Datum>, SVGGElement, unknown> {
     const cubeGroups = group
         .selectAll<SVGGElement, CellCube<Datum>>('g')
-        .data(cubes.data(data) as CellCube<Datum>[], (d) => d[0].key)
-        .join('g')
-        .sort(sort);
+        .data((cubes.data(data) as CellCube<Datum>[]).sort(sort), (d) => d[0].key)
+        .join('g');
 
     joinFaces(
         cubeGroups.selectAll<SVGPathElement, CubeFace<Datum>>('path').data(
