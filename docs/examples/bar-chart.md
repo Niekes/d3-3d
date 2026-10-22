@@ -93,9 +93,16 @@ label counts while the bar grows or shrinks:
 
 The bars do not overlap each other, but the six faces of one bar do. The
 `sort` utility orders by the depth of a centroid,
-so the chart sorts at two levels: the cube groups by the depth of the cube
-centroid, and inside each group the faces and the label by the depth of
-theirs:
+so the chart sorts at two levels: the cube groups by the depth of their
+footprint, and inside each group the faces and the label by the depth of
+theirs. The bars stand on one floor, so the footprint is the right depth:
+the centre of a tall bar sits high up, and seen from above it would paint
+over a short bar in front of it. A cube has the centroid of its `bottom`
+face at hand:
+
+```ts
+centroid: cube.faces.find((face) => face.face === 'bottom').centroid;
+```
 
 ```ts
 group.selectAll('g.cube').sort(sort);

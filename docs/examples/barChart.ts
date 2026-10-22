@@ -31,7 +31,7 @@ const SPEC: AxesSpec = {
 /** One vertex of a bar: a point that carries the id and the height of its bar. */
 type BarVertex = Point3D & { id: string; height: number };
 
-/** One bar after the projection: the transformed cube plus its own label. */
+/** One bar after the projection, with the centroid of its footprint to sort by. */
 type BarCube = Cube<BarVertex> & { id: string; height: number; centroid: Point3D };
 
 /** The datum of a label: the height to show and the centre of the top face. */
@@ -78,6 +78,10 @@ export function mountBarChart(host: HTMLElement): () => void {
      * Projects the bars and re-attaches their labels. The transform returns
      * fresh arrays, but every transformed vertex keeps the properties of
      * its input, so the id and the height are still on the first vertex.
+     *
+     * The bars stand on one floor, so they sort by their footprint: the
+     * centre of a tall bar sits high up, and seen from above it would paint
+     * over a short bar in front of it.
      */
     function project(): BarCube[] {
         return cubes.data(bars).map((cube) => {
@@ -85,7 +89,7 @@ export function mountBarChart(host: HTMLElement): () => void {
             return Object.assign(cube, {
                 id: first.id,
                 height: first.height,
-                centroid: cube.centroid as Point3D
+                centroid: cube.faces!.find((face) => face.face === 'bottom')!.centroid
             });
         });
     }
