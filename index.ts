@@ -5,6 +5,7 @@
 
 // Shape factories - one per shape module under src/shapes.
 export { axes3D } from './src/shapes/axes';
+export { camera3D } from './src/shapes/shape';
 export { cubes3D } from './src/shapes/cubes';
 export { gridPlanes3D } from './src/shapes/gridPlanes';
 export { iso3D } from './src/shapes/iso';
@@ -29,7 +30,7 @@ export type { HasCentroid } from './src/sort';
 export type { OrthographicOptions } from './src/projection-orthographic';
 
 // The shape contract that every shape instance implements.
-export type { ShapeInstance } from './src/shapes/shape';
+export type { Camera3DInstance, ShapeInstance } from './src/shapes/shape';
 
 // Shape result types - one per shape module under src/shapes.
 export type { AxisEdge, AxisWall } from './src/shapes/axes';

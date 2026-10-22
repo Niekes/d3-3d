@@ -93,6 +93,9 @@ import {
     lines3D
 } from 'd3-3d';
 
+// Import the camera that several shapes, a canvas or WebGL can share
+import { camera3D } from 'd3-3d';
+
 // Import utility function for sorting
 import { sort } from 'd3-3d';
 
@@ -110,6 +113,8 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 - [.draw()](#drawshape) - draw SVG path for a shape.
 - [.unproject()](#unprojectpoint-planepoint-planenormal) - map a screen point back to a 3D point on a plane.
 - [.matrix()](#matrix) - the projection as a 4×4 matrix, for canvas and WebGL.
+- [.camera()](#cameracamera) - share one view between shapes and a `camera3D()`.
+- [.viewDirection()](#viewdirection) - the direction towards the viewer, in world coordinates.
 
 **Configuration Methods:**
 
@@ -381,6 +386,30 @@ unit screen vector away from the box, square to the edge.
 See the [scatter plot](https://niekes.github.io/d3-3d/examples/scatter-plot)
 for a complete chart.
 
+### One camera
+
+`camera3D()` is a camera without data: the scale, origin, rotation and rotation center of a scene. Shapes hang on it with [`.camera()`](#cameracamera), so turning the camera turns them all, and the same camera hands its projection to a canvas or to WebGL:
+
+```typescript
+import { camera3D, cubes3D, axes3D, projectPositions } from 'd3-3d';
+
+const camera = camera3D().scale(40).origin({ x: 480, y: 250 });
+const bars = cubes3D().camera(camera);
+const box = axes3D().camera(camera);
+
+camera.rotateY(yaw).rotateX(pitch); // turns the bars and the box
+
+// SVG
+svg.selectAll('path').data(faces).join('path').attr('d', bars.draw);
+
+// Canvas
+context.fill(new Path2D(bars.draw(face)));
+projectPositions(positions, camera.matrix(), screen);
+
+// WebGL
+gl.uniformMatrix4fv(matrixLocation, false, camera.matrix());
+```
+
 ### API Methods
 
 #### .data(_data_)
@@ -637,13 +666,13 @@ Use it when the SVG DOM is too slow for the number of points: `.data()` builds a
 **Example (WebGL):**
 
 ```typescript
-const view = points3D().scale(40).origin({ x: 480, y: 250 }).rotateX(-0.5).rotateY(0.6);
+const camera = camera3D().scale(40).origin({ x: 480, y: 250 }).rotateX(-0.5).rotateY(0.6);
 
-gl.uniformMatrix4fv(matrixLocation, false, view.matrix());
+gl.uniformMatrix4fv(matrixLocation, false, camera.matrix());
 ```
 
 ```glsl
-uniform mat4 u_matrix; // view.matrix(), in CSS pixels
+uniform mat4 u_matrix; // camera.matrix(), in CSS pixels
 uniform vec2 u_size;   // the canvas size, in CSS pixels
 attribute vec3 a_position;
 
@@ -651,6 +680,32 @@ void main() {
     vec4 p = u_matrix * vec4(a_position, 1.0);
     gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, 0.0, 1.0);
 }
+```
+
+#### .camera(_camera_)
+
+Shares the view of _camera_ - a `camera3D()` or another shape: its scale, origin, rotation and rotation center. From then on, turning, scaling or moving either of them changes both. The shape gives up the view it had, so call `.camera()` before the other setters, and hang all shapes of a scene on one camera.
+
+**Available on:** All shapes and `camera3D()`
+
+**Returns:** `this` (for chaining)
+
+See [One camera](#one-camera) for an example.
+
+#### .viewDirection()
+
+Returns the direction from the scene towards the viewer, a unit vector in world coordinates. The rotated depth of a point _p_ is `dot(viewDirection, p − center) + center.z`, and a face whose normal points along it faces the camera. It tells which side of a box shows, which end of a grid is near, or the normal of a plane that faces the camera, for dragging with [`.unproject()`](#unprojectpoint-planepoint-planenormal).
+
+**Available on:** All shapes and `camera3D()`
+
+**Returns:** `Point3D`
+
+**Example:**
+
+```typescript
+const v = camera.viewDirection();
+const topShows = v.y < 0; // up is -y, as on the screen
+const facing = camera.unproject(pointer, grabbed, v); // drag in the plane that faces the camera
 ```
 
 #### .rows(_rows_)
@@ -724,14 +779,14 @@ Projects packed x, y, z triples through a [`.matrix()`](#matrix) into a `Float32
 **Usage:**
 
 ```typescript
-import { points3D, projectPositions } from 'd3-3d';
+import { camera3D, projectPositions } from 'd3-3d';
 
 const positions = new Float32Array(data.flatMap((d) => [d.x, d.y, d.z]));
 const screen = new Float32Array(positions.length);
-const view = points3D().scale(40).origin({ x: 480, y: 250 });
+const camera = camera3D().scale(40).origin({ x: 480, y: 250 });
 
 function frame(angle: number) {
-    projectPositions(positions, view.rotateY(angle).matrix(), screen);
+    projectPositions(positions, camera.rotateY(angle).matrix(), screen);
     context.clearRect(0, 0, width, height);
     for (let i = 0; i < screen.length; i += 3) {
         context.fillRect(screen[i] - 1, screen[i + 1] - 1, 2, 2);

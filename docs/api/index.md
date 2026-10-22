@@ -72,6 +72,18 @@ The projection as a column-major 4×4 `Float32Array`, for a WebGL uniform or
 for `projectPositions`. It maps a world point to its screen x and y, and its
 `rotated` z as the depth.
 
+### `.camera(camera)` {#camera}
+
+Share the view of a `camera3D()` or another shape: turning, scaling or
+moving either changes both. Call it before the other setters, the shape gives
+up the view it had.
+
+### `.viewDirection()` {#viewdirection}
+
+The direction from the scene towards the viewer, a unit vector in world
+coordinates: which side of a box shows, which end of a grid is near, the
+normal of a plane that faces the camera.
+
 ## Configuration Methods
 
 Every setter returns the shape, so the calls chain. Called without an

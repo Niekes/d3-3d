@@ -9,10 +9,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `camera3D`: a camera without data. Shapes share its view with
+  `.camera(camera)`, so turning the camera turns them all, and its
+  `.matrix()` serves a canvas or WebGL.
+- `.viewDirection()` on every shape and camera: the unit vector towards the
+  viewer, in world coordinates.
+- `.matrix()` on every shape: the projection as a column-major 4×4 matrix,
+  for a WebGL uniform. `projectPositions` projects packed x, y, z triples
+  through it into a reusable `Float32Array`.
+
 - `axes3D`: the box of a 3D chart. `.data(spec)` returns the six walls with
   their gridlines and `ccw`, `.draw(wall)` their paths, and `.axes(spec)` the
   three axes on the outline of the box, with their ticks and the direction
   that points away from the box.
+
+### Fixed
+
+- `draw` of `planes3D`, `polygons3D`, `triangles3D` and `lineStrips3D` is
+  typed to take the transformed points that `.data()` returns, not raw
+  points.
 
 ## [2.1.0] - 2026-10-21
 
