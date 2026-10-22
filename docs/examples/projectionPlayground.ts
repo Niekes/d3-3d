@@ -5,9 +5,9 @@ import type { CubeFace, Point3D, ShapeInstance } from '../../index';
 /*
  * A projection playground: one cube, its renderer call and its vertices
  * beside the SVG they project to. The sliders set the rotation, the scale,
- * the origin and the rotation center of three renderers at once, and every
- * input draws the figure, the code and the table again. The styles live in
- * this file too, so the file is all a copy needs.
+ * the origin, the rotation center and the perspective of three renderers at
+ * once, and every input draws the figure, the code and the table again. The
+ * styles live in this file too, so the file is all a copy needs.
  */
 
 /** A slider: the input name, the line of the renderer call it sets and its range. */
@@ -20,6 +20,9 @@ type Control = {
     step: number;
     value: number;
 };
+
+/** The right end of the perspective slider, which stands for an eye infinitely far away. */
+const FAR = 30;
 
 const FIELDSETS: [string, Control[]][] = [
     [
@@ -56,6 +59,20 @@ const FIELDSETS: [string, Control[]][] = [
             step: 0.1,
             value: 0
         }))
+    ],
+    [
+        'perspective, the distance of the eye in model units',
+        [
+            {
+                name: 'perspective',
+                line: 'perspective',
+                label: '',
+                min: 4,
+                max: FAR,
+                step: 0.5,
+                value: FAR
+            }
+        ]
     ]
 ];
 
@@ -117,6 +134,11 @@ const PRESETS: Preset[] = [
         name: 'corner pivot',
         note: 'The rotation center sits on corner 3. Move any rotation slider: the cube turns, corner 3 stays put.',
         values: { centerX: 1, centerY: -1, centerZ: 1, originX: 170, originY: 210 }
+    },
+    {
+        name: 'perspective',
+        note: 'The eye sits 5 units in front of the rotation center. Near edges grow, far ones shrink, and the parallel edges run towards a vanishing point. At the right end of the slider the eye is infinitely far away: orthographic.',
+        values: { rotateX: -0.45, rotateY: 0.6, perspective: 5 }
     },
     {
         name: 'orbit',
@@ -440,6 +462,7 @@ export function mountProjectionPlayground(host: HTMLElement): () => void {
 
     const value = (name: string) =>
         (form.elements.namedItem(name) as HTMLInputElement).valueAsNumber;
+    const distance = () => (value('perspective') === FAR ? Infinity : value('perspective'));
 
     /** Hands the sliders to every renderer and draws the figure, the code and the table. */
     function draw(): void {
@@ -452,7 +475,8 @@ export function mountProjectionPlayground(host: HTMLElement): () => void {
                 .rotateZ(value('rotateZ'))
                 .scale(value('scale'))
                 .origin(origin)
-                .rotationCenter(center);
+                .rotationCenter(center)
+                .perspective(distance());
         }
 
         const [cube] = cube3d.data([CUBE]);
@@ -517,6 +541,7 @@ export function mountProjectionPlayground(host: HTMLElement): () => void {
                 'rotationCenter',
                 `    .rotationCenter({ x: ${center.x}, y: ${center.y}, z: ${center.z} })`
             ],
+            ['perspective', `    .perspective(${distance()})`],
             ['', '    .data([cube]);']
         ];
         code.selectAll('span')
@@ -547,7 +572,8 @@ export function mountProjectionPlayground(host: HTMLElement): () => void {
             .text(String);
 
         for (const slider of sliders) {
-            slider.nextElementSibling!.textContent = slider.value;
+            slider.nextElementSibling!.textContent =
+                slider.name === 'perspective' && distance() === Infinity ? '∞' : slider.value;
         }
     }
 

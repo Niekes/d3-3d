@@ -1,6 +1,6 @@
 import { TransformedPoint, Point3D, TransformOptions } from './types';
 import { rotate, rotationMatrix } from './rotation';
-import { orthographic } from './projection-orthographic';
+import { perspective } from './projection-perspective';
 
 export function transform<Datum = Point3D>(
     data: Datum[],
@@ -22,9 +22,11 @@ export function transform<Datum = Point3D>(
 
         const rotated = rotate(m, startPoint, options.rotateCenter);
 
-        const projected = orthographic(rotated, {
+        const projected = perspective(rotated, {
             scale: options.scale,
-            origin: options.origin
+            origin: options.origin,
+            rotateCenter: options.rotateCenter,
+            distance: options.perspective ?? Infinity
         });
 
         return {

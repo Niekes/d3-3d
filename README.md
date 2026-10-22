@@ -58,7 +58,7 @@ Prefer a one-off? The [sponsor page](https://github.com/sponsors/niekes) also ta
 - ✅ **Automatic centroid calculation** for all shapes
 - ✅ **Counter-clockwise orientation detection** for polygons
 - ✅ **Generic types** for type-safe data transformations
-- ✅ **Orthographic projection** for SVG rendering, and as a matrix for canvas and WebGL
+- ✅ **Orthographic and perspective projection** for SVG rendering, and as a matrix for canvas and WebGL
 - ✅ **Sorting utilities** for proper z-ordering (painter's algorithm)
 
 ## Installing
@@ -127,6 +127,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 - [.rotateZ()](#rotatezanglez) - set the angle for the z rotation.
 - [.rotationCenter()](#rotationcenterpoint) - set the rotation center.
 - [.origin()](#originorigin) - set the 2D rendering origin.
+- [.perspective()](#perspectivedistance) - set the distance of the eye, for a perspective view.
 - [.rows()](#rowsrows) - set the points per row (gridPlanes3D only).
 
 **Utility Functions:**
@@ -142,7 +143,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 
 ### Overview
 
-**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering) and [orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection) to display your data on the screen. It will calculate the centroid for all elements and the orientation for your polygons. Due to the fact that SVG isn't very 3d compatible **d3-3d** adds 3d transformations to SVG.
+**d3-3d** uses the [browser's coordinate system](https://www.w3.org/TR/css-transforms-1/#transform-rendering) and [orthographic projection](https://en.wikipedia.org/wiki/Orthographic_projection), or with [`.perspective()`](#perspectivedistance) a perspective one, to display your data on the screen. It will calculate the centroid for all elements and the orientation for your polygons. Due to the fact that SVG isn't very 3d compatible **d3-3d** adds 3d transformations to SVG.
 
 With **d3-3d** you can easily visualize your 3d data with full TypeScript support.
 
@@ -276,7 +277,8 @@ All shapes share the same API for configuration, but differ in their input data 
 it hands out the **affine frame of a face**: the SVG matrix that carries the
 local coordinates of the face onto the screen. Because the projection is
 orthographic, the image of a plane stays affine, so the browser rasterises
-the transform and the projection itself costs nothing at runtime.
+the transform and the projection itself costs nothing at runtime. For the
+same reason `iso3D` is always orthographic and ignores `.perspective()`.
 
 ```typescript
 import { iso3D, sort } from 'd3-3d';
@@ -628,6 +630,24 @@ If _origin_ is specified, sets the 2D rendering origin to the specified point an
 
 _Default:_ `{ x: 0, y: 0 }`
 
+#### .perspective(_distance_)
+
+If _distance_ is specified, sets the distance of the eye from the rotation center, in world units, and returns the shape instance for chaining. If _distance_ is not specified, returns the current distance.
+
+The default, `Infinity`, is the orthographic projection. A finite distance gives a perspective, like CSS `perspective`: the plane through the rotation center keeps the `scale`, nearer things grow and farther ones shrink, by `distance / (distance − (rotated.z − rotationCenter.z))`. A small distance is a strong perspective, a large one a weak one.
+
+The scene has to lie in front of the eye, closer to the rotation center than _distance_ along the view axis. WebGL clips what does not, SVG and a 2D canvas cannot.
+
+Everything else carries over: [`sort`](#sort) still sorts by the depth along the view axis, `ccw` winds on the screen, [`.unproject()`](#unprojectpoint-planepoint-planenormal) casts its rays from the eye and [`.matrix()`](#matrix) gets a w. The eye sits at `rotationCenter + distance · viewDirection`, and a face faces it where `dot(normal, eye − vertex) > 0`. Circles stay the same size: scale a radius by the factor above to shrink the far ones. The projection itself is the utility `perspective(point, options)`.
+
+**Available on:** All shapes and `camera3D()`
+
+_Default:_ `Infinity`
+
+```typescript
+const camera = camera3D().scale(80).origin({ x: 480, y: 250 }).rotateY(0.6).perspective(6);
+```
+
 #### .unproject(_point_, _planePoint_, _planeNormal_)
 
 Maps a screen point back into the scene: returns the world point on the plane through _planePoint_ with the normal _planeNormal_ that the shape projects to _point_. It is the inverse of `.data()` for points on a known plane, which is what dragging along a floor or reading the coordinates under the pointer needs.
@@ -643,7 +663,7 @@ Maps a screen point back into the scene: returns the world point on the plane th
 **Returns:**
 
 - The `Point3D` on the plane, in world coordinates (the values the `x`, `y` and `z` accessors return)
-- `null` if the plane is seen edge-on
+- `null` if the plane is seen edge-on, or meets the ray only behind the eye
 
 **Example:**
 
@@ -664,6 +684,8 @@ Returns the projection of the shape - its scale, origin, rotation and rotation c
 Use it when the SVG DOM is too slow for the number of points: `.data()` builds an object per point, the matrix projects millions of them on the GPU, or on the CPU with [`projectPositions`](#projectpositions).
 
 Given a _viewport_, the matrix maps to clip space instead, ready for `gl_Position`: x and y from -1 to 1 with y up, and the depth from -1 at the near side to 1 at the far side.
+
+With a [`.perspective()`](#perspectivedistance) the matrix has a w: divide x and y by it, as `projectPositions` and the GPU do. In clip space the _depth_ then has to be less than the distance of the eye.
 
 **Available on:** All shapes and `camera3D()`
 
@@ -702,7 +724,7 @@ See [One camera](#one-camera) for an example.
 
 #### .viewDirection()
 
-Returns the direction from the scene towards the viewer, a unit vector in world coordinates. The rotated depth of a point _p_ is `dot(viewDirection, p − center) + center.z`, and a face whose normal points along it faces the camera. It tells which side of a box shows, which end of a grid is near, or the normal of a plane that faces the camera, for dragging with [`.unproject()`](#unprojectpoint-planepoint-planenormal).
+Returns the direction from the scene towards the viewer, a unit vector in world coordinates. The rotated depth of a point _p_ is `dot(viewDirection, p − center) + center.z`, and a face whose normal points along it faces the camera. In perspective the eye sits at `center + perspective · viewDirection`, and a face faces it where its normal points towards the eye. It tells which side of a box shows, which end of a grid is near, or the normal of a plane that faces the camera, for dragging with [`.unproject()`](#unprojectpoint-planepoint-planenormal).
 
 **Available on:** All shapes and `camera3D()`
 
@@ -782,9 +804,11 @@ interface HasCentroid {
 
 **Things on a floor:** bars or buildings that stand on one floor sort by their footprint. Give each the `centroid` of its `bottom` face: the centre of a tall box sits high up, so seen from above it would paint over a short box in front of it. A long line sorts by its middle; cut it with [`strips()`](#strips) so every piece sorts on its own depth.
 
+**Perspective:** the rotated z is the depth along the view axis in a perspective too, so `sort` works unchanged.
+
 ### projectPositions()
 
-Projects packed x, y, z triples through a [`.matrix()`](#matrix) into a `Float32Array`: screen x, screen y and depth, three numbers per point. Pass the same `out` buffer every frame and a canvas can redraw a large point cloud without allocating.
+Projects packed x, y, z triples through a [`.matrix()`](#matrix) into a `Float32Array`: screen x, screen y and depth, three numbers per point. x and y are divided by the w of a perspective matrix, the depth stays the rotated z. Pass the same `out` buffer every frame and a canvas can redraw a large point cloud without allocating.
 
 **Usage:**
 
@@ -988,7 +1012,7 @@ if (data[0].ccw) {
 }
 ```
 
-**Algorithm:** Uses the shoelace formula on the rotated 2D projection to determine orientation.
+**Algorithm:** Uses the shoelace formula on the projected points, so it holds in a perspective too.
 
 #### rotated
 
@@ -1001,7 +1025,7 @@ console.log(data[0].rotated); // { x: number, y: number, z: number }
 
 #### projected
 
-2D screen coordinates after orthographic projection. Available on each individual point.
+2D screen coordinates after the projection, orthographic or perspective. Available on each individual point.
 
 ```typescript
 const data = points3D().data(myPoints);

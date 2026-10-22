@@ -6,14 +6,18 @@ import { rotationMatrix } from './rotation';
  * `gl.uniformMatrix4fv` expects. A world point maps to its screen x and y
  * and, as z, to its rotated z: the depth `sort` reads.
  *
- * The projection is orthographic, so it is affine: the screen point is
+ * The orthographic projection is affine: the screen point is
  * `origin + scale · (R · p + c − R · c)` for the rotation `R` around the
- * center `c`, and one matrix carries all of it.
+ * center `c`, and w is 1. In perspective, w is the distance from the eye
+ * along the view axis over `perspective`, 1 in the plane of the center, and
+ * x and y divided by w are the screen point.
  *
  * Given the `width` and `height` of the canvas in the same pixels, the
  * matrix maps to clip space instead, ready for `gl_Position`: x and y from
  * -1 to 1 with y up, and the depth within `depth` of the center from -1 at
- * the near side to 1 at the far side. Without a `depth`, z is 0.
+ * the near side to 1 at the far side. Without a `depth`, z is 0. In
+ * perspective, `depth` has to be less than `perspective`, so that the near
+ * side lies in front of the eye.
  */
 export function projectionMatrix(
     options: Omit<TransformOptions<unknown>, 'x' | 'y' | 'z'>,
@@ -39,14 +43,25 @@ export function projectionMatrix(
         o.x + s * tx, o.y + s * ty, tz, 1
     ];
 
-    if (viewport) {
-        const { width, height, depth } = viewport;
-        // Row by row on every column; the fourth row is w, 0 or 1.
-        for (let column = 0; column < 16; column += 4) {
-            const w = matrix[column + 3];
+    const d = options.perspective ?? Infinity;
+
+    // Row by row on every column; the fourth row is 0 or 1 so far.
+    for (let column = 0; column < 16; column += 4) {
+        const one = matrix[column + 3];
+        const z = matrix[column + 2];
+        // w is `one` again for an eye infinitely far away.
+        const w = one - (z - c.z * one) / d;
+        matrix[column] += (o.x + s * c.x) * (w - one);
+        matrix[column + 1] += (o.y + s * c.y) * (w - one);
+        matrix[column + 3] = w;
+
+        if (viewport) {
+            const { width, height, depth } = viewport;
             matrix[column] = (2 * matrix[column]) / width - w;
             matrix[column + 1] = w - (2 * matrix[column + 1]) / height;
-            matrix[column + 2] = depth ? (c.z * w - matrix[column + 2]) / depth : 0;
+            // Near and far at `d ∓ depth` from the eye; the term over `d`
+            // vanishes for an orthographic view.
+            matrix[column + 2] = depth ? (c.z * one - z + (depth * depth * one) / d) / depth : 0;
         }
     }
 
@@ -57,6 +72,9 @@ export function projectionMatrix(
  * Projects packed x, y, z triples through `matrix` into `out`: screen x,
  * screen y and depth, three numbers per point. Pass the same `out` every
  * frame to project a large point cloud without allocating.
+ *
+ * x and y are divided by w, which is 1 unless the matrix is perspective.
+ * The depth is not, so it stays the rotated z that `sort` reads.
  */
 export function projectPositions(
     positions: ArrayLike<number>,
@@ -68,8 +86,10 @@ export function projectPositions(
         const y = positions[i + 1];
         const z = positions[i + 2];
 
-        out[i] = matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12];
-        out[i + 1] = matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13];
+        const w = matrix[3] * x + matrix[7] * y + matrix[11] * z + matrix[15];
+
+        out[i] = (matrix[0] * x + matrix[4] * y + matrix[8] * z + matrix[12]) / w;
+        out[i + 1] = (matrix[1] * x + matrix[5] * y + matrix[9] * z + matrix[13]) / w;
         out[i + 2] = matrix[2] * x + matrix[6] * y + matrix[10] * z + matrix[14];
     }
 

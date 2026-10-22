@@ -35,6 +35,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.draw()` on `lines3D`.
 - `axis` and `side` on the walls of `axes3D`.
 - `topWidth` and `topDepth` on `box`, for tapered shafts, ridges and apexes.
+- `.perspective(distance)` on every shape and camera, back after its removal
+  in 2017 (#16): the distance of the eye from the rotation center. The
+  default, `Infinity`, is the orthographic projection as before. `transform`,
+  `.matrix()`, `projectPositions` and `.unproject()` follow it, and
+  `perspective(point, options)` is the projection itself. `iso3D` stays
+  orthographic.
+
+### Changed
+
+- `ccw` reads the winding of the `projected` points instead of the `rotated`
+  ones, so that it holds in perspective. The result is the same for an
+  orthographic projection.
 
 ### Fixed
 

@@ -99,6 +99,30 @@ and shrinks around the origin with the scale.
 The screen y grows downwards, as in SVG, so the y axis of the model points
 down until a rotation turns it.
 
+## Perspective puts an eye in front of the center
+
+`.perspective(distance)` puts an eye `distance` model units in front of the
+rotation center, on the z axis that points at you. A rotated point is
+scaled around the center by `distance / (distance − (z − center.z))`: 1 in
+the plane of the center, more for the near corners and less for the far
+ones.
+
+```ts
+export function perspective(d, options) {
+    const c = options.rotateCenter;
+    const k1 = 1 / (1 - (d.z - c.z) / options.distance) - 1;
+
+    return {
+        x: options.origin.x + options.scale * (d.x + (d.x - c.x) * k1),
+        y: options.origin.y + options.scale * (d.y + (d.y - c.y) * k1)
+    };
+}
+```
+
+The right end of the slider is `Infinity`, the default: `k1` is 0, and the
+projection is orthographic again. The `sort` of the faces does not change,
+because the rotated z is still the depth along the line of sight.
+
 ## A transformed point keeps everything
 
 A transformed point is the input point with two fields added: `rotated`,

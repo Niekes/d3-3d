@@ -7,7 +7,8 @@ import { Point3D } from './types';
  * It points to the side from which the vertices run counter-clockwise on
  * the screen, where y grows downwards: the side `ccw` reports. So the faces
  * of `cubes3D` point outwards, and a face faces the camera where
- * `dot(normal, viewDirection) > 0`.
+ * `dot(normal, viewDirection) > 0`, or in perspective where
+ * `dot(normal, eye − vertex) > 0`.
  *
  * Returns the zero vector for a polygon without an area.
  */

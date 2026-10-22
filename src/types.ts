@@ -36,6 +36,8 @@ export interface TransformOptions<Datum> {
     rotateY: number;
     rotateZ: number;
     scale: number;
+    /** The distance of the eye from the rotation center; `Infinity`, the default, is orthographic. */
+    perspective?: number;
     x: (point: Datum) => number;
     y: (point: Datum) => number;
     z: (point: Datum) => number;

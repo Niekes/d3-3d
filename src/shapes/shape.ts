@@ -15,6 +15,9 @@ export interface Camera3DInstance {
     origin(): Point2D;
     origin(origin: Point2D): this;
 
+    perspective(): number;
+    perspective(distance: number): this;
+
     rotateX(): number;
     rotateX(angle: number): this;
 
@@ -50,9 +53,10 @@ export interface ShapeInstance<Datum = Point3D> extends Camera3DInstance {
 
 export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     // One object, so that `camera()` can share it between renderers.
-    private view: Omit<TransformOptions<unknown>, 'x' | 'y' | 'z'> = {
+    private view: Required<Omit<TransformOptions<unknown>, 'x' | 'y' | 'z'>> = {
         scale: 1,
         origin: { x: 0, y: 0 },
+        perspective: Infinity,
         rotateX: 0,
         rotateY: 0,
         rotateZ: 0,
@@ -72,6 +76,21 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     origin(origin: Point2D): this;
     origin(origin?: Point2D): this | Point2D {
         return origin === undefined ? this.view.origin : ((this.view.origin = origin), this);
+    }
+
+    /**
+     * The distance of the eye from the rotation center, in model units:
+     * `Infinity`, the default, is orthographic. The plane of the center
+     * keeps the `scale`, nearer things grow and farther ones shrink. The
+     * scene has to lie in front of the eye, closer to the center than the
+     * distance.
+     */
+    perspective(): number;
+    perspective(distance: number): this;
+    perspective(distance?: number): this | number {
+        return distance === undefined
+            ? this.view.perspective
+            : ((this.view.perspective = distance), this);
     }
 
     rotationCenter(): Point3D;
@@ -154,7 +173,9 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
      * The direction from the scene towards the viewer, a unit vector in
      * world coordinates: the rotated depth of a point `p` is
      * `dot(viewDirection, p − center) + center.z`. A face whose normal
-     * points along it faces the camera.
+     * points along it faces the camera. In perspective the eye sits at
+     * `center + perspective · viewDirection`, and a face faces the camera
+     * where its normal points towards the eye, as `ccw` reports.
      */
     viewDirection(): Point3D {
         const m = rotationMatrix({

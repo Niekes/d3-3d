@@ -16,8 +16,8 @@ features:
       details: Full type definitions ship with the package. No @types needed.
     - title: Automatic centroids
       details: Every transformed shape includes centroid, ccw, rotated and projected properties.
-    - title: Orthographic projection
-      details: Projects 3D data onto 2D SVG using orthographic projection.
+    - title: Orthographic and perspective projection
+      details: Projects 3D data onto 2D SVG, a canvas or WebGL, orthographic or in perspective.
     - title: Sorting utilities
       details: Built-in sort for correct z-ordering (painter's algorithm).
 ---

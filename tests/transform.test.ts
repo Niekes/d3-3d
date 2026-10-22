@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vite-plus/test';
-import { transform } from '../index';
+import { perspective, transform } from '../index';
 import { Point3D, TransformOptions } from '../index';
 
 describe('transform', () => {
@@ -61,6 +61,23 @@ describe('transform', () => {
         expect(result[0].rotated.x).toBe(6.123233995736766e-17);
         expect(result[0].rotated.y).toBe(1);
         expect(result[0].rotated.z).toBe(0);
+    });
+
+    test('should project in perspective', () => {
+        const data = [{ x: 1, y: 2, z: 3 }];
+        const options: TransformOptions<Point3D> = {
+            ...defaultOptions,
+            scale: 100,
+            origin: { x: 50, y: 50 },
+            rotateY: 0.5,
+            perspective: 8
+        };
+        const [point] = transform(data, options);
+
+        expect(point.projected).toEqual(perspective(point.rotated, { ...options, distance: 8 }));
+        expect(point.projected).not.toEqual(
+            transform(data, { ...options, perspective: undefined })[0].projected
+        );
     });
 
     test('should work with custom data types', () => {

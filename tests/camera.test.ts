@@ -18,7 +18,8 @@ describe('camera3D', () => {
         expect(camera.rotateY()).toBe(0);
         expect(camera.rotateZ()).toBe(0);
         expect(camera.rotationCenter()).toEqual({ x: 0, y: 0, z: 0 });
-        expect(camera.scale(2).rotateY(1)).toBe(camera);
+        expect(camera.perspective()).toBe(Infinity);
+        expect(camera.scale(2).rotateY(1).perspective(5)).toBe(camera);
     });
 
     test('a shape on the camera projects like a shape with the same settings', () => {
@@ -48,9 +49,12 @@ describe('camera3D', () => {
 
         camera.rotateY(0.5);
         box.rotateX(0.25);
+        other.perspective(8);
 
         for (const view of [camera, points, box, other]) {
-            expect([view.scale(), view.rotateY(), view.rotateX()]).toEqual([30, 0.5, 0.25]);
+            expect([view.scale(), view.rotateY(), view.rotateX(), view.perspective()]).toEqual([
+                30, 0.5, 0.25, 8
+            ]);
         }
     });
 

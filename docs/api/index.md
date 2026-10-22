@@ -65,14 +65,15 @@ Draw the SVG path for a shape. Not on `points3D`.
 ### `.unproject(point, planePoint, planeNormal)` {#unproject}
 
 The world point on a plane under a screen point, or `null` when the plane is
-seen edge-on.
+seen edge-on or the ray from the eye meets it only behind the eye.
 
 ### `.matrix()` {#matrix}
 
 The projection as a column-major 4×4 `Float32Array`, for a WebGL uniform or
 for `projectPositions`. It maps a world point to its screen x and y, and its
 `rotated` z as the depth. Given `{ width, height, depth }`, it maps to clip
-space instead, ready for `gl_Position`.
+space instead, ready for `gl_Position`. With a perspective it has a w, and
+the `depth` has to be less than the distance of the eye.
 
 ### `.camera(camera)` {#camera}
 
@@ -84,7 +85,8 @@ up the view it had.
 
 The direction from the scene towards the viewer, a unit vector in world
 coordinates: which side of a box shows, which end of a grid is near, the
-normal of a plane that faces the camera.
+normal of a plane that faces the camera. In perspective the eye sits at
+`rotationCenter + perspective · viewDirection`.
 
 ## Configuration Methods
 
@@ -127,6 +129,19 @@ Set the rotation center.
 
 Set the 2D rendering origin.
 
+### `.perspective(distance)` {#perspective}
+
+Set the distance of the eye from the rotation center, in world units, for a
+perspective view. The default, `Infinity`, is orthographic. The plane through
+the rotation center keeps the `scale`; nearer things grow and farther ones
+shrink. The scene has to lie in front of the eye: WebGL clips the rest, SVG
+and a 2D canvas cannot.
+
+`sort` keeps working, since the rotated z is still the depth along the view
+axis. `ccw` winds on the screen, `.unproject()` casts its rays from the eye,
+and a face faces the eye where `dot(normal, eye − vertex) > 0`. `iso3D` stays
+orthographic.
+
 ### `.rows(rows)` {#rows}
 
 Set the points per row (`gridPlanes3D` only).
@@ -146,8 +161,8 @@ piece sorts on its own depth.
 
 ### `ccw(polygon)` {#ccw}
 
-Whether a transformed polygon winds counter-clockwise, which means it faces
-the camera.
+Whether a transformed polygon winds counter-clockwise on the screen, which
+means it faces the camera, in a perspective too.
 
 ### `centroid(polygon)` {#centroid}
 
@@ -162,16 +177,24 @@ Rotate and project a list of points: what `.data` does under the hood.
 Project a rotated point onto the screen: `{ origin, scale }` in, `Point2D`
 out.
 
+### `perspective(point, options)` {#perspective-function}
+
+Project a rotated point as seen from an eye `distance` in front of the
+rotation center: `{ origin, scale, rotateCenter, distance }` in, `Point2D`
+out. An infinite distance is `orthographic`.
+
 ### `projectPositions(positions, matrix, out?)` {#projectpositions}
 
 Project packed x, y, z triples through a `.matrix()` into a `Float32Array` of
-screen x, screen y and depth. Reuse `out` to redraw a large point cloud on a
-canvas without allocating.
+screen x, screen y and depth. x and y are divided by the w of a perspective
+matrix, the depth stays the rotated z. Reuse `out` to redraw a large point
+cloud on a canvas without allocating.
 
 ### `normal(polygon)` {#normal}
 
 The unit normal of a polygon, on the side `ccw` reports: outwards on the
-faces of `cubes3D`, along `viewDirection` where a face faces the camera.
+faces of `cubes3D`, along `viewDirection` where a face faces the camera, or
+towards the eye in perspective.
 
 ### `box(spec)` {#box}
 
@@ -224,7 +247,8 @@ One axis of [`axes3D`](#axes3d) from a d3 scale: its domain and about
 it hands out the **affine frame of a face**: the SVG matrix that carries the
 local coordinates of the face onto the screen. Because the projection is
 orthographic, the image of a plane stays affine, so the browser rasterises
-the transform and the projection itself costs nothing at runtime.
+the transform and the projection itself costs nothing at runtime. For the
+same reason `iso3D` is always orthographic and ignores `.perspective()`.
 
 ```typescript
 import { iso3D, sort } from 'd3-3d';
