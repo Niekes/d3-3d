@@ -1,7 +1,8 @@
 import { pointer, select } from 'd3';
-import { box, camera3D, cubes3D, sort } from '../../index';
-import type { Cube, CubeFace, CubeFaceName, Point3D } from '../../index';
-import { joinFaces } from './cubeFaces';
+import { box, camera3D, cubes3D } from '../../index';
+import type { CubeFace, CubeFaceName, Point3D } from '../../index';
+import { joinCells, keyOf, neighborOf, STEPS } from './cubeFaces';
+import type { Cell } from './cubeFaces';
 import { floorGrid, pose } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
 
@@ -25,33 +26,17 @@ const VIEW = { scale: 38, center: { x: 0, y: -H / 2, z: 0 } };
 
 const COLORS = ['blue', 'orange', 'green', 'yellow', 'purple', 'red'];
 
-/** A place in the grid: the column along x, the layer up from the floor and the row along z. */
-type Cell = { column: number; layer: number; row: number };
-
 /** A cube of the build: its cell and the index of its color. */
 type Voxel = Cell & { color: number };
 
 /** One vertex of a cube: a point that carries its cube, so the cube survives the projection. */
 type VoxelVertex = Point3D & Voxel & { key: string; ghost: boolean };
 
-/** One cube after the projection: cubes3D always sets its faces and its centroid. */
-type VoxelCube = Cube<VoxelVertex> & { faces: CubeFace<VoxelVertex>[]; centroid: Point3D };
-
 /** Where the next click lands: a free cell to build in, or a cube to erase. */
 type Target = Cell & { erase: boolean };
 
 /** A pointer position in client pixels, kept so the target can follow a glide. */
 type Pointer = { clientX: number; clientY: number; shiftKey: boolean };
-
-/** The neighbor behind every face, as a step in column, layer and row. */
-const STEPS: Record<CubeFaceName, [number, number, number]> = {
-    front: [0, 0, 1],
-    back: [0, 0, -1],
-    left: [-1, 0, 0],
-    right: [1, 0, 0],
-    top: [0, 1, 0],
-    bottom: [0, -1, 0]
-};
 
 const FACES = Object.keys(STEPS) as CubeFaceName[];
 
@@ -74,8 +59,6 @@ const STARTER: Voxel[] = [
     { column: 3, layer: 2, row: 3, color: 4 }
 ];
 
-const keyOf = (cell: Cell) => `${cell.column},${cell.layer},${cell.row}`;
-
 const inside = (cell: Cell) =>
     cell.column >= 0 &&
     cell.column < N &&
@@ -85,12 +68,6 @@ const inside = (cell: Cell) =>
     cell.layer < H;
 
 const clamp = (i: number) => Math.max(0, Math.min(N - 1, i));
-
-/** The cell behind a face of the cube in `cell`. */
-function neighborOf(cell: Cell, face: CubeFaceName): Cell {
-    const [dc, dl, dr] = STEPS[face];
-    return { column: cell.column + dc, layer: cell.layer + dl, row: cell.row + dr };
-}
 
 /** The eight vertices of the cube in a cell, in the order cubes3D expects. */
 function makeCube(voxel: Voxel, ghost = false): VoxelVertex[] {
@@ -187,25 +164,12 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
         }
         const erased = target?.erase ? keyOf(target) : undefined;
 
-        const cubeGroups = group
-            .selectAll<SVGGElement, VoxelCube>('g.cube')
-            .data(cubes.data(voxels) as VoxelCube[], (d) => d[0].key)
-            .join('g')
-            .attr(
-                'class',
-                (d) =>
-                    `cube color-${d[0].color}${d[0].ghost ? ' ghost' : ''}${d[0].key === erased ? ' is-target' : ''}`
-            )
-            .sort(sort);
-
         // A face against another cube or the floor is dropped, so the DOM
         // only holds the surface of the build.
-        joinFaces(
-            cubeGroups.selectAll<SVGPathElement, CubeFace<VoxelVertex>>('path').data(
-                (d) => d.faces.filter((face) => isOpen(d[0], face.face)),
-                (d) => d.face
-            ),
-            cubes.draw
+        joinCells(group, cubes, voxels, isOpen).attr(
+            'class',
+            (d) =>
+                `cube color-${d[0].color}${d[0].ghost ? ' ghost' : ''}${d[0].key === erased ? ' is-target' : ''}`
         );
 
         const faces = [...built.values()].reduce(

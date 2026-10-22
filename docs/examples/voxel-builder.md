@@ -126,7 +126,7 @@ it mounts into, so it needs no stylesheet. The SVG and the drag live in
 [docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
 the camera and the floor in
 [docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts),
-the face join in
+the cube join, the face join and the neighbor steps in
 [docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts)
 and the grid lines in
 [docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
