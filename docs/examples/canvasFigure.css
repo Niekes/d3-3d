@@ -1,0 +1,86 @@
+.canvas-figure {
+    --cf-ink: #1b1e21;
+    --cf-line: #c4c7c9;
+    --cf-bg: #ffffff;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    border: 1px solid var(--cf-line);
+    border-radius: 12px;
+    background: var(--cf-bg);
+    color: var(--cf-ink);
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+}
+
+.dark .canvas-figure {
+    --cf-ink: #e6e8e9;
+    --cf-line: #3d4144;
+    --cf-bg: #0c0d0e;
+}
+
+.canvas-figure .canvas-figure-stage {
+    position: relative;
+    cursor: grab;
+    touch-action: none;
+}
+
+.canvas-figure .canvas-figure-stage:active {
+    cursor: grabbing;
+}
+
+.canvas-figure canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.canvas-figure canvas[hidden] {
+    display: none;
+}
+
+.canvas-figure .canvas-figure-fps {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.8;
+}
+
+.canvas-figure .canvas-figure-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 24px;
+    padding: 10px 14px;
+    border-top: 1px solid var(--cf-line);
+}
+
+.canvas-figure .canvas-figure-controls fieldset {
+    display: flex;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.canvas-figure .canvas-figure-controls legend {
+    float: left;
+    margin-right: 4px;
+    padding: 0;
+}
+
+.canvas-figure .canvas-figure-controls label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.canvas-figure .canvas-figure-controls select {
+    padding: 2px 6px;
+    border: 1px solid var(--cf-line);
+    border-radius: 6px;
+    background: var(--cf-bg);
+    color: var(--cf-ink);
+    font: inherit;
+}

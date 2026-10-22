@@ -5,6 +5,7 @@
 - [Surface plot](/examples/surface-plot) — a ripple or a wave drawn with `gridPlanes3D`, with shape, amplitude, frequency, color and wireframe controls
 - [Terrain sculptor](/examples/terrain-sculptor) — a field of 32 × 32 samples drawn with `gridPlanes3D` that a brush raises and lowers; the brush lands on the hill under the pointer through `unproject`, and its ring is a `lineStrips3D`
 - [Bar chart](/examples/bar-chart) — fifteen bars drawn with `cubes3D`, rotated by drag
+- [Bar field](/examples/bar-field) — a height map of up to 40,000 bars, projected by `.matrix()` and drawn on a 2D canvas in grid order or with WebGL instances and a depth buffer
 - [Exploded cube assembly](/examples/exploded-cubes) — a block of 64 cubes drawn with `cubes3D`, whose layers part on a slider; click a cube to inspect it
 - [Voxel builder](/examples/voxel-builder) — an 8 × 8 floor to build on with `cubes3D`, drawn with `planes3D` and `lines3D`; the cell under the pointer comes from `unproject`, and the faces that touch are never drawn
 - [Mini city](/examples/mini-city) — sixteen low-poly buildings drawn with `cubes3D`, each piece a box, a tapered shaft, a gable roof or a spire, lit by a sun that a slider moves across the sky; click a building to see its stats

@@ -1,6 +1,7 @@
-import { randomNormal, rgb, select, timer } from 'd3';
+import { randomNormal, rgb } from 'd3';
 import { points3D, projectPositions } from '../../index';
-import { dragRotate } from './rotatingFigure';
+import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram } from './canvasFigure';
+import type { Draw } from './canvasFigure';
 import './pointCloud.css';
 
 /*
@@ -11,16 +12,12 @@ import './pointCloud.css';
  * the stars additively, so neither has to sort them by depth.
  */
 
-const WIDTH = 960;
-const HEIGHT = 500;
 const SCALE = 230;
 const COUNTS = [10_000, 100_000, 1_000_000];
 const ARMS = 3;
 const TWIST = 5;
 /** The disk leans towards the reader by this angle, in radians. */
 const TILT = -0.6;
-/** The auto-rotation, in radians per millisecond. */
-const SPIN = 0.00008;
 const POINT_SIZE = 1.5;
 const BACKGROUND = '#07090f';
 /** From the core outwards: one color per ring of the disk. */
@@ -92,7 +89,7 @@ function canvasRenderer(
     rings: Uint8Array,
     dpr: number,
     size: number
-): (count: number, matrix: Float32Array) => void {
+): Draw {
     const { width, height } = canvas;
     const context = canvas.getContext('2d')!;
     const image = context.createImageData(width, height);
@@ -138,36 +135,14 @@ function canvasRenderer(
 
 /** WebGL: the stars go to the GPU once, every frame only sends the matrix. */
 function webglRenderer(
-    gl: WebGLRenderingContext,
+    gl: WebGL2RenderingContext,
     positions: Float32Array<ArrayBuffer>,
     rings: Uint8Array<ArrayBuffer>,
     size: number
-): (count: number, matrix: Float32Array) => void {
-    const program = gl.createProgram()!;
-    for (const [type, source] of [
-        [gl.VERTEX_SHADER, VERTEX_SHADER],
-        [gl.FRAGMENT_SHADER, FRAGMENT_SHADER]
-    ] as const) {
-        const shader = gl.createShader(type)!;
-        gl.shaderSource(shader, source);
-        gl.compileShader(shader);
-        gl.attachShader(program, shader);
-    }
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        throw new Error(gl.getProgramInfoLog(program) ?? 'the point cloud shaders do not link');
-    }
-    gl.useProgram(program);
-
-    function attribute(name: string, data: BufferSource, size: number, type: number): void {
-        const location = gl.getAttribLocation(program, name);
-        gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-        gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-        gl.enableVertexAttribArray(location);
-        gl.vertexAttribPointer(location, size, type, false, 0, 0);
-    }
-    attribute('a_position', positions, 3, gl.FLOAT);
-    attribute('a_ring', rings, 1, gl.UNSIGNED_BYTE);
+): Draw {
+    const program = linkProgram(gl, VERTEX_SHADER, FRAGMENT_SHADER);
+    attribute(gl, program, 'a_position', 3, gl.FLOAT)(positions);
+    attribute(gl, program, 'a_ring', 1, gl.UNSIGNED_BYTE)(rings);
 
     const uniform = (name: string) => gl.getUniformLocation(program, name);
     const palette = PALETTE.flatMap((color) => {
@@ -198,109 +173,24 @@ function webglRenderer(
  * Renders the galaxy into `host` and returns the function that stops it.
  */
 export function mountPointCloud(host: HTMLElement): () => void {
-    host.innerHTML = `
-        <div class="point-cloud-stage">
-            <canvas class="point-cloud-canvas" data-renderer="canvas" role="img"
-                aria-label="A spiral galaxy drawn on a 2D canvas"></canvas>
-            <canvas class="point-cloud-canvas" data-renderer="webgl" role="img"
-                aria-label="A spiral galaxy drawn with WebGL" hidden></canvas>
-            <output class="point-cloud-fps"></output>
-        </div>
-        <form class="point-cloud-controls">
-            <label>stars
-                <select name="count">${COUNTS.map(
-                    (count) => `<option value="${count}">${count.toLocaleString('en')}</option>`
-                ).join('')}</select>
-            </label>
-            <fieldset>
-                <legend>renderer</legend>
-                <label><input type="radio" name="renderer" value="canvas" checked> canvas 2D</label>
-                <label><input type="radio" name="renderer" value="webgl"> WebGL</label>
-            </fieldset>
-        </form>`;
-
-    const stage = select(host).select<HTMLDivElement>('.point-cloud-stage');
-    const canvases = stage.selectAll<HTMLCanvasElement, unknown>('canvas');
-    const fps = stage.select('output');
-    const form = host.querySelector('form')!;
-    const dpr = window.devicePixelRatio || 1;
-    // A star in device pixels, the same square in both renderers.
-    const size = Math.max(1, Math.round(POINT_SIZE * dpr));
-
-    canvases.attr('width', Math.round(WIDTH * dpr)).attr('height', Math.round(HEIGHT * dpr));
-
     const { positions, rings } = galaxy(COUNTS[COUNTS.length - 1]);
-    const gl = stage
-        .select<HTMLCanvasElement>('[data-renderer="webgl"]')
-        .node()!
-        .getContext('webgl');
-    const draw = {
-        canvas: canvasRenderer(
-            stage.select<HTMLCanvasElement>('[data-renderer="canvas"]').node()!,
-            positions,
-            rings,
-            dpr,
-            size
-        ),
-        webgl: gl ? webglRenderer(gl, positions, rings, size) : undefined
-    };
 
-    if (!gl) {
-        form.querySelector<HTMLInputElement>('[value="webgl"]')!.disabled = true;
-    }
-
-    let count = COUNTS[1];
-    let renderer: 'canvas' | 'webgl' = 'canvas';
-    form.querySelector('select')!.value = String(count);
-
-    form.addEventListener('change', () => {
-        count = Number(new FormData(form).get('count'));
-        renderer = new FormData(form).get('renderer') as 'canvas' | 'webgl';
-        canvases.property('hidden', function () {
-            return this.dataset.renderer !== renderer;
-        });
-    });
-
-    let yaw = 0;
-    let pitch = 0;
-    stage.call(
-        dragRotate<HTMLDivElement>((y, p) => {
-            yaw = y;
-            pitch = p;
-        })
-    );
-
-    const view = points3D()
-        .scale(SCALE)
-        .origin({ x: WIDTH / 2, y: HEIGHT / 2 });
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let spin = 0;
-    let previous = 0;
-    let frames = 0;
-    let since = 0;
-
-    const loop = timer((elapsed) => {
-        spin += still ? 0 : (elapsed - previous) * SPIN;
-        previous = elapsed;
-
-        frames += 1;
-        if (elapsed - since >= 500) {
-            fps.text(`${Math.round((frames * 1000) / (elapsed - since))} fps`);
-            frames = 0;
-            since = elapsed;
+    return canvasFigure(host, {
+        unit: 'stars',
+        label: 'A spiral galaxy',
+        counts: COUNTS,
+        count: COUNTS[1],
+        tilt: TILT,
+        view: points3D()
+            .scale(SCALE)
+            .origin({ x: WIDTH / 2, y: HEIGHT / 2 }),
+        renderers(canvas, gl, dpr) {
+            // A star in device pixels, the same square in both renderers.
+            const size = Math.max(1, Math.round(POINT_SIZE * dpr));
+            return {
+                canvas: canvasRenderer(canvas, positions, rings, dpr, size),
+                webgl: gl ? webglRenderer(gl, positions, rings, size) : undefined
+            };
         }
-
-        // Turn the disk around its own axis first, then lean it.
-        const matrix = view
-            .rotateY(spin + yaw)
-            .rotateX(TILT + pitch)
-            .matrix();
-        (draw[renderer] ?? draw.canvas)(count, matrix);
     });
-
-    return () => {
-        loop.stop();
-        gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        host.innerHTML = '';
-    };
 }

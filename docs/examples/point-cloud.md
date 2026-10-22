@@ -109,7 +109,7 @@ stars, which gives the same picture in any order, so nothing is sorted.
 ## Two canvases
 
 A canvas keeps the first kind of context it hands out, so one canvas cannot
-switch from `2d` to `webgl`. The figure holds one canvas per renderer and
+switch from `2d` to `webgl2`. The figure holds one canvas per renderer and
 shows one of them. Both are sized for the device pixel ratio. The matrix
 projects to CSS pixels: the canvas multiplies by the ratio, WebGL divides by
 the size in CSS pixels.
@@ -118,8 +118,9 @@ the size in CSS pixels.
 
 The figure lives in
 [docs/examples/pointCloud.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/pointCloud.ts)
-in the repository, its styles in
-[docs/examples/pointCloud.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/pointCloud.css).
+in the repository, the canvases, the controls and the loop it shares with
+the [bar field](/examples/bar-field) in
+[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/canvasFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/pointCloud.ts
