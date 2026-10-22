@@ -12,7 +12,7 @@ export type Plane<Datum> = TransformedPoint<Datum>[] & {
 
 export interface Planes3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Plane<Datum>[];
-    draw(planes: Datum[]): string;
+    draw(plane: TransformedPoint<Datum>[]): string;
 }
 
 class Planes3DRenderer<Datum = Point3D>
@@ -30,8 +30,8 @@ class Planes3DRenderer<Datum = Point3D>
         });
     }
 
-    draw(polygons: TransformedPoint<Datum>[]): string {
-        return drawPlane(polygons);
+    draw(plane: TransformedPoint<Datum>[]): string {
+        return drawPlane(plane);
     }
 }
 

@@ -194,4 +194,15 @@ describe('triangles3D', () => {
         expect(triangles3.scale()).toBe(3);
         expect(triangles4.scale()).toBe(4);
     });
+
+    test('draws a transformed triangle, not the raw points', () => {
+        const raw = [
+            { x: 0, y: 0, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 }
+        ];
+
+        // @ts-expect-error draw reads the projected points that data() adds
+        expect(() => triangles3D().draw(raw)).toThrow(TypeError);
+    });
 });

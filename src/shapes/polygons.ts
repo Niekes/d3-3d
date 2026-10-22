@@ -12,7 +12,7 @@ export type Polygon<Datum> = TransformedPoint<Datum>[] & {
 
 export interface Polygons3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Polygon<Datum>[];
-    draw(polygons: Datum[]): string;
+    draw(polygon: TransformedPoint<Datum>[]): string;
 }
 
 class Polygons3DRenderer<Datum = Point3D>
@@ -33,8 +33,8 @@ class Polygons3DRenderer<Datum = Point3D>
         });
     }
 
-    draw(polygons: TransformedPoint<Datum>[]): string {
-        return drawPolygon(polygons);
+    draw(polygon: TransformedPoint<Datum>[]): string {
+        return drawPolygon(polygon);
     }
 }
 

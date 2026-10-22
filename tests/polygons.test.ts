@@ -43,4 +43,15 @@ describe('polygons3D', () => {
         expect(polygons.y).toBeTypeOf('function');
         expect(polygons.z).toBeTypeOf('function');
     });
+
+    test('draws a transformed polygon, not the raw points', () => {
+        const raw = [
+            { x: 0, y: 0, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 0, y: 1, z: 0 }
+        ];
+
+        // @ts-expect-error draw reads the projected points that data() adds
+        expect(() => polygons3D().draw(raw)).toThrow(TypeError);
+    });
 });

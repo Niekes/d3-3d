@@ -51,4 +51,16 @@ describe('planes3D', () => {
 
         expect(planes.data(data)[0].ccw).toBe(false);
     });
+
+    test('draws a transformed plane, not the raw points', () => {
+        const raw = [
+            { x: 0, y: 0, z: 0 },
+            { x: 1, y: 0, z: 0 },
+            { x: 1, y: 1, z: 0 },
+            { x: 0, y: 1, z: 0 }
+        ];
+
+        // @ts-expect-error draw reads the projected points that data() adds
+        expect(() => planes3D().draw(raw)).toThrow(TypeError);
+    });
 });

@@ -12,7 +12,7 @@ export type Triangle<Datum> = TransformedPoint<Datum>[] & {
 
 export interface Triangles3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): Triangle<Datum>[];
-    draw(triangles: Datum[]): string;
+    draw(triangle: TransformedPoint<Datum>[]): string;
 }
 
 class Triangles3DRenderer<Datum = Point3D>
@@ -33,8 +33,8 @@ class Triangles3DRenderer<Datum = Point3D>
         });
     }
 
-    draw(polygons: TransformedPoint<Datum>[]): string {
-        return drawTriangle(polygons);
+    draw(triangle: TransformedPoint<Datum>[]): string {
+        return drawTriangle(triangle);
     }
 }
 

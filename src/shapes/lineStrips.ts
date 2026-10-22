@@ -10,7 +10,7 @@ export type LineStrip<Datum> = TransformedPoint<Datum>[] & {
 
 export interface LineStrips3DInstance<Datum = Point3D> extends ShapeInstance<Datum> {
     data(data: Datum[][]): LineStrip<Datum>[];
-    draw(lineStrips: Datum[]): string;
+    draw(lineStrip: TransformedPoint<Datum>[]): string;
 }
 
 class LineStrips3DRenderer<Datum = Point3D>
@@ -36,8 +36,8 @@ class LineStrips3DRenderer<Datum = Point3D>
         });
     }
 
-    draw(lineStrips: TransformedPoint<Datum>[]): string {
-        return drawLineStrip(lineStrips);
+    draw(lineStrip: TransformedPoint<Datum>[]): string {
+        return drawLineStrip(lineStrip);
     }
 }
 
