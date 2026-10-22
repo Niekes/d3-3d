@@ -34,7 +34,7 @@ Assumptions:
 - **The right copy's renderer.** It has all three angles at zero and accessors that read `rotated`. At zero the rotation is the identity, so the renderer only projects.
 - **Front view.** Nothing else turns the copies: world x points right, y points down and z points at the viewer, as in the front preset of the projection playground (`docs/examples/projectionPlayground.ts:83-87`).
 - **Degrees.** The sliders run in whole degrees from −180 to 180, and the figure converts them to radians with π/180, so 90 is exactly a quarter turn. The playground's step of 0.01 radians cannot hit π/2.
-- **The block.** A column of three unit cubes, with one more cube towards +x at the top and one towards +z at the bottom. No turn maps the block onto itself. Every face gets a colour by its face name, so its pose reads even in a front view.
+- **The block.** A column of three unit cubes, with one more cube towards +x at the top and one towards +z in the middle. No turn maps the block onto itself; with the +z cube at the bottom, a half turn around the diagonal between +x and +z would swap the two ends. Every face gets a colour by its face name, so its pose reads even in a front view.
 - **Rotation center.** It is the middle of the block for both copies, so both copies turn in place.
 - **Shared rules.** All `AGENTS.md` rules apply. The styles live in the module, as in `docs/examples/projectionPlayground.ts:185`.
 
