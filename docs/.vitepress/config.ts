@@ -62,7 +62,10 @@ export default defineConfig({
             '/guide/': [
                 {
                     text: 'Guide',
-                    items: [{ text: 'Getting Started', link: '/guide/getting-started' }]
+                    items: [
+                        { text: 'Getting Started', link: '/guide/getting-started' },
+                        { text: 'Migrating from v0.x', link: '/guide/migration' }
+                    ]
                 }
             ],
             '/api/': [
