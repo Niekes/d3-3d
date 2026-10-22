@@ -15,6 +15,8 @@ const GLIDE_DECAY = 325;
 const GLIDE_MIN_SPEED = 0.01;
 /** A pointer that rests this long before the release has no speed left. */
 const GLIDE_REST = 50;
+/** A press that wanders less than this, in pixels, is a click, not a drag. */
+const CLICK_DISTANCE = 4;
 
 /**
  * The drag that turns a figure: hands `onRotate` the yaw and the pitch in
@@ -36,6 +38,7 @@ export function dragRotate<E extends Element = SVGSVGElement>(
     let speedY = 0;
     let glide: Timer | undefined;
     let figure: E | undefined;
+    let turning = false;
 
     function glideFrom(release: number): void {
         const still =
@@ -70,18 +73,26 @@ export function dragRotate<E extends Element = SVGSVGElement>(
     }
 
     // A press that wanders a few pixels is still a click, not a drag, so a
-    // shaky hand can still select what it points at.
+    // shaky hand can still select what it points at. The figure does not
+    // turn either: a redraw re-sorts the elements, and the browser drops the
+    // click when the element it was pressed on moves in the DOM.
     return drag<E, unknown>()
-        .clickDistance(4)
+        .clickDistance(CLICK_DISTANCE)
         .on('start', function (event) {
             figure = this;
             glide?.stop();
+            turning = false;
             startX = lastX = event.x;
             startY = lastY = event.y;
             lastTime = event.sourceEvent.timeStamp;
             speedX = speedY = 0;
         })
         .on('drag', (event) => {
+            turning ||= Math.hypot(event.x - startX, event.y - startY) > CLICK_DISTANCE;
+            if (!turning) {
+                return;
+            }
+
             const dt = event.sourceEvent.timeStamp - lastTime;
 
             if (dt > 0) {
@@ -98,6 +109,9 @@ export function dragRotate<E extends Element = SVGSVGElement>(
             );
         })
         .on('end', (event) => {
+            if (!turning) {
+                return;
+            }
             keptX += event.x - startX;
             keptY += event.y - startY;
             glideFrom(event.sourceEvent.timeStamp);

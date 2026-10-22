@@ -121,6 +121,10 @@ faces take `pointer-events="visible"`, so with the faces unchecked the
 wireframe can still be clicked, while a hidden back face cannot. The normals
 take no pointer events, so a click goes through them to the face. The drag
 swallows the click that ends it, so turning the vase never selects a face.
+Every redraw re-sorts the faces, and the browser drops a click whose face
+has moved in the DOM, so nothing redraws while a button is down: a press
+that wanders less than four pixels is still a click and does not turn the
+vase. A free pointer outlines the face that a click would select.
 
 The number field selects without a pointer. A face selected there can be a
 hidden back face; the inspector says so.

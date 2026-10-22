@@ -132,6 +132,7 @@ export function mountMeshInspector(host: HTMLElement): () => void {
     let yaw = 0;
     let pitch = 0;
     let selected: number | undefined;
+    let hovered: number | undefined;
 
     const { group, button } = rotatingFigure(
         host,
@@ -140,6 +141,8 @@ export function mountMeshInspector(host: HTMLElement): () => void {
         (dragYaw, dragPitch) => {
             yaw = dragYaw;
             pitch = dragPitch;
+            // The outlined face turns away from under the pointer.
+            hovered = undefined;
             render();
         }
     );
@@ -209,9 +212,13 @@ export function mountMeshInspector(host: HTMLElement): () => void {
             .style('fill', (d) =>
                 !faces.checked ? 'none' : (d.ccw ? OUTSIDE : INSIDE)(Math.abs(d.nz))
             )
-            .style('stroke', (d) => (d.id === selected ? ACCENT : edges.checked ? INK : 'none'))
-            .attr('stroke-opacity', (d) => (d.id === selected ? 1 : faces.checked ? 0.3 : 0.7))
-            .attr('stroke-width', (d) => (d.id === selected ? 2.5 : 1))
+            .style('stroke', (d) =>
+                d.id === selected || d.id === hovered ? ACCENT : edges.checked ? INK : 'none'
+            )
+            .attr('stroke-opacity', (d) =>
+                d.id === selected ? 1 : d.id === hovered ? 0.6 : faces.checked ? 0.3 : 0.7
+            )
+            .attr('stroke-width', (d) => (d.id === selected ? 2.5 : d.id === hovered ? 2 : 1))
             .attr('d', faces3d.draw);
 
         // The normals keep the order of the faces, so the join goes by the
@@ -266,13 +273,29 @@ export function mountMeshInspector(host: HTMLElement): () => void {
         inspect(undefined);
     }
 
+    /** The id of the face an event targets, if any. */
+    function faceAt(event: Event): number | undefined {
+        const target = event.target as Element;
+        return target.matches('path') ? select<Element, Facet>(target).datum().id : undefined;
+    }
+
     // A click on the selected face or next to the vase clears the selection.
     // d3.drag swallows the click that ends a drag, so turning the vase never
     // selects a face.
     svg.on('click', (event: MouseEvent) => {
-        const target = event.target as Element;
-        const id = target.matches('path') ? select<Element, Facet>(target).datum().id : undefined;
+        const id = faceAt(event);
         inspect(id === selected ? undefined : id);
+    });
+
+    // A free pointer outlines the face a click would select. Every redraw
+    // re-sorts the faces, and the browser drops a click whose face moved in
+    // the DOM, so the outline never redraws while a button is down.
+    svg.on('pointermove pointerleave', (event: PointerEvent) => {
+        const id = faceAt(event);
+        if (!event.buttons && id !== hovered) {
+            hovered = id;
+            render();
+        }
     });
 
     picker.addEventListener('input', () => {
