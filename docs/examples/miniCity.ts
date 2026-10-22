@@ -18,6 +18,10 @@ const ORIGIN = { x: 480, y: 290 };
 const SCALE = 20;
 const START_YAW = Math.PI / 6;
 const START_TILT = Math.PI / 6;
+// The camera stays between 10° and 85° above the ground: the ground, the
+// order of the pieces and the sort by the lot all paint a city seen from above.
+const MIN_TILT = Math.PI / 18;
+const MAX_TILT = (17 * Math.PI) / 36;
 // The lots along every street, the size of a lot and the width of a street,
 // in model units. A storey is 0.4 units and a unit is 8 m, so a storey is 3.2 m.
 const N = 4;
@@ -326,7 +330,12 @@ export function mountMiniCity(host: HTMLElement): () => void {
 
     /** Projects the city, lights it and paints the buildings back to front. */
     function render(): void {
-        turnCamera(camera, yaw, pitch, { yaw: START_YAW, tilt: START_TILT });
+        turnCamera(camera, yaw, pitch, {
+            yaw: START_YAW,
+            tilt: START_TILT,
+            minTilt: MIN_TILT,
+            maxTilt: MAX_TILT
+        });
         const sun = sunAt(hour);
 
         // A low sun shines warmer, and the CSS mixes that in everywhere.

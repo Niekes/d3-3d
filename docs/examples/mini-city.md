@@ -95,6 +95,21 @@ centroid: pieces[0].faces!.find((f) => f.face === 'bottom')!.centroid;
 The lots are equal squares on a grid and never overlap, so seen from above,
 the depth of their centres orders the buildings on them exactly.
 
+Seen from above is the catch. The ground is painted first, and the pieces of
+a building from the bottom up, and both are right only while the camera looks
+down on the city. Seen from below, the ground would cover everything, and the
+underside of a crown or a spire would paint over the body nearer to the
+camera. So the drag keeps the camera between 10° and 85° above the ground:
+
+```ts
+turnCamera(camera, yaw, pitch, {
+    yaw: START_YAW,
+    tilt: START_TILT,
+    minTilt: Math.PI / 18,
+    maxTilt: (17 * Math.PI) / 36
+});
+```
+
 ## Inspecting a building
 
 Every vertex carries its building through the projection. The face under the
