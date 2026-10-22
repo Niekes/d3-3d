@@ -289,6 +289,16 @@ const STYLE = `
         white-space: nowrap;
     }
 
+    /* A formula breaks before its result and a note goes under its value, so
+       the z column stays in view without a scroll. */
+    .coordinate-explorer .coord-table td {
+        white-space: pre-line;
+    }
+
+    .coordinate-explorer .coord-table td small {
+        display: block;
+    }
+
     .coordinate-explorer .coord-table th[scope='row'] {
         text-align: left;
         font-weight: 400;
@@ -440,8 +450,8 @@ export function mountCoordinateExplorer(host: HTMLElement): () => void {
             ...[shown.x, shown.y, shown.z].map(fixed1),
             ...[dot3d.x()(shown), dot3d.y()(shown), dot3d.z()(shown)].map(fixed1),
             ...[r.x, r.y, r.z].map(fixed3),
-            `${ORIGIN.x} + ${SCALE} × ${fixed3(r.x)} = ${fixed1(p.x)}`,
-            `${ORIGIN.y} + ${SCALE} × ${fixed3(r.y)} = ${fixed1(p.y)}`
+            `${ORIGIN.x} + ${SCALE} × ${fixed3(r.x)}\n= ${fixed1(p.x)}`,
+            `${ORIGIN.y} + ${SCALE} × ${fixed3(r.y)}\n= ${fixed1(p.y)}`
         ];
         cells.forEach((cell, k) => (cell.textContent = values[k]));
     }
