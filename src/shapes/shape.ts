@@ -1,6 +1,7 @@
 import { Point2D, Point3D, TransformOptions } from '../types';
 import { x as px, y as py, z as pz } from '../point';
 import { unproject } from '../unproject';
+import { projectionMatrix } from '../projection-matrix';
 
 export interface ShapeInstance<Datum = Point3D> {
     scale(): number;
@@ -32,6 +33,8 @@ export interface ShapeInstance<Datum = Point3D> {
     rotationCenter(center?: Point3D): this | Point3D;
 
     unproject(point: Point2D, planePoint: Point3D, planeNormal: Point3D): Point3D | null;
+
+    matrix(): Float32Array;
 }
 
 export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
@@ -110,6 +113,14 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
      */
     unproject(point: Point2D, planePoint: Point3D, planeNormal: Point3D): Point3D | null {
         return unproject(point, planePoint, planeNormal, this.transformOptions());
+    }
+
+    /**
+     * The projection of this renderer as a column-major 4×4 matrix, for a
+     * WebGL uniform or for `projectPositions`.
+     */
+    matrix(): Float32Array {
+        return projectionMatrix(this.transformOptions());
     }
 
     /**

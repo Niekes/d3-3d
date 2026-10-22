@@ -66,6 +66,12 @@ Draw the SVG path for a shape. Not on `points3D` and `lines3D`.
 The world point on a plane under a screen point, or `null` when the plane is
 seen edge-on.
 
+### `.matrix()` {#matrix}
+
+The projection as a column-major 4×4 `Float32Array`, for a WebGL uniform or
+for `projectPositions`. It maps a world point to its screen x and y, and its
+`rotated` z as the depth.
+
 ## Configuration Methods
 
 Every setter returns the shape, so the calls chain. Called without an
@@ -135,6 +141,12 @@ Rotate and project a list of points: what `.data` does under the hood.
 
 Project a rotated point onto the screen: `{ origin, scale }` in, `Point2D`
 out.
+
+### `projectPositions(positions, matrix, out?)` {#projectpositions}
+
+Project packed x, y, z triples through a `.matrix()` into a `Float32Array` of
+screen x, screen y and depth. Reuse `out` to redraw a large point cloud on a
+canvas without allocating.
 
 ## Isometric scenes
 

@@ -58,7 +58,7 @@ Prefer a one-off? The [sponsor page](https://github.com/sponsors/niekes) also ta
 - ✅ **Automatic centroid calculation** for all shapes
 - ✅ **Counter-clockwise orientation detection** for polygons
 - ✅ **Generic types** for type-safe data transformations
-- ✅ **Orthographic projection** for SVG rendering
+- ✅ **Orthographic projection** for SVG rendering, and as a matrix for canvas and WebGL
 - ✅ **Sorting utilities** for proper z-ordering (painter's algorithm)
 
 ## Installing
@@ -109,6 +109,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 - [.data()](#data-data) - transform and compute properties for your data.
 - [.draw()](#drawshape) - draw SVG path for a shape.
 - [.unproject()](#unprojectpoint-planepoint-planenormal) - map a screen point back to a 3D point on a plane.
+- [.matrix()](#matrix) - the projection as a 4×4 matrix, for canvas and WebGL.
 
 **Configuration Methods:**
 
@@ -126,6 +127,7 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 **Utility Functions:**
 
 - [sort()](#sort) - utility function to sort shapes by depth.
+- [projectPositions()](#projectpositions) - project a packed point cloud through a matrix.
 
 ### Overview
 
@@ -622,6 +624,35 @@ svg.on('pointermove', (event) => {
 });
 ```
 
+#### .matrix()
+
+Returns the projection of the shape - its scale, origin, rotation and rotation center - as a column-major 4×4 matrix, the layout `gl.uniformMatrix4fv` expects. A world point maps to its screen x and y, and as z to its `rotated` z, the depth [`sort`](#sort) reads: a larger z is nearer the viewer.
+
+Use it when the SVG DOM is too slow for the number of points: `.data()` builds an object per point, the matrix projects millions of them on the GPU, or on the CPU with [`projectPositions`](#projectpositions).
+
+**Available on:** All shapes
+
+**Returns:** `Float32Array` - 16 numbers, column by column
+
+**Example (WebGL):**
+
+```typescript
+const view = points3D().scale(40).origin({ x: 480, y: 250 }).rotateX(-0.5).rotateY(0.6);
+
+gl.uniformMatrix4fv(matrixLocation, false, view.matrix());
+```
+
+```glsl
+uniform mat4 u_matrix; // view.matrix(), in CSS pixels
+uniform vec2 u_size;   // the canvas size, in CSS pixels
+attribute vec3 a_position;
+
+void main() {
+    vec4 p = u_matrix * vec4(a_position, 1.0);
+    gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, 0.0, 1.0);
+}
+```
+
 #### .rows(_rows_)
 
 Sets the number of points per row (columns) for `gridPlanes3D`. Since a grid is passed as a flat array, the library needs to know how many points constitute one horizontal line to correctly create the rectangular faces.
@@ -684,6 +715,38 @@ function sort<T extends HasCentroid>(a: T, b: T): number;
 interface HasCentroid {
     centroid: { z: number };
 }
+```
+
+### projectPositions()
+
+Projects packed x, y, z triples through a [`.matrix()`](#matrix) into a `Float32Array`: screen x, screen y and depth, three numbers per point. Pass the same `out` buffer every frame and a canvas can redraw a large point cloud without allocating.
+
+**Usage:**
+
+```typescript
+import { points3D, projectPositions } from 'd3-3d';
+
+const positions = new Float32Array(data.flatMap((d) => [d.x, d.y, d.z]));
+const screen = new Float32Array(positions.length);
+const view = points3D().scale(40).origin({ x: 480, y: 250 });
+
+function frame(angle: number) {
+    projectPositions(positions, view.rotateY(angle).matrix(), screen);
+    context.clearRect(0, 0, width, height);
+    for (let i = 0; i < screen.length; i += 3) {
+        context.fillRect(screen[i] - 1, screen[i + 1] - 1, 2, 2);
+    }
+}
+```
+
+**Type Signature:**
+
+```typescript
+function projectPositions(
+    positions: ArrayLike<number>,
+    matrix: ArrayLike<number>,
+    out?: Float32Array
+): Float32Array;
 ```
 
 ### Computed Properties

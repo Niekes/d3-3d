@@ -21,6 +21,7 @@ export { ccw } from './src/counter-clockwise';
 export { centroid } from './src/centroid';
 export { transform } from './src/transform';
 export { orthographic } from './src/projection-orthographic';
+export { projectPositions } from './src/projection-matrix';
 
 // Shared types.
 export * from './src/types';
