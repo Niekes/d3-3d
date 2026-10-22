@@ -16,7 +16,7 @@
 <table>
     <tr style="background-color: #f6f8fa">
         <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/space-time-cube"><img src="assets/examples/space-time-cube.gif" alt="Space-time cube"></a></td>
-        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/iso-tower"><img src="assets/examples/iso-tower.gif" alt="Office tower"></a></td>
+        <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/area-chart"><img src="assets/examples/area-chart.gif" alt="Area chart"></a></td>
         <td><a target="_blank" href="https://niekes.github.io/d3-3d/examples/mini-city"><img src="assets/examples/mini-city.gif" alt="Mini city"></a></td>
     </tr>
     <tr style="background-color: #f6f8fa">
