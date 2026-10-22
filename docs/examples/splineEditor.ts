@@ -1,5 +1,5 @@
 import { drag, leastIndex, pairs, pointer, range, select, sum } from 'd3';
-import { catmullRom, lineStrips3D, lines3D, points3D, sort } from '../../index';
+import { camera3D, catmullRom, lineStrips3D, lines3D, points3D, sort } from '../../index';
 import type { Line, Point, Point3D } from '../../index';
 import { pose, tiltOf } from './floorView';
 import { rotatingFigure } from './rotatingFigure';
@@ -133,9 +133,11 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     let hovered: number | undefined;
     let held: Grab['mode'] = 'free';
 
-    const lines = lines3D();
-    const dots = points3D<Knot>();
-    const strips = lineStrips3D();
+    // The lines, the points and the curve hang on one camera.
+    const camera = camera3D();
+    const lines = lines3D().camera(camera);
+    const dots = points3D<Knot>().camera(camera);
+    const strips = lineStrips3D().camera(camera);
 
     const { group, button } = rotatingFigure(
         host,
@@ -179,9 +181,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     /** Turns the scene and draws the floor, the depth cues, the curve and the points. */
     function render(): void {
         const tilt = tiltOf(pitch);
-        pose(lines, VIEW, yaw, tilt);
-        pose(dots, VIEW, yaw, tilt);
-        pose(strips, VIEW, yaw, tilt);
+        pose(camera, VIEW, yaw, tilt);
         // The view box shrinks with a narrow page; the handles keep their
         // size on the screen.
         const unit = 960 / (svg.node()!.getBoundingClientRect().width || 960);

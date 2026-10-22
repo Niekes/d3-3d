@@ -98,7 +98,8 @@ The middle rises fastest and the edge hardly at all, so the brush raises a
 soft hill, not a column. The screen `y` grows downwards, so raising the
 ground lowers `y`. The ring around the brush lies on the terrain: every
 point of it takes the height of the field where it stands, interpolated
-from the four samples around it.
+from the four samples around it. Its `lineStrips3D` shares the view of the
+surface with `.camera(surface)`, so it turns with the terrain.
 
 ## Sixty frames a second
 

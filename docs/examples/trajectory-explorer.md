@@ -63,16 +63,16 @@ fractional sample index that the timer advances and the slider sets.
 
 `axes3D` draws the back walls of the box, and
 `lineStrips3D` the trails.
-`points3D` draws the markers. All three get the same
-scale, origin and accessors, and every draw turns them by the same angles,
-so they project into one scene:
+`points3D` draws the markers. All three hang on one
+camera and get the same accessors, and every draw turns the camera, so they
+project into one scene:
 
 ```ts
+const camera = camera3D().scale(SCALE).origin(ORIGIN);
 const renderers = [box3d, strips3d, markers3d];
 for (const renderer of renderers) {
     renderer
-        .scale(SCALE)
-        .origin(ORIGIN)
+        .camera(camera)
         .x((d) => scaleX(d.x))
         .y((d) => -scaleZ(d.z))
         .z((d) => scaleY(d.y));

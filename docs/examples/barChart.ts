@@ -1,15 +1,16 @@
 import { color, interpolateNumber, randomUniform, scaleOrdinal, schemeDark2, select } from 'd3';
-import { axes3D, box, cubes3D, sort } from '../../index';
+import { axes3D, box, camera3D, cubes3D, orthographic, sort } from '../../index';
 import type { AxesSpec, Cube, CubeFace, Cubes3DInstance, Point3D } from '../../index';
 import { drawChartBox } from './axisEdges';
 import { dragRotate } from './rotatingFigure';
 
 /*
  * A bar chart: cubes3D turns the eight vertices of each bar into six named
- * faces, the drag rotates the scene, the `sort` utility orders the bars and
- * their faces by the depth of their centre and the label of every bar tweens
- * from its old height to the new one. axes3D draws the box around the bars:
- * the back walls with their gridlines and an axis along the outline.
+ * faces, the drag turns the camera both renderers share, the `sort` utility
+ * orders the bars by the depth of their footprint and their faces by the
+ * depth of their centre, and the label of every bar tweens from its old
+ * height to the new one. axes3D draws the box around the bars: the back
+ * walls with their gridlines and an axis along the outline.
  */
 
 const ORIGIN = { x: 480, y: 300 };
@@ -50,13 +51,14 @@ function makeBar(id: string, height: number, x: number, z: number): BarVertex[] 
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountBarChart(host: HTMLElement): () => void {
-    const cubes: Cubes3DInstance<BarVertex> = cubes3D<BarVertex>()
+    // The bars and the box hang on one camera, so turning it turns both.
+    const camera = camera3D()
         .scale(SCALE)
         .origin(ORIGIN)
         .rotateY(START_ANGLE)
         .rotateX(-START_ANGLE);
-
-    const box = axes3D().scale(SCALE).origin(ORIGIN).rotateY(START_ANGLE).rotateX(-START_ANGLE);
+    const cubes: Cubes3DInstance<BarVertex> = cubes3D<BarVertex>().camera(camera);
+    const chartBox = axes3D().camera(camera);
 
     const colorScale = scaleOrdinal<string>(schemeDark2);
 
@@ -99,7 +101,7 @@ export function mountBarChart(host: HTMLElement): () => void {
         drawChartBox(
             wallGroup,
             axisGroup,
-            box,
+            chartBox,
             SPEC,
             (axis, value) => String(axis === 'y' ? -value : value),
             (axis) => AXIS_TITLES[axis]
@@ -147,8 +149,9 @@ export function mountBarChart(host: HTMLElement): () => void {
 
         /* --------- LABELS --------- */
 
-        const labelX = (d: BarLabel) => ORIGIN.x + SCALE * d.centroid.x;
-        const labelY = (d: BarLabel) => ORIGIN.y + SCALE * d.centroid.y;
+        const view = { origin: camera.origin(), scale: camera.scale() };
+        const labelX = (d: BarLabel) => orthographic(d.centroid, view).x;
+        const labelY = (d: BarLabel) => orthographic(d.centroid, view).y;
 
         const labels = entered.selectAll<SVGTextElement, BarLabel>('text.text').data((d) => {
             const top = (d.faces ?? []).filter((face) => face.face === 'top')[0];
@@ -209,8 +212,7 @@ export function mountBarChart(host: HTMLElement): () => void {
 
     svg.call(
         dragRotate((yaw, pitch) => {
-            cubes.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
-            box.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
+            camera.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
             draw(project(), 0);
         })
     );

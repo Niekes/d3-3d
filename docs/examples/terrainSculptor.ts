@@ -125,7 +125,8 @@ export function mountTerrainSculptor(host: HTMLElement): () => void {
     // The ring sits outside the group of the quads, which the scaffold joins
     // as a whole, and above it, so the brush always shows.
     const ring = svg.append('path').attr('class', 'sculpt-ring');
-    const ring3d = lineStrips3D();
+    // The ring shares the view of the surface, so it turns with the terrain.
+    const ring3d = lineStrips3D().camera(surface);
     const radius = host.querySelector('[name=radius]') as HTMLInputElement;
     const strength = host.querySelector('[name=strength]') as HTMLInputElement;
     const lower = host.querySelector('[name=sculpt-mode][value=lower]') as HTMLInputElement;
@@ -161,11 +162,6 @@ export function mountTerrainSculptor(host: HTMLElement): () => void {
         }
         const { x, z } = brush;
         const r = radius.valueAsNumber;
-        ring3d
-            .scale(surface.scale())
-            .origin(surface.origin())
-            .rotateX(surface.rotateX())
-            .rotateY(surface.rotateY());
         const loop = range(RING_POINTS + 1).map((i) => {
             const angle = (2 * Math.PI * i) / RING_POINTS;
             const px = x + r * Math.cos(angle);

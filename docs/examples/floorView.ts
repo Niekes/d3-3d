@@ -1,4 +1,4 @@
-import type { Point3D, ShapeInstance } from '../../index';
+import type { Camera3DInstance, Point3D } from '../../index';
 
 /*
  * The camera of the figures built on a floor. The scene turns around a pivot
@@ -19,17 +19,18 @@ export function tiltOf(pitch: number): number {
 }
 
 /**
- * Poses a renderer: every renderer of a figure shares the projection and the
- * turn. `view` holds the scale of the figure and the pivot of its scene.
+ * Poses the camera that every renderer of a figure hangs on: the projection
+ * and the turn. `view` holds the scale of the figure and the pivot of its
+ * scene.
  */
-export function pose<Datum>(
-    shape: ShapeInstance<Datum>,
+export function pose(
+    camera: Camera3DInstance,
     view: { scale: number; center: Point3D },
     yaw: number,
     tilt: number
 ): void {
     const { scale, center } = view;
-    shape
+    camera
         .scale(scale)
         .origin({ x: 480 - center.x * scale, y: 250 - center.y * scale })
         .rotationCenter(center)

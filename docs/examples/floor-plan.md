@@ -64,18 +64,17 @@ through there, and a click on it selects the floor.
 ## One accessor lifts the floors
 
 No vertex has a `y`. The height of a floor comes from the `y` accessor,
-which all three renderers share. The spread adds to the height of a storey,
-and the floors are counted from the middle of the building, so the building
-turns around its own centre:
+which all three renderers share, and all three hang on one camera. The
+spread adds to the height of a storey, and the floors are counted from the
+middle of the building, so the building turns around its own centre:
 
 ```ts
 const elevation = (f) => (f - 1.5) * (STOREY + GAP * spread);
 
+const camera = camera3D().scale(24).origin({ x: 480, y: 250 });
+
 for (const renderer of [slabs3d, rooms3d, anchors3d]) {
-    renderer
-        .scale(24)
-        .origin({ x: 480, y: 250 })
-        .y((d) => -elevation(d.floor));
+    renderer.camera(camera).y((d) => -elevation(d.floor));
 }
 ```
 
@@ -199,7 +198,8 @@ and with <kbd>Shift</kbd> they call the same `turn`, 15° per press. A key
 held with <kbd>Ctrl</kbd>, <kbd>⌘</kbd> or <kbd>Alt</kbd> is left to the
 browser, so <kbd>⌘</kbd> <kbd>R</kbd> still reloads the page.
 
-The zoom is a factor on the scale of all three renderers. The wheel zooms
+The zoom is a factor on the scale of the camera, so all three renderers
+follow it. The wheel zooms
 only with <kbd>Ctrl</kbd> or <kbd>⌘</kbd>, so a plain wheel still scrolls
 past the figure. A pinch on a trackpad arrives as a wheel with
 <kbd>Ctrl</kbd>, so it zooms too.

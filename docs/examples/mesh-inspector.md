@@ -77,15 +77,15 @@ angle.
 
 A normal is a segment from the centroid of its face, a quarter of a unit
 along the face's normal. The normals are computed once in model space and go
-through `lines3D`. Both renderers get the same scale and
-origin once, and every render turns both by the same angles, so a normal
-stays on its face:
+through `lines3D`. Both renderers hang on one camera, and every render
+turns the camera, so a normal stays on its face:
 
 ```ts
-const renderers = [faces3d, normals3d];
-for (const renderer of renderers) {
-    renderer.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
-}
+const camera = camera3D().scale(SCALE).origin(ORIGIN);
+const faces3d = triangles3D().camera(camera);
+const normals3d = lines3D().camera(camera);
+
+camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
 ```
 
 ## One painter's list

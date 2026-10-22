@@ -1,5 +1,5 @@
 import { pointer, range, select } from 'd3';
-import { box, cubes3D, lines3D, planes3D, sort } from '../../index';
+import { box, camera3D, cubes3D, lines3D, planes3D, sort } from '../../index';
 import type { Cube, CubeFace, CubeFaceName, Line, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
 import { pose, tiltOf } from './floorView';
@@ -145,9 +145,11 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     let hovering: Pointer | undefined;
     let cursor: { column: number; row: number } | undefined;
 
-    const cubes = cubes3D<VoxelVertex>();
-    const floor = planes3D();
-    const grid = lines3D();
+    // The cubes, the floor and the grid hang on one camera.
+    const camera = camera3D();
+    const cubes = cubes3D<VoxelVertex>().camera(camera);
+    const floor = planes3D().camera(camera);
+    const grid = lines3D().camera(camera);
 
     const { group, button } = rotatingFigure(
         host,
@@ -200,10 +202,7 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
 
     /** Turns the scene, draws the floor and paints the cubes and the ghost back to front. */
     function render(): void {
-        const tilt = tiltOf(pitch);
-        pose(cubes, VIEW, yaw, tilt);
-        pose(floor, VIEW, yaw, tilt);
-        pose(grid, VIEW, yaw, tilt);
+        pose(camera, VIEW, yaw, tiltOf(pitch));
 
         floorGroup
             .selectAll('path')

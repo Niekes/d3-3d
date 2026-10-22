@@ -68,50 +68,42 @@ const EDGES = [
 ];
 ```
 
-## Two renderers, one set of settings
+## Two renderers, one camera
 
 `points3D` draws the nodes and `lines3D`
 the edges. An edge is a pair of the same node objects that `points3D` gets,
-so as long as both renderers share their settings, an edge projects its
-ends to the pixels of its two nodes. Both get the scale and the origin once:
+so as long as both renderers share their view, an edge projects its ends to
+the pixels of its two nodes. Both hang on one `camera3D`:
 
 ```ts
-const renderers = [nodes3d, edges3d];
-for (const renderer of renderers) {
-    renderer.scale(SCALE).origin(ORIGIN);
-}
+const camera = camera3D().scale(SCALE).origin(ORIGIN);
+const nodes3d = points3D().camera(camera);
+const edges3d = lines3D().camera(camera);
 ```
 
-and every draw turns both by the same angles:
+and every draw turns the camera, so both turn by the same angles:
 
 ```ts
-for (const renderer of renderers) {
-    renderer.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
-}
+camera.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
 ```
-
-Leave one renderer out of either loop and the edges come loose from the
-nodes as soon as the figure turns.
 
 ## Zoom is the scale
 
-The zoom needs no state of its own. It is the scale of the renderers over
-the scale they started with, and zooming sets a new scale on both:
+The zoom needs no state of its own. It is the scale of the camera over the
+scale it started with, and zooming sets a new scale on it:
 
 ```ts
 function zoomTo(zoom) {
     const clamped = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, zoom));
-    for (const renderer of renderers) {
-        renderer.scale(SCALE * clamped);
-    }
+    camera.scale(SCALE * clamped);
     drawScene();
 }
 ```
 
-A pinch reads the current zoom back from a renderer and multiplies it:
+A pinch reads the current zoom back from the camera and multiplies it:
 
 ```ts
-zoomTo((nodes3d.scale() / SCALE) * Math.exp(-event.deltaY * ZOOM_SPEED));
+zoomTo((camera.scale() / SCALE) * Math.exp(-event.deltaY * ZOOM_SPEED));
 ```
 
 The projection scales around the origin, so the figure zooms into its

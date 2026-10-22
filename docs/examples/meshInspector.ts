@@ -1,6 +1,6 @@
 import { format, interpolateLab, select } from 'd3';
-import { lathe, lines3D, normal, sort, triangles3D } from '../../index';
-import type { HasCentroid, Line, Point3D, ShapeInstance, Triangle } from '../../index';
+import { camera3D, lathe, lines3D, normal, sort, triangles3D } from '../../index';
+import type { HasCentroid, Line, Point3D, Triangle } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
@@ -82,15 +82,11 @@ const vector = (p: Point3D) => `(${fixed(p.x)}, ${fixed(p.y)}, ${fixed(p.z)})`;
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountMeshInspector(host: HTMLElement): () => void {
-    const faces3d = triangles3D<Point3D>();
-    const normals3d = lines3D<Point3D>();
-
     // A normal starts on the centroid of its face, so as long as both
-    // renderers share their settings it stays on the face as the mesh turns.
-    const renderers: ShapeInstance<Point3D>[] = [faces3d, normals3d];
-    for (const renderer of renderers) {
-        renderer.scale(SCALE).origin(ORIGIN);
-    }
+    // renderers hang on one camera it stays on the face as the mesh turns.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
+    const faces3d = triangles3D<Point3D>().camera(camera);
+    const normals3d = lines3D<Point3D>().camera(camera);
 
     let yaw = 0;
     let pitch = 0;
@@ -147,9 +143,7 @@ export function mountMeshInspector(host: HTMLElement): () => void {
 
     /** Projects the faces and the normals, styles them from the toggles and paints them back to front. */
     function render(): void {
-        for (const renderer of renderers) {
-            renderer.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
-        }
+        camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
 
         // The projected triangles are new arrays, so the key and the normal
         // in view space are stamped on after the projection. Its z is the

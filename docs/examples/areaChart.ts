@@ -1,7 +1,7 @@
 import { color, interpolate, randomUniform, range, scaleLinear, schemeTableau10, select } from 'd3';
 import type { Selection } from 'd3';
-import { axes3D, iso3D, polygons3D, sort } from '../../index';
-import type { AxesSpec, Point2D, Point3D, Polygon, ShapeInstance } from '../../index';
+import { axes3D, camera3D, iso3D, polygons3D, sort } from '../../index';
+import type { AxesSpec, Point2D, Point3D, Polygon } from '../../index';
 import { drawChartBox } from './axisEdges';
 import { rotatingFigure } from './rotatingFigure';
 import './areaChart.css';
@@ -162,14 +162,11 @@ function label(axis: keyof AxesSpec, value: number): string {
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountAreaChart(host: HTMLElement): () => void {
-    const polygons = polygons3D<Point3D>();
-    const box = axes3D();
-    const plane = iso3D();
-    const renderers: ShapeInstance<Point3D>[] = [polygons, box, plane];
-
-    for (const renderer of renderers) {
-        renderer.scale(SCALE).origin(ORIGIN);
-    }
+    // The three renderers hang on one camera, so turning it turns them all.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
+    const polygons = polygons3D<Point3D>().camera(camera);
+    const box = axes3D().camera(camera);
+    const plane = iso3D().camera(camera);
 
     // The ribbons start flat and grow into the first sample.
     let values: number[][] = SERIES.map(() => YEARS.map(() => 0));
@@ -196,9 +193,9 @@ export function mountAreaChart(host: HTMLElement): () => void {
             .data(named.map(([, points]) => points))
             .map((face, index) => Object.assign(face, { face: named[index][0], index }));
         const bottom = faces[4];
-        // The rotation is linear, so the depth between two corners of the
-        // floor is the depth of the x direction.
-        const sx = Math.sign(bottom[3].rotated.z - bottom[0].rotated.z);
+        // The depth grows along the view direction, so its x tells whether
+        // +x points towards the camera or away from it.
+        const sx = Math.sign(camera.viewDirection().x);
         const visible = faces.filter((face) => face.ccw);
         const hatched = faces[0].ccw ? series.z + DEPTH : series.z - DEPTH;
 
@@ -284,11 +281,9 @@ export function mountAreaChart(host: HTMLElement): () => void {
             });
     }
 
-    /** Turns all three renderers together and repaints. */
+    /** Turns the camera, and with it all three renderers, and repaints. */
     function pose(yaw: number, pitch: number): void {
-        for (const renderer of renderers) {
-            renderer.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
-        }
+        camera.rotateY(yaw + START_ANGLE).rotateX(-pitch - START_ANGLE);
         draw();
     }
 

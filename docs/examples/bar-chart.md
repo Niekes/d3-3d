@@ -33,11 +33,12 @@ the x-z plane and two values for `y` - handed to `cubes3D` as one flat list.
 bar stands and how high it rises:
 
 ```ts
-const cubes = cubes3D()
+const camera = camera3D()
     .scale(20)
     .origin({ x: 480, y: 300 })
     .rotateY(Math.PI / 6)
     .rotateX(-Math.PI / 6);
+const cubes = cubes3D().camera(camera);
 
 const bars = cubes.data(
     data.map((d) => box({ x: d.x, y: 0, z: d.z, width: 2, height: d.height, depth: 2 }))
@@ -67,12 +68,13 @@ enter or exit again - a new sample only changes the depth of each bar.
 ## Labels that count
 
 The label of a bar sits on the centroid of its top face, which is the
-average of the rotated vertices. The projection maps it onto the screen the
-same way it maps the vertices themselves:
+average of the rotated vertices. `orthographic` maps it onto the screen the
+same way the camera maps the vertices themselves:
 
 ```ts
-.attr('x', (d) => origin.x + scale * d.centroid.x)
-.attr('y', (d) => origin.y + scale * d.centroid.y);
+const view = { origin: camera.origin(), scale: camera.scale() };
+.attr('x', (d) => orthographic(d.centroid, view).x)
+.attr('y', (d) => orthographic(d.centroid, view).y);
 ```
 
 The number itself is a transition tween: it interpolates from the current
@@ -119,14 +121,15 @@ domain and the ticks for each. The bars grow towards a negative `y`, so the
 height axis runs from `0` to `-8` and its labels drop the sign:
 
 ```ts
-const box = axes3D().scale(20).origin({ x: 480, y: 300 });
+const chartBox = axes3D().camera(camera);
 
-box.data(spec).filter((wall) => !wall.ccw); // the back walls, with gridlines
-box.axes(spec); // one axis per dimension, on the outline of the box
+chartBox.data(spec).filter((wall) => !wall.ccw); // the back walls, with gridlines
+chartBox.axes(spec); // one axis per dimension, on the outline of the box
 ```
 
 The walls and the axes are drawn before the bars, so the bars always sit in
-front of them, and the box turns with the same drag as the bars.
+front of them. The box hangs on the same camera as the bars, so the drag
+turns the camera and both follow.
 
 ## The whole source
 

@@ -1,14 +1,14 @@
 import { groups, least, pointer, randomLcg, randomNormal, range, select } from 'd3';
-import { lines3D, points3D, sort } from '../../index';
-import type { Line, Point, Point3D, ShapeInstance } from '../../index';
+import { camera3D, lines3D, points3D, sort } from '../../index';
+import type { Line, Point, Point3D } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
  * A network explorer: nodes in three spatial clusters, linked to their
  * nearest neighbors and by a few bridges between the clusters. points3D
- * draws the nodes and lines3D the edges. Both renderers share one set of
- * transformation settings, so every edge ends on its two nodes.
+ * draws the nodes and lines3D the edges. Both renderers hang on one camera,
+ * so every edge ends on its two nodes.
  */
 
 const ORIGIN = { x: 480, y: 250 };
@@ -20,7 +20,7 @@ const SELECTED_RADIUS = 8;
 // The pointer catches the nearest node within this many units of the viewBox.
 const HIT_RADIUS = 18;
 
-// The zoom multiplies the scale of both renderers. A pinch on a trackpad, or
+// The zoom multiplies the scale of the camera. A pinch on a trackpad, or
 // a wheel turned with ctrl held, zooms; a plain wheel still scrolls the page.
 const ZOOM_MIN = 0.5;
 const ZOOM_MAX = 3;
@@ -259,15 +259,11 @@ const STYLES = `
 export function mountNetworkExplorer(host: HTMLElement): () => void {
     host.classList.add('network-explorer');
 
-    const nodes3d = points3D<Node>();
-    const edges3d = lines3D<Node>();
-
-    // An edge is a pair of the same node objects that points3D draws, so with
-    // the same settings both renderers project a node to the same pixel.
-    const renderers: ShapeInstance<Node>[] = [nodes3d, edges3d];
-    for (const renderer of renderers) {
-        renderer.scale(SCALE).origin(ORIGIN);
-    }
+    // An edge is a pair of the same node objects that points3D draws, so on
+    // one camera both renderers project a node to the same pixel.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
+    const nodes3d = points3D<Node>().camera(camera);
+    const edges3d = lines3D<Node>().camera(camera);
 
     let selected: Node | undefined;
     let hovered: string | undefined;
@@ -329,11 +325,9 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
     const edgeState = ([a, b]: Line<Node>) =>
         !selected ? null : a.id === selected.id || b.id === selected.id ? 'is-active' : 'is-dimmed';
 
-    /** Turns both renderers by the drag and draws the shown nodes and the edges between them. */
+    /** Turns the camera by the drag and draws the shown nodes and the edges between them. */
     function drawScene(): void {
-        for (const renderer of renderers) {
-            renderer.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
-        }
+        camera.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
 
         // The edges lie under the nodes, so an edge never covers its own ends.
         edgeGroup
@@ -395,14 +389,12 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
     }
 
     /**
-     * Zooms by scaling both renderers around the origin: the nodes spread
+     * Zooms by scaling the camera around the origin: the nodes spread
      * apart, keep their size, and the edges follow them.
      */
     function zoomTo(zoom: number): void {
         const clamped = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, zoom));
-        for (const renderer of renderers) {
-            renderer.scale(SCALE * clamped);
-        }
+        camera.scale(SCALE * clamped);
         zoomInput.valueAsNumber = clamped;
         zoomInput.nextElementSibling!.textContent = `${clamped.toFixed(1)}×`;
         drawScene();
@@ -433,7 +425,7 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
     // d3-drag swallows the click that ends a drag, so rotating never selects.
     // A tap has no hover before it, so the click looks for its own node.
     svg.addEventListener('click', (event) => choose(nodeAt(event)?.id ?? ''));
-    // The renderer keeps the zoom: its scale over SCALE.
+    // The camera keeps the zoom: its scale over SCALE.
     svg.addEventListener(
         'wheel',
         (event) => {
@@ -441,7 +433,7 @@ export function mountNetworkExplorer(host: HTMLElement): () => void {
                 return;
             }
             event.preventDefault();
-            zoomTo((nodes3d.scale() / SCALE) * Math.exp(-event.deltaY * ZOOM_SPEED));
+            zoomTo((camera.scale() / SCALE) * Math.exp(-event.deltaY * ZOOM_SPEED));
         },
         { passive: false }
     );

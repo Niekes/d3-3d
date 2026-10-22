@@ -1,5 +1,5 @@
 import { interpolateRgb, range } from 'd3';
-import { lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
+import { camera3D, lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
 import { playback, rotatingFigure } from './rotatingFigure';
 import type {
     HasCentroid,
@@ -96,9 +96,10 @@ function sunlight(triangle: Point3D[], center: Point3D): number {
  * Mounts the figure into `host` and returns a function that removes it.
  */
 export function mountSolarSystem(host: HTMLElement): () => void {
-    const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>();
-    const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>();
-    for (const shape of [triangles, orbits3d]) shape.origin(ORIGIN).rotateX(-TILT);
+    // The bodies and the orbits hang on one camera, so turning it turns both.
+    const camera = camera3D().origin(ORIGIN).rotateX(-TILT);
+    const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>().camera(camera);
+    const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>().camera(camera);
 
     const meshes = BODIES.map((body) => sphere(body.radius, body.segments));
     const shades = BODIES.map((body) => interpolateRgb('#000', body.color));
@@ -118,7 +119,7 @@ export function mountSolarSystem(host: HTMLElement): () => void {
         'solar-system',
         'The sun, the planets and the moon, made of triangles. Drag the figure to rotate it.',
         (yaw, pitch) => {
-            for (const shape of [triangles, orbits3d]) shape.rotateY(yaw).rotateX(-pitch - TILT);
+            camera.rotateY(yaw).rotateX(-pitch - TILT);
             draw();
         }
     );

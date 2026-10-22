@@ -1,6 +1,6 @@
 import { format, polygonHull, randomInt, randomLcg, range, select } from 'd3';
-import { box, cubes3D, normal, polygons3D, sort } from '../../index';
-import type { CubeFace, Point3D, Polygon, ShapeInstance } from '../../index';
+import { box, camera3D, cubes3D, normal, polygons3D, sort } from '../../index';
+import type { CubeFace, Point3D, Polygon } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 import './miniCity.css';
 
@@ -282,12 +282,10 @@ export function mountMiniCity(host: HTMLElement): () => void {
     let hour = START_HOUR;
     let selected: Building | undefined;
 
-    const cubes = cubes3D<CityVertex>();
-    const flat = polygons3D<Point3D>();
-    const shapes: ShapeInstance<any>[] = [cubes, flat];
-    for (const shape of shapes) {
-        shape.scale(SCALE).origin(ORIGIN);
-    }
+    // The buildings and the ground hang on one camera, so turning it turns both.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
+    const cubes = cubes3D<CityVertex>().camera(camera);
+    const flat = polygons3D<Point3D>().camera(camera);
 
     const { group, button } = rotatingFigure(
         host,
@@ -328,9 +326,7 @@ export function mountMiniCity(host: HTMLElement): () => void {
 
     /** Projects the city, lights it and paints the buildings back to front. */
     function render(): void {
-        for (const shape of shapes) {
-            shape.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
-        }
+        camera.rotateY(yaw + START_YAW).rotateX(-pitch - START_TILT);
         const sun = sunAt(hour);
 
         // A low sun shines warmer, and the CSS mixes that in everywhere.

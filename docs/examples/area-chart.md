@@ -74,11 +74,11 @@ other.
   therefore exact.
 - **Along the top.** Every segment of a ribbon is a convex slab, and the
   planes `x = const` separate the slabs. The top is painted in the order of
-  the data, or reversed when `+x` points away from the camera. The rotation
-  is linear, so two corners of the floor tell which way `+x` points:
+  the data, or reversed when `+x` points away from the camera. The x of
+  the camera's `viewDirection` tells which way `+x` points:
 
   ```ts
-  const sx = Math.sign(bottom[3].rotated.z - bottom[0].rotated.z);
+  const sx = Math.sign(camera.viewDirection().x);
   top.sort((a, b) => sx * (a.index - b.index));
   ```
 

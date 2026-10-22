@@ -1,5 +1,5 @@
 import { extent, format, interpolateObject, range, scaleLinear } from 'd3';
-import { axes3D, axisSpec, lineStrips3D, points3D, sort, strips } from '../../index';
+import { axes3D, axisSpec, camera3D, lineStrips3D, points3D, sort, strips } from '../../index';
 import type { AxesSpec, HasCentroid, Point, Point3D, ShapeInstance } from '../../index';
 import { playback, rotatingFigure } from './rotatingFigure';
 import './trajectoryExplorer.css';
@@ -89,13 +89,14 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
     const strips3d = lineStrips3D<Sample>();
     const markers3d = points3D<Sample>();
 
+    // The renderers hang on one camera, so turning it turns the whole scene.
     // Lorenz z points up and Lorenz y into the depth, so the butterfly faces
     // the reader. The screen y grows downwards, so z is negated.
+    const camera = camera3D().scale(SCALE).origin(ORIGIN);
     const renderers: ShapeInstance<any>[] = [box3d, strips3d, markers3d];
     for (const renderer of renderers) {
         renderer
-            .scale(SCALE)
-            .origin(ORIGIN)
+            .camera(camera)
             .x((d: Point3D) => scaleX(d.x))
             .y((d: Point3D) => -scaleZ(d.z))
             .z((d: Point3D) => scaleY(d.y));
@@ -169,11 +170,9 @@ export function mountTrajectoryExplorer(host: HTMLElement): () => void {
         return parent.selectAll<SVGPathElement, D>('path').data(data).join('path').attr('d', draw);
     }
 
-    /** Turns every renderer by the drag and draws the scene at the playhead. */
+    /** Turns the camera by the drag and draws the scene at the playhead. */
     function drawScene(): void {
-        for (const renderer of renderers) {
-            renderer.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
-        }
+        camera.rotateY(dragYaw + START_YAW).rotateX(-dragPitch - START_TILT);
 
         // A selected trajectory is drawn alone.
         const shown = TRAJECTORIES.filter((d) => !selected || d.id === selected);

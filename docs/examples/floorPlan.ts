@@ -11,7 +11,7 @@ import {
     sum
 } from 'd3';
 import type { Selection } from 'd3';
-import { planes3D, points3D, polygons3D, sort } from '../../index';
+import { camera3D, planes3D, points3D, polygons3D, sort } from '../../index';
 import type { Plane, Point, Point3D, Polygon, ShapeInstance, TransformedPoint } from '../../index';
 import { rotatingFigure } from './rotatingFigure';
 
@@ -294,11 +294,13 @@ export function mountFloorPlan(host: HTMLElement): () => void {
     const rooms3d = polygons3D<RoomVertex>();
     const anchors3d = points3D<RoomVertex>();
 
-    // The spread lives in the y accessor, before the rotation, so the floors
-    // part along the building's own axis. The screen y grows downwards.
+    // The renderers hang on one camera, so turning or zooming it moves them
+    // all. The spread lives in the y accessor, before the rotation, so the
+    // floors part along the building's own axis. The screen y grows downwards.
+    const camera = camera3D().origin(ORIGIN);
     const renderers: ShapeInstance<any>[] = [slabs3d, rooms3d, anchors3d];
     for (const renderer of renderers) {
-        renderer.origin(ORIGIN).y((d: FloorVertex) => -elevation(d.floor));
+        renderer.camera(camera).y((d: FloorVertex) => -elevation(d.floor));
     }
 
     // The scaffold reports the total of every drag so far. The figure turns
@@ -360,12 +362,10 @@ export function mountFloorPlan(host: HTMLElement): () => void {
 
     /** Projects the floors and paints them back to front, the rooms on their slab. */
     function render(): void {
-        for (const renderer of renderers) {
-            renderer
-                .scale(SCALE * zoom)
-                .rotateY(yaw + START_YAW)
-                .rotateX(-pitch - START_TILT);
-        }
+        camera
+            .scale(SCALE * zoom)
+            .rotateY(yaw + START_YAW)
+            .rotateX(-pitch - START_TILT);
 
         const rooms = rooms3d.data(OUTLINES);
         const anchors = anchors3d.data(ANCHORS);
