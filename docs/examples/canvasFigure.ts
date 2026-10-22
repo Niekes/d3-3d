@@ -29,6 +29,13 @@ export interface CanvasFigure {
     tilt: number;
     /** The camera that holds the scale and the origin of the figure. */
     camera: Camera3DInstance;
+    /** False keeps the figure still until it is dragged. */
+    spin?: boolean;
+    /**
+     * Turns the figure only while Space is held over it, so a plain drag
+     * leaves the pointer to the figure. A touch drag turns it as ever.
+     */
+    orbitOnSpace?: boolean;
     /** Builds the renderers once the canvases are sized for `dpr`. */
     renderers(
         canvas: HTMLCanvasElement,
@@ -63,6 +70,7 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
                 <label><input type="radio" name="renderer" value="canvas" checked> canvas 2D</label>
                 <label><input type="radio" name="renderer" value="webgl"> WebGL</label>
             </fieldset>
+            ${figure.orbitOnSpace ? '<p class="canvas-figure-hint"><kbd>Space</kbd> + drag to orbit</p>' : ''}
         </form>`;
 
     const stage = select(host).select<HTMLDivElement>('.canvas-figure-stage');
@@ -76,8 +84,9 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
     const gl = canvases.filter('[data-renderer="webgl"]').node()!.getContext('webgl2');
     const draw = figure.renderers(canvases.filter('[data-renderer="canvas"]').node()!, gl, dpr);
 
+    // A figure for the 2D canvas alone has nothing to toggle.
     if (!draw.webgl) {
-        form.querySelector<HTMLInputElement>('[value="webgl"]')!.disabled = true;
+        form.querySelector('fieldset')!.hidden = true;
     }
 
     let count = figure.count;
@@ -95,14 +104,46 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
 
     let yaw = 0;
     let pitch = 0;
-    stage.call(
-        dragRotate<HTMLDivElement>((y, p) => {
-            yaw = y;
-            pitch = p;
-        })
-    );
+    const rotate = dragRotate<HTMLDivElement>((y, p) => {
+        yaw = y;
+        pitch = p;
+    });
 
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Space over the figure turns the next drag into an orbit; anywhere
+    // else, and in a text field, it scrolls and types as ever.
+    const hold = (event: KeyboardEvent): void => {
+        if (event.code !== 'Space') {
+            return;
+        }
+        if (event.type === 'keydown') {
+            if (!stage.node()!.matches(':hover') || typing(event.target)) {
+                return;
+            }
+            event.preventDefault();
+        }
+        host.classList.toggle('orbiting', event.type === 'keydown');
+    };
+    const release = (): void => {
+        host.classList.remove('orbiting');
+    };
+
+    if (figure.orbitOnSpace) {
+        const pressed = rotate.filter();
+        rotate.filter(function (event, d) {
+            return (
+                (host.classList.contains('orbiting') || event.type === 'touchstart') &&
+                pressed.call(this, event, d)
+            );
+        });
+        host.classList.add('space-to-orbit');
+        window.addEventListener('keydown', hold);
+        window.addEventListener('keyup', hold);
+        window.addEventListener('blur', release);
+    }
+    stage.call(rotate);
+
+    const still =
+        figure.spin === false || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let spin = 0;
     let previous = 0;
     let frames = 0;
@@ -127,9 +168,40 @@ export function canvasFigure(host: HTMLElement, figure: CanvasFigure): () => voi
     return () => {
         loop.stop();
         gl?.getExtension('WEBGL_lose_context')?.loseContext();
-        host.classList.remove('canvas-figure');
+        window.removeEventListener('keydown', hold);
+        window.removeEventListener('keyup', hold);
+        window.removeEventListener('blur', release);
+        host.classList.remove('canvas-figure', 'space-to-orbit', 'orbiting');
         host.innerHTML = '';
     };
+}
+
+/** Whether a Space typed into `target` belongs to the text there. */
+function typing(target: EventTarget | null): boolean {
+    return (
+        target instanceof HTMLElement &&
+        target.matches(
+            'textarea, [contenteditable], input:not([type="radio"], [type="checkbox"], [type="range"])'
+        )
+    );
+}
+
+/**
+ * The device pixel at the top left of the square of `size` device pixels
+ * that point `i` of the projected `screen` covers, on a canvas of `width` ×
+ * `height` device pixels; -1 where the square leaves the canvas.
+ */
+export function squareAt(
+    screen: Float32Array,
+    i: number,
+    dpr: number,
+    size: number,
+    width: number,
+    height: number
+): number {
+    const x = Math.round(screen[3 * i] * dpr - size / 2);
+    const y = Math.round(screen[3 * i + 1] * dpr - size / 2);
+    return x < 0 || y < 0 || x + size > width || y + size > height ? -1 : y * width + x;
 }
 
 /** Compiles the two shaders, links them and makes the program current. */

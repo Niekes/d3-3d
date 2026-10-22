@@ -28,13 +28,19 @@
     cursor: grabbing;
 }
 
+/* A figure that orbits on Space leaves the pointer to the figure until then. */
+.canvas-figure.space-to-orbit:not(.orbiting) .canvas-figure-stage {
+    cursor: auto;
+}
+
 .canvas-figure canvas {
     display: block;
     width: 100%;
     height: auto;
 }
 
-.canvas-figure canvas[hidden] {
+.canvas-figure canvas[hidden],
+.canvas-figure .canvas-figure-controls fieldset[hidden] {
     display: none;
 }
 
@@ -74,6 +80,27 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+}
+
+/* The hint closes the row, whatever a figure adds to the controls. */
+.canvas-figure .canvas-figure-hint {
+    order: 1;
+    margin: 0 0 0 auto;
+    opacity: 0.8;
+}
+
+.canvas-figure kbd {
+    padding: 0 5px;
+    border: 1px solid var(--cf-line);
+    border-radius: 4px;
+    font: inherit;
+    font-size: 12px;
+}
+
+/* The key lights up while it is held. */
+.canvas-figure.orbiting kbd {
+    background: var(--cf-ink);
+    color: var(--cf-bg);
 }
 
 .canvas-figure .canvas-figure-controls select {

@@ -89,6 +89,7 @@ export default defineConfig({
                             { text: 'Floor-plan explorer', link: '/examples/floor-plan' },
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
                             { text: 'Point cloud', link: '/examples/point-cloud' },
+                            { text: 'Pixel space', link: '/examples/pixel-space' },
                             { text: 'Trajectory explorer', link: '/examples/trajectory-explorer' },
                             { text: 'Network explorer', link: '/examples/network-explorer' },
                             { text: 'Projection playground', link: '/examples/projection-playground' },

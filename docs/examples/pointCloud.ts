@@ -1,6 +1,6 @@
 import { randomNormal, rgb } from 'd3';
 import { camera3D, projectPositions } from '../../index';
-import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram } from './canvasFigure';
+import { HEIGHT, WIDTH, attribute, canvasFigure, linkProgram, squareAt } from './canvasFigure';
 import type { Draw } from './canvasFigure';
 import './pointCloud.css';
 
@@ -110,16 +110,15 @@ function canvasRenderer(
         );
 
         for (let i = 0; i < count; i += 1) {
-            const x = Math.round(screen[3 * i] * dpr - size / 2);
-            const y = Math.round(screen[3 * i + 1] * dpr - size / 2);
-            if (x < 0 || y < 0 || x + size > width || y + size > height) {
+            const corner = squareAt(screen, i, dpr, size, width, height);
+            if (corner < 0) {
                 continue;
             }
 
             // The pixels clamp at 255, as the additive blending of WebGL does.
             const k = 3 * rings[i];
             for (let dy = 0; dy < size; dy += 1) {
-                for (let j = 4 * ((y + dy) * width + x), end = j + 4 * size; j < end; j += 4) {
+                for (let j = 4 * (corner + dy * width), end = j + 4 * size; j < end; j += 4) {
                     pixels[j] += light[k];
                     pixels[j + 1] += light[k + 1];
                     pixels[j + 2] += light[k + 2];
