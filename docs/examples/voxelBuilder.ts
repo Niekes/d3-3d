@@ -490,6 +490,11 @@ export function mountVoxelBuilder(host: HTMLElement): () => void {
     // top of it, or erases or paints its top cube, and Delete takes its top
     // cube away.
     svg.on('keydown', (event: KeyboardEvent) => {
+        // Cmd and Ctrl keep their browser shortcuts, such as Cmd+P to print.
+        // AltGr reports Ctrl too, and types characters on many layouts.
+        if (event.metaKey || (event.ctrlKey && !event.getModifierState('AltGraph'))) {
+            return;
+        }
         const move = MOVES[event.key];
         if (move) {
             event.preventDefault();
