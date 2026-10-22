@@ -9,9 +9,15 @@ import { rotationMatrix } from './rotation';
  * The projection is orthographic, so it is affine: the screen point is
  * `origin + scale · (R · p + c − R · c)` for the rotation `R` around the
  * center `c`, and one matrix carries all of it.
+ *
+ * Given the `width` and `height` of the canvas in the same pixels, the
+ * matrix maps to clip space instead, ready for `gl_Position`: x and y from
+ * -1 to 1 with y up, and the depth within `depth` of the center from -1 at
+ * the near side to 1 at the far side. Without a `depth`, z is 0.
  */
 export function projectionMatrix(
-    options: Omit<TransformOptions<unknown>, 'x' | 'y' | 'z'>
+    options: Omit<TransformOptions<unknown>, 'x' | 'y' | 'z'>,
+    viewport?: { width: number; height: number; depth?: number }
 ): Float32Array {
     const { origin: o, rotateCenter: c, scale: s } = options;
     const m = rotationMatrix({
@@ -26,12 +32,25 @@ export function projectionMatrix(
     const tz = c.z - (m[6] * c.x + m[7] * c.y + m[8] * c.z);
 
     // prettier-ignore
-    return new Float32Array([
+    const matrix = [
         s * m[0], s * m[3], m[6], 0,
         s * m[1], s * m[4], m[7], 0,
         s * m[2], s * m[5], m[8], 0,
         o.x + s * tx, o.y + s * ty, tz, 1
-    ]);
+    ];
+
+    if (viewport) {
+        const { width, height, depth } = viewport;
+        // Row by row on every column; the fourth row is w, 0 or 1.
+        for (let column = 0; column < 16; column += 4) {
+            const w = matrix[column + 3];
+            matrix[column] = (2 * matrix[column]) / width - w;
+            matrix[column + 1] = w - (2 * matrix[column + 1]) / height;
+            matrix[column + 2] = depth ? (c.z * w - matrix[column + 2]) / depth : 0;
+        }
+    }
+
+    return new Float32Array(matrix);
 }
 
 /**

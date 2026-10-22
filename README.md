@@ -133,6 +133,8 @@ import type { Point3D, Point2D, TransformedPoint } from 'd3-3d';
 
 - [sort()](#sort) - utility function to sort shapes by depth.
 - [projectPositions()](#projectpositions) - project a packed point cloud through a matrix.
+- [normal()](#normal) - the unit normal of a polygon, for back faces and lighting.
+- [box()](#box) - the eight corners of a box, in the order `cubes3D` expects.
 
 ### Overview
 
@@ -407,7 +409,7 @@ context.fill(new Path2D(bars.draw(face)));
 projectPositions(positions, camera.matrix(), screen);
 
 // WebGL
-gl.uniformMatrix4fv(matrixLocation, false, camera.matrix());
+gl.uniformMatrix4fv(matrixLocation, false, camera.matrix({ width, height, depth }));
 ```
 
 ### API Methods
@@ -659,7 +661,13 @@ Returns the projection of the shape - its scale, origin, rotation and rotation c
 
 Use it when the SVG DOM is too slow for the number of points: `.data()` builds an object per point, the matrix projects millions of them on the GPU, or on the CPU with [`projectPositions`](#projectpositions).
 
-**Available on:** All shapes
+Given a _viewport_, the matrix maps to clip space instead, ready for `gl_Position`: x and y from -1 to 1 with y up, and the depth from -1 at the near side to 1 at the far side.
+
+**Available on:** All shapes and `camera3D()`
+
+**Parameters:**
+
+- `viewport?: { width: number; height: number; depth?: number }` - the size of the canvas in the pixels of `origin` and `scale`, and the radius of the scene around the rotation center, in world units. Without a `depth`, z is 0.
 
 **Returns:** `Float32Array` - 16 numbers, column by column
 
@@ -668,17 +676,15 @@ Use it when the SVG DOM is too slow for the number of points: `.data()` builds a
 ```typescript
 const camera = camera3D().scale(40).origin({ x: 480, y: 250 }).rotateX(-0.5).rotateY(0.6);
 
-gl.uniformMatrix4fv(matrixLocation, false, camera.matrix());
+gl.uniformMatrix4fv(matrixLocation, false, camera.matrix({ width: 960, height: 500, depth: 2 }));
 ```
 
 ```glsl
-uniform mat4 u_matrix; // camera.matrix(), in CSS pixels
-uniform vec2 u_size;   // the canvas size, in CSS pixels
+uniform mat4 u_matrix; // camera.matrix({ width, height, depth })
 attribute vec3 a_position;
 
 void main() {
-    vec4 p = u_matrix * vec4(a_position, 1.0);
-    gl_Position = vec4(p.x / u_size.x * 2.0 - 1.0, 1.0 - p.y / u_size.y * 2.0, 0.0, 1.0);
+    gl_Position = u_matrix * vec4(a_position, 1.0);
 }
 ```
 
@@ -802,6 +808,54 @@ function projectPositions(
     matrix: ArrayLike<number>,
     out?: Float32Array
 ): Float32Array;
+```
+
+### normal()
+
+Returns the unit normal of a polygon, by Newell's method. It points to the side from which the vertices run counter-clockwise on the screen - the side [`ccw`](#ccw-counter-clockwise) reports - so the faces of `cubes3D` point outwards, and a face faces the camera where its normal points along [`.viewDirection()`](#viewdirection). A polygon without an area gets the zero vector.
+
+**Usage:**
+
+```typescript
+import { cubes3D, normal } from 'd3-3d';
+
+const sun = { x: 0.5, y: -0.7, z: 0.5 }; // up is -y
+const light = (face) => {
+    const n = normal(face);
+    return Math.max(0.2, n.x * sun.x + n.y * sun.y + n.z * sun.z);
+};
+```
+
+**Type Signature:**
+
+```typescript
+function normal(polygon: ReadonlyArray<Point3D>): Point3D;
+```
+
+### box()
+
+Returns the eight corners of a box in the order `cubes3D` expects. The box stands on the point (_x_, _y_, _z_): its footprint is centered on _x_ and _z_, _width_ along x and _depth_ along z, and it rises _height_ upwards, towards -y as on the screen.
+
+**Usage:**
+
+```typescript
+import { box, cubes3D } from 'd3-3d';
+
+const bars = data.map((d) => box({ x: d.x, y: 0, z: d.z, width: 1, height: d.value, depth: 1 }));
+cubes3D().data(bars);
+```
+
+**Type Signature:**
+
+```typescript
+function box(spec: {
+    x: number;
+    y: number;
+    z: number;
+    width: number;
+    height: number;
+    depth: number;
+}): Point3D[];
 ```
 
 ### Computed Properties

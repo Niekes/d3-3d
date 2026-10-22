@@ -20,6 +20,8 @@ export { triangles3D } from './src/shapes/triangles';
 export { sort } from './src/sort';
 export { ccw } from './src/counter-clockwise';
 export { centroid } from './src/centroid';
+export { normal } from './src/normal';
+export { box } from './src/box';
 export { transform } from './src/transform';
 export { orthographic } from './src/projection-orthographic';
 export { projectPositions } from './src/projection-matrix';

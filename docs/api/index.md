@@ -70,7 +70,8 @@ seen edge-on.
 
 The projection as a column-major 4×4 `Float32Array`, for a WebGL uniform or
 for `projectPositions`. It maps a world point to its screen x and y, and its
-`rotated` z as the depth.
+`rotated` z as the depth. Given `{ width, height, depth }`, it maps to clip
+space instead, ready for `gl_Position`.
 
 ### `.camera(camera)` {#camera}
 
@@ -159,6 +160,16 @@ out.
 Project packed x, y, z triples through a `.matrix()` into a `Float32Array` of
 screen x, screen y and depth. Reuse `out` to redraw a large point cloud on a
 canvas without allocating.
+
+### `normal(polygon)` {#normal}
+
+The unit normal of a polygon, on the side `ccw` reports: outwards on the
+faces of `cubes3D`, along `viewDirection` where a face faces the camera.
+
+### `box(spec)` {#box}
+
+The eight corners of a box in the order `cubes3D` expects, standing on
+`{ x, y, z }` with its `width`, `depth` and `height`, upwards towards -y.
 
 ## Isometric scenes
 

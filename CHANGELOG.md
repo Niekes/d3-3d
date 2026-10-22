@@ -14,9 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `.matrix()` serves a canvas or WebGL.
 - `.viewDirection()` on every shape and camera: the unit vector towards the
   viewer, in world coordinates.
-- `.matrix()` on every shape: the projection as a column-major 4×4 matrix,
-  for a WebGL uniform. `projectPositions` projects packed x, y, z triples
-  through it into a reusable `Float32Array`.
+- `.matrix()` on every shape: the projection as a column-major 4×4 matrix.
+  `projectPositions` projects packed x, y, z triples through it into a
+  reusable `Float32Array`, and `.matrix({ width, height, depth })` maps to
+  clip space for a WebGL uniform.
+- `normal(polygon)`: the unit normal of a polygon, on the side `ccw`
+  reports.
+- `box(spec)`: the eight corners of a box in the order `cubes3D` expects.
 
 - `axes3D`: the box of a 3D chart. `.data(spec)` returns the six walls with
   their gridlines and `ccw`, `.draw(wall)` their paths, and `.axes(spec)` the

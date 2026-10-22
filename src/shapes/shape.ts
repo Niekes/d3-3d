@@ -32,7 +32,7 @@ export interface Camera3DInstance {
 
     unproject(point: Point2D, planePoint: Point3D, planeNormal: Point3D): Point3D | null;
 
-    matrix(): Float32Array;
+    matrix(viewport?: { width: number; height: number; depth?: number }): Float32Array;
 
     viewDirection(): Point3D;
 }
@@ -142,11 +142,12 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     }
 
     /**
-     * The projection of this renderer as a column-major 4×4 matrix, for a
-     * WebGL uniform or for `projectPositions`.
+     * The projection of this renderer as a column-major 4×4 matrix, for
+     * `projectPositions` in screen pixels, or for a WebGL uniform in clip
+     * space when it gets the size of the canvas and the depth of the scene.
      */
-    matrix(): Float32Array {
-        return projectionMatrix(this.transformOptions());
+    matrix(viewport?: { width: number; height: number; depth?: number }): Float32Array {
+        return projectionMatrix(this.transformOptions(), viewport);
     }
 
     /**
