@@ -3,7 +3,7 @@ import { camera3D, catmullRom, lineStrips3D, lines3D, points3D, sort } from '../
 import type { Line, Point, Point3D } from '../../index';
 import { FLOOR_MOVES, pose } from './floorView';
 import { enterHandles, placeHandles } from './handles';
-import { rotatingFigure } from './rotatingFigure';
+import { endDrags, rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -426,6 +426,7 @@ export function mountSplineEditor(host: HTMLElement): () => void {
     reset();
 
     return () => {
+        endDrags();
         window.removeEventListener('keydown', hold);
         window.removeEventListener('keyup', hold);
         host.innerHTML = '';

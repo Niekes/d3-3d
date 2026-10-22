@@ -10,7 +10,7 @@ import type {
     Points3DInstance
 } from '../../index';
 import { FLOOR_TURN, floorGrid } from './floorView';
-import { dragRotate, turnCamera } from './rotatingFigure';
+import { dragRotate, endDrags, turnCamera } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -427,11 +427,7 @@ export function mountLinkedViews(host: HTMLElement): () => void {
     render();
 
     return () => {
-        // A brush under way listens on the window: a mouseup ends it, so it
-        // never reaches for a view that is gone.
-        if (brushing) {
-            window.dispatchEvent(new MouseEvent('mouseup', { view: window }));
-        }
+        endDrags();
         host.innerHTML = '';
         host.classList.remove('linked-views');
     };

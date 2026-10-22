@@ -4,7 +4,7 @@ import type { CubeFace, Line, Point, Point3D } from '../../index';
 import { joinFaces } from './cubeFaces';
 import { FLOOR_MOVES, FLOOR_TURN, floorGrid } from './floorView';
 import { enterHandles, placeHandles } from './handles';
-import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
+import { endDrags, playback, rotatingFigure, turnCamera } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -340,6 +340,7 @@ export function mountRotationPivot(host: HTMLElement): () => void {
     render();
 
     return () => {
+        endDrags();
         play?.(false);
         host.innerHTML = '';
         host.classList.remove('rotation-pivot');

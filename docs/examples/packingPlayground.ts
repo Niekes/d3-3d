@@ -5,7 +5,7 @@ import { cellBox, joinCells, joinFaces, keyOf, neighborOf } from './cubeFaces';
 import type { Cell } from './cubeFaces';
 import { FLOOR_MOVES, floorGrid, followPointer, pose } from './floorView';
 import type { Pointer } from './floorView';
-import { rotatingFigure } from './rotatingFigure';
+import { endDrags, rotatingFigure } from './rotatingFigure';
 import { placeSegments } from './segments';
 
 /*
@@ -617,6 +617,7 @@ export function mountPackingPlayground(host: HTMLElement): () => void {
     render();
 
     return () => {
+        endDrags();
         host.innerHTML = '';
         host.classList.remove('packing-playground');
     };

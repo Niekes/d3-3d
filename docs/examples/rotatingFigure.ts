@@ -119,6 +119,17 @@ export function dragRotate<E extends Element = SVGSVGElement>(
         });
 }
 
+/**
+ * Ends a mouse drag or brush that is under way. d3 follows the mouse on the
+ * window until the button comes up, so a figure taken off the page mid-drag
+ * would still hear the moves, and in Firefox an SVG element off the page has
+ * no screen matrix to place them with. A figure calls this first when it is
+ * removed, while it is still on the page.
+ */
+export function endDrags(): void {
+    window.dispatchEvent(new MouseEvent('mouseup', { view: window }));
+}
+
 /** Where a figure starts and how far it may tilt, in radians. */
 export interface Turn {
     /** The turn around the vertical axis before any drag. */

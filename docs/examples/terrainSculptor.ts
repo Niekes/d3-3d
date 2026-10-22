@@ -2,6 +2,7 @@ import { drag, interpolateLab, piecewise, pointer, range, select, timer } from '
 import type { Timer } from 'd3';
 import { lineStrips3D } from '../../index';
 import type { GridPlane, Point3D } from '../../index';
+import { endDrags } from './rotatingFigure';
 import { sample, surfaceFigure } from './surfaceFigure';
 import './terrainSculptor.css';
 
@@ -311,6 +312,7 @@ export function mountTerrainSculptor(host: HTMLElement): () => void {
     show(points);
 
     return () => {
+        endDrags();
         sculpting?.stop();
         host.innerHTML = '';
         host.classList.remove('terrain-sculptor');
