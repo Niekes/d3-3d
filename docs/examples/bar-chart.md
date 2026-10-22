@@ -88,7 +88,7 @@ label counts while the bar grows or shrinks:
 ## The painter's algorithm, twice
 
 The bars do not overlap each other, but the six faces of one bar do. The
-[`sort`](/api/#utility-functions) utility orders by the depth of a centroid,
+`sort` utility orders by the depth of a centroid,
 so the chart sorts at two levels: the cube groups by the depth of the cube
 centroid, and inside each group the faces and the label by the depth of
 theirs:
@@ -103,7 +103,7 @@ the order has to be recomputed with every frame.
 
 ## The box around the bars
 
-[`axes3D`](/api/#axes) draws the chart box from a spec of three axes, a
+`axes3D` draws the chart box from a spec of three axes, a
 domain and the ticks for each. The bars grow towards a negative `y`, so the
 height axis runs from `0` to `-8` and its labels drop the sign:
 

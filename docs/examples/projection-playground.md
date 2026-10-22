@@ -31,8 +31,8 @@ marked. **Hover a row** of the table to find its vertex in the figure. The
 reset button puts every slider back.
 
 Every renderer of d3-3d shares these settings. The playground hands them to
-three renderers at once, [`cubes3D`](/api/#shapes) for the cube,
-[`lines3D`](/api/#shapes) for the model axes and [`points3D`](/api/#shapes)
+three renderers at once, `cubes3D` for the cube,
+`lines3D` for the model axes and `points3D`
 for the rotation center, so the three project into one scene:
 
 ```ts
@@ -115,7 +115,7 @@ return {
 
 The cube draws its faces from `projected`. `rotated.z` is the depth that
 survives the projection: the faces carry a `centroid` of their rotated
-corners, and the [`sort`](/api/#utility-functions) utility orders them by
+corners, and the `sort` utility orders them by
 its z, back to front.
 
 ## Presets are slider values

@@ -34,9 +34,9 @@ reset the view.
 ## Floors are planes, rooms are polygons
 
 Every floor is a slab of the same 12 × 8 footprint, drawn with
-[`planes3D`](/api/#shapes). A plane has exactly four vertices, and its
+`planes3D`. A plane has exactly four vertices, and its
 `draw` connects those four. The rooms on a slab are drawn with
-[`polygons3D`](/api/#shapes), which closes an outline of any length. Every
+`polygons3D`, which closes an outline of any length. Every
 floor has one L-shaped room, and an L has six corners:
 
 ```ts
@@ -111,7 +111,7 @@ The `centroid` that the library sets on a polygon is the average of its
 vertices, which is what the sort needs. For the label of an L it can fall
 outside the room. The labels sit at the centroid of the area instead,
 which d3's `polygonCentroid` computes on the plan, and they go through
-[`points3D`](/api/#shapes) with the same accessors:
+`points3D` with the same accessors:
 
 ```ts
 const anchors = rooms.map((room) => roomVertex(room)(polygonCentroid(room.plan)));

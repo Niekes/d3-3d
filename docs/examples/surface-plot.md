@@ -138,7 +138,7 @@ colorScale.domain(fit.checked ? extent(points, (d) => d.y) : [-12, 12]);
 ## The painter's algorithm
 
 The quads are drawn as flat SVG paths, so their order decides which one
-wins. The [`sort`](/api/#utility-functions) utility orders the paths by the
+wins. The `sort` utility orders the paths by the
 depth of their rotated centre, and the painter's algorithm does the rest:
 
 ```ts

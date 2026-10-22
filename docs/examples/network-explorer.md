@@ -70,7 +70,7 @@ const EDGES = [
 
 ## Two renderers, one set of settings
 
-[`points3D`](/api/#shapes) draws the nodes and [`lines3D`](/api/#shapes)
+`points3D` draws the nodes and `lines3D`
 the edges. An edge is a pair of the same node objects that `points3D` gets,
 so as long as both renderers share their settings, an edge projects its
 ends to the pixels of its two nodes. Both get the scale and the origin once:
@@ -123,7 +123,7 @@ wheel still scrolls the page.
 ## Depth order
 
 The nodes are sorted back to front with
-[`sort`](/api/#utility-functions). The edges are drawn in a group under
+`sort`. The edges are drawn in a group under
 them and are not sorted, so an edge never covers the node it ends on.
 
 ## Neighbors from an adjacency map

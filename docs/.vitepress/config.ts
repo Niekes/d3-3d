@@ -1,9 +1,55 @@
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vitepress';
+
+// Every ### `name(...)` {#id} heading of the API page. The first heading of a
+// name wins, so `.data` points at the shared method, not at iso3D's.
+const apiAnchors = new Map(
+    [...readFileSync(new URL('../api/index.md', import.meta.url), 'utf8').matchAll(
+        /^### `([^`(]+)[^`]*` \{#([\w-]+)\}$/gm
+    )]
+        .reverse()
+        .map(([, name, id]) => [name, id])
+);
+
+// Utilities that share their name with a property of the shapes: a bare
+// `ccw` is the flag, only `ccw()` is the function.
+const properties = new Set(['ccw', 'centroid']);
 
 export default defineConfig({
     title: 'd3-3d',
     description: 'D3.js plugin for 3D visualization, written in TypeScript.',
     base: '/d3-3d/',
+    markdown: {
+        // Link every inline `name` of the API to its entry, except in
+        // headings and in code that already sits in a link.
+        config(md) {
+            md.core.ruler.push('api-links', (state) => {
+                state.tokens.forEach((block, i) => {
+                    if (block.type !== 'inline' || state.tokens[i - 1]?.type === 'heading_open') {
+                        return;
+                    }
+                    let inLink = false;
+                    block.children = (block.children ?? []).flatMap((token) => {
+                        if (token.type === 'link_open' || token.type === 'link_close') {
+                            inLink = token.type === 'link_open';
+                        }
+                        const name = token.content.replace(/\(.*\)$/, '');
+                        const id =
+                            !inLink &&
+                            token.type === 'code_inline' &&
+                            !(name === token.content && properties.has(name)) &&
+                            apiAnchors.get(name);
+                        if (!id) {
+                            return [token];
+                        }
+                        const open = new state.Token('link_open', 'a', 1);
+                        open.attrSet('href', `/api/#${id}`);
+                        return [open, token, new state.Token('link_close', 'a', -1)];
+                    });
+                });
+            });
+        }
+    },
     themeConfig: {
         nav: [
             { text: 'Guide', link: '/guide/getting-started' },

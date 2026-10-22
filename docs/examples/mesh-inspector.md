@@ -46,7 +46,7 @@ counter-clockwise when it is seen from outside the vase.
 
 ## Front or back
 
-[`triangles3D`](/api/#shapes) hands back every triangle with a `ccw` flag:
+`triangles3D` hands back every triangle with a `ccw` flag:
 whether its points run counter-clockwise on the screen after the rotation.
 A triangle that is counter-clockwise from outside is clockwise from inside,
 so with every triangle wound the same way, `ccw` tells a face that looks at
@@ -79,7 +79,7 @@ angle.
 
 A normal is a segment from the centroid of its face, a quarter of a unit
 along the face's normal. The normals are computed once in model space and go
-through [`lines3D`](/api/#shapes). Both renderers get the same scale and
+through `lines3D`. Both renderers get the same scale and
 origin once, and every render turns both by the same angles, so a normal
 stays on its face:
 
@@ -95,7 +95,7 @@ for (const renderer of renderers) {
 Hiding the back faces is not enough to draw the vase. Its neck is narrower
 than its belly and its lip, so faces that all look at the camera still
 cover each other. The faces and the normals go into one group, and the
-[`sort`](/api/#utility-functions) utility orders both by the depth of their
+`sort` utility orders both by the depth of their
 centroid. It only reads `centroid.z`, which `triangles3D` and `lines3D` both
 set:
 

@@ -64,7 +64,7 @@ vertical accessor negates it.
 
 ## The back walls face away from the camera
 
-[`axes3D`](/api/#axes) returns the six walls of the box, each with its
+`axes3D` returns the six walls of the box, each with its
 gridlines and the `ccw` flag that tells whether the wall faces the camera.
 Only the walls that face away are drawn. That is why the walls jump to the
 other side when the rotation crosses an axis plane, and why they never

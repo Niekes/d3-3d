@@ -61,9 +61,9 @@ fractional sample index that the timer advances and the slider sets.
 
 ## One playhead, three renderers
 
-[`axes3D`](/api/#axes) draws the back walls of the box, and
-[`lineStrips3D`](/api/#shapes) the paths and their trails.
-[`points3D`](/api/#shapes) draws the markers. All three get the same
+`axes3D` draws the back walls of the box, and
+`lineStrips3D` the paths and their trails.
+`points3D` draws the markers. All three get the same
 scale, origin and accessors, and every draw turns them by the same angles,
 so they project into one scene:
 
@@ -98,7 +98,7 @@ a head carries its own place on the playhead.
 ## A trail of short strips
 
 A line strip comes back with one centroid, the depth that the
-[`sort`](/api/#utility-functions) utility reads. A whole trail drawn as
+`sort` utility reads. A whole trail drawn as
 one strip would paint above or below every marker as a single piece. The
 trail is cut into strips of six samples that share their end points
 instead, and each strip sorts on its own depth. A trail can pass behind

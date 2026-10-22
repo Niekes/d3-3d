@@ -49,7 +49,7 @@ const paths = group.selectAll('path').data(facets, (d) => d.id);
 
 `data` returns new arrays, so the index is stamped on after the projection
 and is the key of the join. One `data` call matters for the painter's
-algorithm: the [`sort`](/api/#utility-functions) utility orders the
+algorithm: the `sort` utility orders the
 triangles of all bodies together, so the sun hides a planet behind it and a
 planet in front hides the sun.
 
