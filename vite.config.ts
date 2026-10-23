@@ -51,9 +51,16 @@ const config: UserConfig = {
         include: ['tests/**/*.test.ts'],
         coverage: {
             provider: 'v8',
-            reporter: ['text', 'json', 'html', 'lcov'],
+            // json-summary feeds the coverage badge on master.
+            reporter: ['text', 'html', 'json-summary'],
             include: ['src/**/*.ts', 'index.ts'],
-            exclude: ['tests/**', 'build/**', '**/*.d.ts']
+            exclude: ['tests/**', 'build/**', '**/*.d.ts'],
+            thresholds: {
+                statements: 99,
+                branches: 90,
+                functions: 100,
+                lines: 99
+            }
         }
     }
 };

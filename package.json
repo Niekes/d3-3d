@@ -1,6 +1,6 @@
 {
     "name": "d3-3d",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "D3.js plugin for 3d visualization written in Typescript",
     "keywords": [
         "3D",
@@ -19,7 +19,7 @@
     "author": "Niekes (https://niekes.com)",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/niekes/d3-3d.git"
+        "url": "git+https://github.com/Niekes/d3-3d.git"
     },
     "funding": {
         "type": "github",
