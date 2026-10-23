@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2026-10-23
+
 ### Added
 
 - `axes3D().edges(spec)`: the four edges along every axis, with `sides`, the
@@ -201,7 +203,8 @@ Initial releases. The first public version of d3-3d with points, lines, line
 strips, triangles, planes, polygons and cubes, plus grid planes, centroid and
 counter-clockwise detection and the `sort` utility.
 
-[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.4.0...HEAD
+[2.4.0]: https://github.com/Niekes/d3-3d/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/Niekes/d3-3d/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/Niekes/d3-3d/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/Niekes/d3-3d/compare/v2.0.2...v2.1.0
