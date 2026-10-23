@@ -462,6 +462,21 @@ const bars = data.map((d) =>
 cubes3D().data(bars);
 ```
 
+### `sphere(spec, segments)` {#sphere}
+
+The triangles of a sphere for `triangles3D`, around `{ x, y, z }` with its
+`radius`. `segments` steps run around the y axis and half as many bands,
+rounded up, from pole to pole. Every triangle faces outwards: its `normal`
+points out and `ccw` tells the front of the sphere from its back.
+
+```typescript
+const triangles = triangles3D();
+const ball = triangles
+  .data(sphere({ x: 0, y: 0, z: 0, radius: 1 }, 24))
+  .filter((t) => t.ccw);
+svg.selectAll("path").data(ball).join("path").attr("d", triangles.draw);
+```
+
 ### `lathe(profile, segments)` {#lathe}
 
 The triangles of a surface of revolution, for `triangles3D`. The profile is a
@@ -472,19 +487,21 @@ to a small one, and every triangle faces outwards: its `normal` points out
 and `ccw` tells the outside from the inside.
 
 ```typescript
-// A sphere: a half circle from the bottom pole to the top pole.
-const profile = [{ x: 0, y: r }];
-for (let i = 1; i < 12; i += 1) {
-  profile.push({
-    x: r * Math.sin((i / 12) * Math.PI),
-    y: r * Math.cos((i / 12) * Math.PI),
-  });
-}
-profile.push({ x: 0, y: -r });
+// A cylinder standing on y = 0: from the middle of the bottom out, up the
+// side and in again to the middle of the top.
+const cylinder = lathe(
+  [
+    { x: 0, y: 0 },
+    { x: r, y: 0 },
+    { x: r, y: -h },
+    { x: 0, y: -h },
+  ],
+  24,
+);
 
 const triangles = triangles3D();
-const sphere = triangles.data(lathe(profile, 24)).filter((t) => t.ccw);
-svg.selectAll("path").data(sphere).join("path").attr("d", triangles.draw);
+const faces = triangles.data(cylinder).filter((t) => t.ccw);
+svg.selectAll("path").data(faces).join("path").attr("d", triangles.draw);
 ```
 
 ### `strips(points, size)` {#strips}

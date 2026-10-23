@@ -40,6 +40,9 @@ import {
 // The camera that several shapes, a canvas or WebGL can share
 import { camera3D } from "d3-3d";
 
+// The corners of a box for cubes3D, the triangles of a sphere for triangles3D
+import { box, sphere } from "d3-3d";
+
 // Utility function for sorting
 import { sort } from "d3-3d";
 
