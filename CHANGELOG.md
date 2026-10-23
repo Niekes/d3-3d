@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `sphere(spec, segments)`: the triangles of a sphere around a point, for
+  `triangles3D`, wound so that `normal` points outwards and `ccw` tells the
+  front from the back.
+
 ## [2.2.0] - 2026-10-22
 
 ### Added

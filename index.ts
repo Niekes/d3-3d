@@ -23,6 +23,7 @@ export { centroid } from './src/centroid';
 export { normal } from './src/normal';
 export { box } from './src/box';
 export { lathe } from './src/lathe';
+export { sphere } from './src/sphere';
 export { strips } from './src/strips';
 export { catmullRom } from './src/catmull-rom';
 export { axisSpec } from './src/axis-spec';
