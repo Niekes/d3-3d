@@ -1,5 +1,5 @@
 import { interpolateRgb, range } from 'd3';
-import { camera3D, lathe, lineStrips3D, normal, sort, strips, triangles3D } from '../../index';
+import { camera3D, lineStrips3D, normal, sort, sphere, strips, triangles3D } from '../../index';
 import { playback, rotatingFigure, turnCamera } from './rotatingFigure';
 import { joinFacets } from './facets';
 import type { HasCentroid, LineStrips3DInstance, Point3D, Triangles3DInstance } from '../../index';
@@ -36,30 +36,17 @@ interface Body {
 }
 
 const BODIES: Body[] = [
-    { name: 'Sun', radius: 34, distance: 0, period: 1, color: '#ffb52e', segments: 16 },
-    { name: 'Mercury', radius: 3, distance: 52, period: 4, color: '#b5aca3', segments: 8 },
-    { name: 'Venus', radius: 6, distance: 72, period: 6.5, color: '#e8c787', segments: 10 },
-    { name: 'Earth', radius: 6.5, distance: 98, period: 10, color: '#3d8bfd', segments: 10 },
-    { name: 'Moon', radius: 2, distance: 12, period: 2.5, color: '#d6d3d1', segments: 6, around: 'Earth' },
-    { name: 'Mars', radius: 4.5, distance: 124, period: 14, color: '#e0553a', segments: 8 },
-    { name: 'Jupiter', radius: 16, distance: 170, period: 23, color: '#d9a877', segments: 12 },
-    { name: 'Saturn', radius: 13, distance: 222, period: 35, color: '#ecd193', segments: 12 },
-    { name: 'Uranus', radius: 9, distance: 276, period: 48, color: '#8fdcf0', segments: 10 },
-    { name: 'Neptune', radius: 9, distance: 326, period: 61, color: '#4c6ef5', segments: 10 }
+    { name: 'Sun', radius: 34, distance: 0, period: 1, color: '#ffb52e', segments: 24 },
+    { name: 'Mercury', radius: 3, distance: 52, period: 4, color: '#b5aca3', segments: 12 },
+    { name: 'Venus', radius: 6, distance: 72, period: 6.5, color: '#e8c787', segments: 14 },
+    { name: 'Earth', radius: 6.5, distance: 98, period: 10, color: '#3d8bfd', segments: 14 },
+    { name: 'Moon', radius: 2, distance: 12, period: 2.5, color: '#d6d3d1', segments: 8, around: 'Earth' },
+    { name: 'Mars', radius: 4.5, distance: 124, period: 14, color: '#e0553a', segments: 12 },
+    { name: 'Jupiter', radius: 16, distance: 170, period: 23, color: '#d9a877', segments: 18 },
+    { name: 'Saturn', radius: 13, distance: 222, period: 35, color: '#ecd193', segments: 18 },
+    { name: 'Uranus', radius: 9, distance: 276, period: 48, color: '#8fdcf0', segments: 14 },
+    { name: 'Neptune', radius: 9, distance: 326, period: 61, color: '#4c6ef5', segments: 14 }
 ];
-
-/**
- * A sphere of `radius` around the origin: a half circle from the bottom pole
- * to the top one, turned around the y axis by `lathe`. The poles lie on the
- * axis, so the bands next to them close in fans.
- */
-function sphere(radius: number, segments: number): Point3D[][] {
-    const profile = range(1, segments).map((i) => {
-        const theta = (i / segments) * Math.PI;
-        return { x: radius * Math.sin(theta), y: radius * Math.cos(theta) };
-    });
-    return lathe([{ x: 0, y: radius }, ...profile, { x: 0, y: -radius }], segments);
-}
 
 /** Where `body` is after `t` seconds: on a circle in the x-z plane around `center`. */
 function orbit(body: Body, t: number, center: Point3D): Point3D {
@@ -94,7 +81,10 @@ export function mountSolarSystem(host: HTMLElement): () => void {
     const triangles: Triangles3DInstance<Point3D> = triangles3D<Point3D>().camera(camera);
     const orbits3d: LineStrips3DInstance<Point3D> = lineStrips3D<Point3D>().camera(camera);
 
-    const meshes = BODIES.map((body) => sphere(body.radius, body.segments));
+    // Built once around the origin; draw moves them along their orbits.
+    const meshes = BODIES.map((body) =>
+        sphere({ x: 0, y: 0, z: 0, radius: body.radius }, body.segments)
+    );
     const shades = BODIES.map((body) => interpolateRgb('#000', body.color));
     // The planets' orbits never move, the moon's travels with the earth.
     // Cut into strips, an orbit passes in front of the sun and behind it.

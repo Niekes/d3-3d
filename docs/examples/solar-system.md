@@ -28,16 +28,17 @@ that all eight planets fit on the page and Neptune still moves.
 
 ## Every body is a sphere of triangles
 
-A body is a half circle from pole to pole, turned around the y axis by
-`lathe`. Between two rings every quad becomes two triangles, and next to a
-pole, where the ring has no radius, one. So a body is a plain list of point
-triples built around the origin - the sun from 16 bands, the moon from 6:
+A body is a `sphere`: a half circle from pole to pole, turned around the y
+axis by `lathe`. Between two rings every quad becomes two triangles, and next
+to a pole, where the ring has no radius, one. So a body is a plain list of
+point triples built around the origin - the sun from 12 bands, the moon from
+4:
 
 ```ts
-lathe([{ x: 0, y: radius }, ...halfCircle, { x: 0, y: -radius }], segments);
+sphere({ x: 0, y: 0, z: 0, radius: body.radius }, body.segments);
 ```
 
-`lathe` winds every triangle counter-clockwise as seen from outside, so
+`sphere` winds every triangle counter-clockwise as seen from outside, so
 the `ccw` flag of a projected triangle tells the near side of a body from
 the far side. The far side is hidden, which halves the painted paths.
 
