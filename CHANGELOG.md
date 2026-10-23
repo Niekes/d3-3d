@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `axes3D().edges(spec)`: the four edges along every axis, with `sides`, the
+  ends of the two other axes the edge runs at, and `chosen`, the edge
+  `.axes(spec)` puts the axis on. A chart can draw every edge and fade an
+  axis from one to the next. `.axes(spec)` returns the chosen ones, which
+  now carry `sides` and `chosen` too.
+
+### Fixed
+
+- A camera level with the box keeps every axis on its edge. A wall seen
+  exactly edge on faced the camera or not by rounding, so the axes flickered
+  between the floor and the ceiling.
+
 ## [2.3.0] - 2026-10-23
 
 ### Added

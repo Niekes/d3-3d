@@ -139,4 +139,43 @@ describe('axes3D', () => {
         expect(y.normal.y).toBeGreaterThan(0);
         expect(z.normal.x).toBeLessThan(0);
     });
+
+    test('lists the four edges along every axis and marks the one it chooses', () => {
+        const box = tilted();
+        const edges = box.edges(SPEC);
+
+        expect(edges.map((edge) => edge.axis).join('')).toBe('xxxxyyyyzzzz');
+        expect(edges.map((edge) => edge.sides.join('')).slice(0, 4)).toEqual([
+            '00',
+            '01',
+            '10',
+            '11'
+        ]);
+        expect(edges.filter((edge) => edge.chosen).map((edge) => edge.axis)).toEqual([
+            'x',
+            'y',
+            'z'
+        ]);
+        expect(box.axes(SPEC).every((edge) => edge.chosen)).toBe(true);
+    });
+
+    test('keeps an axis on its edge while the camera turns level with the box', () => {
+        // Level, the floor and the ceiling are seen edge on and face neither way.
+        const changes = { x: 0, y: 0, z: 0 };
+        let last: string[] = [];
+        for (let degree = 0; degree < 360; degree += 1) {
+            const edges = axes3D()
+                .rotateY((degree * Math.PI) / 180)
+                .rotateX(0)
+                .axes(SPEC);
+            const now = edges.map((edge) => edge.sides.join(''));
+            edges.forEach((edge, i) => {
+                if (last.length && last[i] !== now[i]) changes[edge.axis] += 1;
+            });
+            last = now;
+        }
+
+        // An axis moves only when a wall beside it turns away; z moves once more at 360°.
+        expect(changes).toEqual({ x: 2, y: 4, z: 1 });
+    });
 });

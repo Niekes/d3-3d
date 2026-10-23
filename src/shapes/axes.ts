@@ -1,6 +1,6 @@
 import { AxesSpec, AxisSpec, Point2D, Point3D, TransformedPoint } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
-import { ccw } from '../counter-clockwise';
+import { area, ccw } from '../counter-clockwise';
 import { centroid } from '../centroid';
 import { transform } from '../transform';
 import { drawPlane } from '../draw/drawPlane';
@@ -21,18 +21,23 @@ export type AxisWall = TransformedPoint<Point3D>[] & {
 };
 
 /**
- * One axis on the outline of the chart box: its ticks, which keep their
+ * One edge of the chart box along an axis: its ticks, which keep their
  * value under the axis key, and the screen direction away from the box.
+ * `sides` are the ends of the two other axes the edge runs at, in the order
+ * of the walls they span, and `chosen` marks the edge `axes` puts the axis on.
  */
 export type AxisEdge = TransformedPoint<Point3D>[] & {
     axis: keyof AxesSpec;
     normal: Point2D;
+    sides: [0 | 1, 0 | 1];
+    chosen: boolean;
 };
 
 export interface Axes3DInstance extends ShapeInstance<Point3D> {
     data(spec: AxesSpec): AxisWall[];
     draw(wall: AxisWall): string;
     axes(spec: AxesSpec): AxisEdge[];
+    edges(spec: AxesSpec): AxisEdge[];
 }
 
 type Axis = keyof AxesSpec;
@@ -42,6 +47,14 @@ const AXES: Axis[] = ['x', 'y', 'z'];
 // The two axes that span the wall across an axis, in cyclic order, so the
 // walls on the same side of the box wind the same way.
 const SPAN: Record<Axis, [Axis, Axis]> = { x: ['y', 'z'], y: ['z', 'x'], z: ['x', 'y'] };
+
+// The four edges along an axis, by the ends of the two axes that span it.
+const SIDES: [0 | 1, 0 | 1][] = [
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+];
 
 class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
     /** The six walls, in the order x lo, x hi, y lo, y hi, z lo, z hi. */
@@ -63,18 +76,31 @@ class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
      * the box, then the ones left of it.
      */
     axes(spec: AxesSpec): AxisEdge[] {
+        return this.edges(spec).filter((edge) => edge.chosen);
+    }
+
+    /**
+     * The four edges along every axis, in the order x, y, z, with the one
+     * `axes` chooses marked, so that a chart can fade an axis from one edge
+     * to the next.
+     */
+    edges(spec: AxesSpec): AxisEdge[] {
         const walls = this.data(spec);
-        const faces = (a: Axis, side: number) => walls[AXES.indexOf(a) * 2 + side].ccw;
+        // A wall seen edge on faces neither way, or its sign would be noise.
+        const flat = Math.max(...walls.map((wall) => Math.abs(area(wall)))) * 1e-9;
+        const faces = (a: Axis, side: number) => area(walls[AXES.indexOf(a) * 2 + side]) > flat;
         const [centre] = this.apply([{ x: middle(spec.x), y: middle(spec.y), z: middle(spec.z) }]);
 
-        return AXES.map((a) => {
+        return AXES.flatMap((a) => {
             const [b, c] = SPAN[a];
-            const edges = [0, 1].flatMap((sb) => [0, 1].map((sc) => [sb, sc]));
-            const outline = edges.filter(([sb, sc]) => faces(b, sb) !== faces(c, sc));
+            const edges = SIDES.map((sides) => this.edge(spec, a, sides, centre.projected));
+            const outline = edges.filter(({ sides: [sb, sc] }) => faces(b, sb) !== faces(c, sc));
+            const best = (outline.length ? outline : edges).reduce((best, edge) =>
+                score(edge) > score(best) ? edge : best
+            );
+            best.chosen = true;
 
-            return (outline.length ? outline : edges)
-                .map(([sb, sc]) => this.edge(spec, a, sb, sc, centre.projected))
-                .reduce((best, edge) => (score(edge) > score(best) ? edge : best));
+            return edges;
         });
     }
 
@@ -112,8 +138,9 @@ class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
         return wall;
     }
 
-    private edge(spec: AxesSpec, a: Axis, sb: number, sc: number, centre: Point2D): AxisEdge {
+    private edge(spec: AxesSpec, a: Axis, sides: [0 | 1, 0 | 1], centre: Point2D): AxisEdge {
         const [b, c] = SPAN[a];
+        const [sb, sc] = sides;
         const vb = ends(spec[b])[sb];
         const vc = ends(spec[c])[sc];
         const [start, end] = this.apply(ends(spec[a]).map((v) => at(a, v, b, vb, c, vc)));
@@ -122,6 +149,8 @@ class Axes3DRenderer extends ShapeRenderer<Point3D> implements Axes3DInstance {
 
         edge.axis = a;
         edge.normal = normal(start.projected, end.projected, centre);
+        edge.sides = sides;
+        edge.chosen = false;
 
         return edge;
     }

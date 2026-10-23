@@ -676,8 +676,21 @@ The path of a wall: its outline and its gridlines.
 
 ### `.axes(spec)` {#axes-axes}
 
-The three axes `x`, `y`, `z`, each a list of ticks with its `axis` and
-`normal`.
+The three axes `x`, `y`, `z`, each a list of ticks with its `axis`,
+`normal`, `sides` and `chosen`.
+
+### `.edges(spec)` {#axes-edges}
+
+The four edges along every axis, four `x`, four `y`, four `z`, in the same
+form as `.axes`. `sides` names the edge by the ends of the two other axes it
+runs at, 0 at the first value of their domains and 1 at the last, and
+`chosen` marks the edge `.axes` puts the axis on. A chart that draws the
+labels of every edge and shows only the chosen ones can fade an axis from
+one edge to the next as the camera turns.
+
+A wall seen exactly edge on faces neither way, so a camera level with the
+box keeps every axis on its edge instead of letting it flicker between the
+floor and the ceiling.
 
 ## Types
 
