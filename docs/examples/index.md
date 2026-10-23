@@ -35,10 +35,14 @@
 - [Mesh inspector](/examples/mesh-inspector) — a vase of triangles drawn with `triangles3D` and its normals with `lines3D`; toggle the faces, edges, normals and back faces, click a face to inspect it
 - [Möbius strip](/examples/mobius-strip) — a strip of 768 triangles drawn with `triangles3D` and its edge with `lineStrips3D`, lit from either side by the absolute cosine between `normal` and `viewDirection`; a walker comes back from one lap upside down, and a slider sets the half-twists from 0 to 5
 - [Office tower](/examples/iso-tower) — 24 floors of a city block, drawn with `iso3D`
+- [Neon city](/examples/iso-city) — 25 lots of shops, mid-rises, towers and parks drawn with `iso3D`, every face shaded in the frame `iso3D` returns for it, with traffic that CSS runs along the streets
 
 The office tower is inspired by
 [isoglow.dev](https://isoglow.dev/), an isometric gallery of small machines
 and cities by April Zhu.
+The neon city is inspired by
+[3Dokploy](https://github.com/suleyman/3dokploy), a Dokploy server shown as an
+isometric city.
 The scatter plot recreates the
 [3D scatter plot of matterviz](https://matterviz.janosh.dev/plot/scatter-plot-3d)
 by Janosh Riebesell.

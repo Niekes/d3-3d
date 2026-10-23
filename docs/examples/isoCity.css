@@ -1,0 +1,189 @@
+/* The city is a night scene in both themes: the figure brings its own sky. */
+.iso-city {
+    --ic-night: #150a32;
+    --ic-head: #fff1c1;
+    --ic-tail: #ff2e63;
+    --ic-warm: #ffd166;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    border: 1px solid var(--vp-c-divider, #3d4144);
+    border-radius: 12px;
+    background: radial-gradient(ellipse at 50% 20%, #3a1478, #0b0420 75%);
+}
+
+.iso-city .iso-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+/* The neon hue of a building. */
+.iso-city .hue-0 {
+    --c: #ff2e88;
+}
+
+.iso-city .hue-1 {
+    --c: #00e5ff;
+}
+
+.iso-city .hue-2 {
+    --c: #9b5cff;
+}
+
+.iso-city .hue-3 {
+    --c: #ffb000;
+}
+
+.iso-city .hue-4 {
+    --c: #3d7bff;
+}
+
+/*
+ * Every box sets the fill of its three faces, the sun of an isometric
+ * picture stands top left: the top is the brightest, the right the darkest.
+ */
+.iso-city .left {
+    fill: var(--left);
+}
+
+.iso-city .right {
+    fill: var(--right);
+}
+
+.iso-city .top {
+    fill: var(--top);
+}
+
+.iso-city .left,
+.iso-city .right,
+.iso-city .top {
+    stroke: var(--edge, transparent);
+    stroke-width: 0.6;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+.iso-city .plate {
+    --left: #2c1460;
+    --right: #1b0b40;
+    --top: #120826;
+}
+
+.iso-city .pad {
+    --left: #3b2479;
+    --right: #271656;
+    --top: #2d1b5e;
+}
+
+.iso-city .park .pad {
+    --top: #0c5a4c;
+}
+
+.iso-city .body {
+    --left: color-mix(in srgb, var(--c) 50%, var(--ic-night));
+    --right: color-mix(in srgb, var(--c) 28%, var(--ic-night));
+    --top: color-mix(in srgb, var(--c) 70%, white);
+    --edge: color-mix(in srgb, var(--c) 30%, black);
+}
+
+/* The roof is rimmed with the neon of the building. */
+.iso-city .body .top {
+    stroke: var(--c);
+}
+
+.iso-city .unit {
+    --left: #4a3787;
+    --right: #2f2160;
+    --top: #6a55b0;
+}
+
+.iso-city .sign {
+    --left: var(--c);
+    --right: color-mix(in srgb, var(--c) 60%, black);
+    --top: color-mix(in srgb, var(--c) 40%, white);
+    filter: url(#iso-soft);
+}
+
+.iso-city .pane.off {
+    fill: color-mix(in srgb, var(--c) 12%, #08041a);
+}
+
+.iso-city .pane.on {
+    fill: color-mix(in srgb, var(--c) 35%, white);
+}
+
+.iso-city .pane.warm {
+    fill: var(--ic-warm);
+}
+
+.iso-city .tree {
+    fill: #0c8f6a;
+}
+
+.iso-city .crown {
+    fill: #2cf0a6;
+}
+
+.iso-city .mast {
+    fill: none;
+    stroke: #c9b8ff;
+    stroke-width: 0.8;
+}
+
+.iso-city .beacon {
+    fill: var(--ic-tail);
+    filter: url(#iso-glow);
+    animation: iso-city-blink 1.6s steps(1) infinite;
+}
+
+/* A light trail: a wide faint glow under a thin core, both on the same dash. */
+.iso-city .lane path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 3 19 6 40;
+    animation: iso-city-drive var(--t) linear var(--d) infinite;
+}
+
+.iso-city .lane .glow {
+    stroke-width: 3.5;
+    opacity: 0.35;
+}
+
+.iso-city .lane .core {
+    stroke-width: 1;
+}
+
+.iso-city .head {
+    stroke: var(--ic-head);
+}
+
+.iso-city .tail {
+    stroke: var(--ic-tail);
+}
+
+/* The building under the pointer lights up. */
+@media (hover: hover) {
+    .iso-city .lot:hover {
+        filter: brightness(1.3) saturate(1.15);
+    }
+}
+
+/* The offset runs one period of the dash: 3 + 19 + 6 + 40. */
+@keyframes iso-city-drive {
+    to {
+        stroke-dashoffset: -68;
+    }
+}
+
+@keyframes iso-city-blink {
+    50% {
+        opacity: 0.15;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .iso-city .lane path,
+    .iso-city .beacon {
+        animation: none;
+    }
+}

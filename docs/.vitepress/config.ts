@@ -93,6 +93,7 @@ export default defineConfig({
                             { text: 'Cellular automaton', link: '/examples/cellular-automaton' },
                             { text: 'Spline editor', link: '/examples/spline-editor' },
                             { text: 'Mini city', link: '/examples/mini-city' },
+                            { text: 'Neon city', link: '/examples/iso-city' },
                             { text: 'Floor-plan explorer', link: '/examples/floor-plan' },
                             { text: 'Scatter plot', link: '/examples/scatter-plot' },
                             { text: 'Point cloud', link: '/examples/point-cloud' },
