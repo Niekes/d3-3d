@@ -32,6 +32,15 @@ For non-skill agents, treat the task map below as the local onboarding source: r
 
 <!-- fallow:setup-hooks:end -->
 
+## Releasing
+
+A release is a pull request that bumps the version in `package.json` and
+updates `CHANGELOG.md` (for example the `release/2.2.0` branch). Merging it
+into `master` triggers `.github/workflows/release.yml`, which publishes the
+new version to npm and pushes the `vX.Y.Z` tag — but only when `package.json`
+changed and the version is not on npm yet. Never run `npm publish` or push a
+version tag by hand.
+
 ## The library template
 
 `d3-3d` is a published library. Its template is not a convention - it is

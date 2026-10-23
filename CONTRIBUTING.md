@@ -80,6 +80,17 @@ API, re-export it from `index.ts` and cover it with a test.
   anything visual.
 - Make sure `npm run lint` and `npm test` pass locally.
 
+## Releasing
+
+A release is a pull request that bumps the version in `package.json` and
+updates `CHANGELOG.md` — for example the `release/2.2.0` branch. Merging it
+into `master` is all that is left to do: when `package.json` changed, the
+[Release workflow](.github/workflows/release.yml) publishes the new version
+to npm with provenance and pushes the `vX.Y.Z` tag. It needs the `NPM_TOKEN`
+secret, and it skips itself when the version is already on npm, so dependency
+updates that touch `package.json` without a version bump never trigger a
+publish. Do not run `npm publish` or push a version tag by hand.
+
 ## Reporting bugs
 
 Open an issue with the [bug report template](https://github.com/Niekes/d3-3d/issues/new/choose).
