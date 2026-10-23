@@ -9,7 +9,7 @@
 
 <p align="center">
   <a href="https://github.com/niekes/d3-3d/actions"><img src="https://github.com/niekes/d3-3d/workflows/main/badge.svg" alt="Build"></a>
-  <a href="https://codecov.io/github/niekes/d3-3d"><img src="https://img.shields.io/codecov/c/github/niekes/d3-3d.svg" alt="Coverage"></a>
+  <a href="https://github.com/niekes/d3-3d/actions"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/niekes/d3-3d/master/.github/badges/coverage.json" alt="Coverage"></a>
   <a href="https://fallow.tools/docs/explanations/health/"><img src="https://raw.githubusercontent.com/niekes/d3-3d/master/.github/badges/health.svg" alt="fallow health"></a>
   <a href="https://www.npmjs.com/package/d3-3d"><img src="https://img.shields.io/npm/dt/d3-3d" alt="npm downloads"></a>
   <a href="https://www.npmjs.com/package/d3-3d"><img src="https://img.shields.io/npm/dw/d3-3d" alt="npm weekly downloads"></a>

@@ -51,13 +51,8 @@ jobs:
                   node-version: ${{matrix.node}}
                   cache: 'npm'
             - run: npm ci
-            - run: npm test
-            - name: Upload coverage
-              uses: codecov/codecov-action@v7
-              if: matrix.node == 22
-              with:
-                  token: ${{ secrets.CODECOV_TOKEN }}
-                  files: ./coverage/lcov.info
+            # Fails when the coverage drops below the thresholds in vite.config.ts.
+            - run: npm run coverage
 
     build:
         name: Build
@@ -78,12 +73,15 @@ jobs:
               with:
                   name: build
                   path: build/
-            - name: Update fallow health badge
+            - name: Update the health and coverage badges
               if: github.ref == 'refs/heads/master' && github.event_name == 'push'
               run: |
                   npx fallow health --format badge > .github/badges/health.svg
+                  npm run coverage
+                  # A shields.io endpoint badge, read by the README.
+                  node -e "const p = require('./coverage/coverage-summary.json').total.lines.pct; console.log(JSON.stringify({ schemaVersion: 1, label: 'coverage', message: p + '%', color: p >= 90 ? 'brightgreen' : p >= 75 ? 'yellow' : 'red' }))" > .github/badges/coverage.json
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git add .github/badges/health.svg
-                  git diff --quiet --cached || git commit -m "chore: update fallow health badge [skip ci]"
+                  git add .github/badges/health.svg .github/badges/coverage.json
+                  git diff --quiet --cached || git commit -m "chore: update the health and coverage badges [skip ci]"
                   git push
