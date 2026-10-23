@@ -86,13 +86,14 @@ A release is a pull request that bumps the version in `package.json` and
 updates `CHANGELOG.md` — for example the `release/2.2.0` branch. Merging it
 into `master` starts it: when `package.json` changed, the
 [Release workflow](.github/workflows/release.yml) stages the new version on
-npm through trusted publishing and pushes the `vX.Y.Z` tag. A maintainer then
+npm through trusted publishing and creates the `vX.Y.Z` release on GitHub,
+with the version's section of `CHANGELOG.md` as its notes. A maintainer then
 approves the staged version with 2FA, on npmjs.com or with
 `npm stage approve <stage-id>`, and only then is it installable. The workflow
 skips itself when the version is already on npm, so dependency updates that
 touch `package.json` without a version bump never trigger a publish, and it
-can be rerun by hand from the Actions tab. Do not run `npm publish` or push a
-version tag by hand.
+can be rerun by hand from the Actions tab, which also adds a missing GitHub
+release. Do not run `npm publish` or push a version tag by hand.
 
 ## Reporting bugs
 

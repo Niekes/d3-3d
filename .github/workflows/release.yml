@@ -42,11 +42,17 @@ jobs:
               # The version goes live once a maintainer approves it with 2FA.
               # npm stage publish runs prepack, which typechecks and builds.
               run: npm stage publish
-            - name: Tag the release
-              if: steps.version.outputs.new == 'true'
+            - name: Release on GitHub
+              # Runs for a version that is on npm already as well, so a rerun
+              # adds a missing release. gh creates the vX.Y.Z tag on this commit
+              # and takes the notes from the version's section in CHANGELOG.md.
               run: |
                   VERSION=$(node -p "require('./package.json').version")
-                  git config user.name "github-actions[bot]"
-                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                  git tag "v$VERSION"
-                  git push origin "v$VERSION"
+                  if gh release view "v$VERSION" >/dev/null 2>&1; then
+                      echo "v$VERSION is released on GitHub already."
+                      exit 0
+                  fi
+                  awk -v v="$VERSION" 'index($0, "## [" v "]") == 1 { f = 1; next } /^## \[/ { f = 0 } f' CHANGELOG.md |
+                      gh release create "v$VERSION" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file -
+              env:
+                  GH_TOKEN: ${{ github.token }}
