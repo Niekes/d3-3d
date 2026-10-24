@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>3D visualizations for the web, built on <a href="https://d3js.org/">d3.js</a>.</strong><br>
+  <strong>3D visualizations for the web, built to work with <a href="https://d3js.org/">d3.js</a>.</strong><br>
   Free and open source, kept alive by one maintainer and the people who sponsor the work.
 </p>
 
