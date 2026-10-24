@@ -65,4 +65,16 @@ describe('gridPlanes3D', () => {
 
         expect(grid3d.draw?.(result[0])).toBe('M4,1L4,1L3,1L3,1Z');
     });
+
+    test('rows() without an argument returns the row length', () => {
+        expect(gridPlanes3D().rows()).toBe(1);
+        expect(gridPlanes3D().rows(4).rows()).toBe(4);
+    });
+
+    test('rows() rejects a row length that is not a positive integer', () => {
+        expect(() => gridPlanes3D().rows(0)).toThrow(RangeError);
+        expect(() => gridPlanes3D().rows(-2)).toThrow(RangeError);
+        expect(() => gridPlanes3D().rows(2.5)).toThrow(RangeError);
+        expect(() => gridPlanes3D().rows(Number.NaN)).toThrow(RangeError);
+    });
 });

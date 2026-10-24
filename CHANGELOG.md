@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `gridPlanes3D().rows(0)` returned the row length instead of the renderer,
+  so the next call in a chain threw. `rows()` now only reads the row length
+  when it is called without an argument, and throws a `RangeError` for a
+  value that is not an integer of at least 1, which `data()` cannot divide by.
+
 ## [2.4.0] - 2026-10-23
 
 ### Added
