@@ -24,13 +24,13 @@ features:
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref } from 'vue';
-import { mountSurfacePlot } from './examples/surfacePlot';
+import { mountAreaChart } from './examples/areaChart';
 
 const host = ref(null);
 let dispose;
 
 onMounted(() => {
-    if (host.value) dispose = mountSurfacePlot(host.value);
+    if (host.value) dispose = mountAreaChart(host.value);
 });
 
 onBeforeUnmount(() => {
@@ -38,7 +38,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<div ref="host" class="surface-plot"></div>
+<div ref="host" class="area-chart"></div>
 
-Drag the surface to rotate it, hover a quad to read its sample.
-[How the figure is built](/examples/surface-plot).
+Drag the figure to rotate it, press the button to sample new share prices.
+[How the figure is built](/examples/area-chart).
