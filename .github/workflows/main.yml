@@ -46,6 +46,10 @@ jobs:
                 node: [22, 24]
         steps:
             - uses: actions/checkout@v7
+              with:
+                  # Fallow audit resolves its base against the remote history,
+                  # so the merge-base has to be there.
+                  fetch-depth: 0
             - uses: actions/setup-node@v7
               with:
                   node-version: ${{matrix.node}}
@@ -53,6 +57,13 @@ jobs:
             - run: npm ci
             # Fails when the coverage drops below the thresholds in vite.config.ts.
             - run: npm run coverage
+            # The same audit the pre-commit hook runs, but with the coverage
+            # data from the step above, so the CRAP scores are exact.
+            - name: Fallow audit with coverage
+              if: matrix.node == 24
+              run: npx fallow audit --coverage coverage/coverage-final.json
+              env:
+                  FALLOW_FORMAT: github-annotations
 
     build:
         name: Build
@@ -76,8 +87,8 @@ jobs:
             - name: Update the health and coverage badges
               if: github.ref == 'refs/heads/master' && github.event_name == 'push'
               run: |
-                  npx fallow health --format badge > .github/badges/health.svg
                   npm run coverage
+                  npx fallow health --format badge --coverage coverage/coverage-final.json > .github/badges/health.svg
                   # A shields.io endpoint badge, read by the README.
                   node -e "const p = require('./coverage/coverage-summary.json').total.lines.pct; console.log(JSON.stringify({ schemaVersion: 1, label: 'coverage', message: p + '%', color: p >= 90 ? 'brightgreen' : p >= 75 ? 'yellow' : 'red' }))" > .github/badges/coverage.json
                   git config user.name "github-actions[bot]"

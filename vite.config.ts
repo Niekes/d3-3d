@@ -51,8 +51,9 @@ const config: UserConfig = {
         include: ['tests/**/*.test.ts'],
         coverage: {
             provider: 'v8',
-            // json-summary feeds the coverage badge on master.
-            reporter: ['text', 'html', 'json-summary'],
+            // json-summary feeds the coverage badge on master; json emits
+            // coverage-final.json, which fallow reads for exact CRAP scores.
+            reporter: ['text', 'html', 'json-summary', 'json'],
             include: ['src/**/*.ts', 'index.ts'],
             exclude: ['tests/**', 'build/**', '**/*.d.ts'],
             thresholds: {
