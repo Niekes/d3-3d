@@ -28,7 +28,13 @@ class GridPlanes3DRenderer<Datum = Point3D>
     rows(): number;
     rows(rows: number): this;
     rows(rows?: number): this | number {
-        return rows ? ((this._rows = rows), this) : this._rows;
+        if (rows === undefined) return this._rows;
+        // data() divides by the row length: with 0, numRows is Infinity and the loop never ends.
+        if (!Number.isInteger(rows) || rows < 1) {
+            throw new RangeError(`rows() expects an integer of at least 1, got ${rows}`);
+        }
+        this._rows = rows;
+        return this;
     }
 
     data(data: Datum[]): GridPlane<Datum>[] {

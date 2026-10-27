@@ -316,6 +316,8 @@ const camera = camera3D()
 
 Set the points per row (`gridPlanes3D` only). A grid comes as a flat list,
 so the shape needs the row length to build its quads. Default: `1`.
+The row length must be an integer of at least 1; any other value throws a
+`RangeError`.
 
 ```typescript
 const grid = gridPlanes3D()
