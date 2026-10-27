@@ -29,7 +29,7 @@ class GridPlanes3DRenderer<Datum = Point3D>
     rows(rows: number): this;
     rows(rows?: number): this | number {
         if (rows === undefined) return this._rows;
-        // data() divides by the row length, so 0 or a fraction would never end.
+        // data() divides by the row length: with 0, numRows is Infinity and the loop never ends.
         if (!Number.isInteger(rows) || rows < 1) {
             throw new RangeError(`rows() expects an integer of at least 1, got ${rows}`);
         }
