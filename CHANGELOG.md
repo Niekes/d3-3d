@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2026-11-20
+
+### Changed
+
+- The README and the package description say what the library does first:
+  3D charts and shapes for D3.js, projected to plain SVG or canvas. The
+  sponsor section moved below the gallery and the install line. No change
+  to the code.
+
 ## [2.4.1] - 2026-10-27
 
 ### Fixed
@@ -212,7 +221,9 @@ Initial releases. The first public version of d3-3d with points, lines, line
 strips, triangles, planes, polygons and cubes, plus grid planes, centroid and
 counter-clockwise detection and the `sort` utility.
 
-[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.4.2...HEAD
+[2.4.2]: https://github.com/Niekes/d3-3d/compare/v2.4.1...v2.4.2
+[2.4.1]: https://github.com/Niekes/d3-3d/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Niekes/d3-3d/compare/v2.3.0...v2.4.0
 [2.3.0]: https://github.com/Niekes/d3-3d/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/Niekes/d3-3d/compare/v2.1.0...v2.2.0
