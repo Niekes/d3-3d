@@ -17,7 +17,17 @@ const properties = new Set(['ccw', 'centroid']);
 
 export default defineConfig({
     title: 'd3-3d',
-    description: 'D3.js plugin for 3D visualization, written in TypeScript.',
+    description:
+        '3D charts and shapes for D3.js. Projects 3D data to plain SVG or canvas, no WebGL needed. TypeScript.',
+    head: [
+        [
+            'meta',
+            {
+                property: 'og:image',
+                content: 'https://raw.githubusercontent.com/niekes/d3-3d/master/assets/social-card.png'
+            }
+        ]
+    ],
     base: '/d3-3d/',
     markdown: {
         // Link every inline `name` of the API to its entry, except in
