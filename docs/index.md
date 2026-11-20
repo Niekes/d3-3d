@@ -2,14 +2,14 @@
 layout: home
 hero:
     name: d3-3d
-    text: 3D visualizations for the web
-    tagline: A D3.js plugin for projecting 3D data onto the screen — with first-class TypeScript support.
+    text: 3D charts and shapes for D3.js
+    tagline: Projects 3D data to plain SVG or canvas, no WebGL needed. Written in TypeScript.
     actions:
         - theme: brand
           text: Get Started
           link: /guide/getting-started
         - theme: alt
-          text: View on GitHub
+          text: Star on GitHub
           link: https://github.com/niekes/d3-3d
 features:
     - title: First-class TypeScript

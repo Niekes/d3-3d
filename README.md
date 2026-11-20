@@ -1,10 +1,6 @@
 <p align="center">
-  <a href="https://github.com/sponsors/niekes"><img src="https://img.shields.io/badge/Sponsor_d3--3d-EA4AAA?logo=githubsponsors&logoColor=white&style=for-the-badge" alt="Sponsor d3-3d"></a>
-</p>
-
-<p align="center">
-  <strong>3D visualizations for the web, built to work with <a href="https://d3js.org/">d3.js</a>.</strong><br>
-  Free and open source, kept alive by one maintainer and the people who sponsor the work.
+  <strong>3D charts and shapes for <a href="https://d3js.org/">D3.js</a>.</strong><br>
+  Projects 3D data to plain SVG or canvas, no WebGL needed. Written in TypeScript.
 </p>
 
 <p align="center">
@@ -45,7 +41,21 @@
 
 More in the [example gallery](https://niekes.github.io/d3-3d/examples/).
 
+## Using d3-3d
+
+```bash
+npm install d3-3d
+```
+
+Everything else lives in the [documentation](https://niekes.github.io/d3-3d/): [getting started](https://niekes.github.io/d3-3d/guide/getting-started), the [API reference](https://niekes.github.io/d3-3d/api/), the [examples](https://niekes.github.io/d3-3d/examples/) and [migrating from v0.x](https://niekes.github.io/d3-3d/guide/migration).
+
+If d3-3d is useful to you, [give it a star](https://github.com/niekes/d3-3d). It helps other people find it.
+
 ## Sponsor d3-3d
+
+<p align="center">
+  <a href="https://github.com/sponsors/niekes"><img src="https://img.shields.io/badge/Sponsor_d3--3d-EA4AAA?logo=githubsponsors&logoColor=white&style=for-the-badge" alt="Sponsor d3-3d"></a>
+</p>
 
 **d3-3d** is free, and it always will be. There is no company behind it — just one maintainer working in spare time — so the cost of keeping it alive is paid for by the people who depend on it.
 
@@ -73,14 +83,6 @@ Prefer a one-off? The [sponsor page](https://github.com/sponsors/niekes) also ta
 Thank you to the people who make this possible. Sponsors at $25/mo and above get their logo in this README and on the docs site; everyone gets their name below.
 
 <!-- New sponsors go below this line, one per line. -->
-
-## Using d3-3d
-
-```bash
-npm install d3-3d
-```
-
-Everything else lives in the [documentation](https://niekes.github.io/d3-3d/): [getting started](https://niekes.github.io/d3-3d/guide/getting-started), the [API reference](https://niekes.github.io/d3-3d/api/), the [examples](https://niekes.github.io/d3-3d/examples/) and [migrating from v0.x](https://niekes.github.io/d3-3d/guide/migration).
 
 ## Star History
 

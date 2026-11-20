@@ -1,7 +1,7 @@
 {
     "name": "d3-3d",
     "version": "2.4.1",
-    "description": "D3.js plugin for 3d visualization written in Typescript",
+    "description": "3D charts and shapes for D3.js. Projects 3D data to plain SVG or canvas, no WebGL needed. TypeScript.",
     "keywords": [
         "3D",
         "d3",

@@ -17,7 +17,17 @@ const properties = new Set(['ccw', 'centroid']);
 
 export default defineConfig({
     title: 'd3-3d',
-    description: 'D3.js plugin for 3D visualization, written in TypeScript.',
+    description:
+        '3D charts and shapes for D3.js. Projects 3D data to plain SVG or canvas, no WebGL needed. TypeScript.',
+    head: [
+        [
+            'meta',
+            {
+                property: 'og:image',
+                content: 'https://raw.githubusercontent.com/niekes/d3-3d/master/assets/social-card.png'
+            }
+        ]
+    ],
     base: '/d3-3d/',
     markdown: {
         // Link every inline `name` of the API to its entry, except in
@@ -129,7 +139,7 @@ export default defineConfig({
         search: { provider: 'local' },
         footer: {
             message:
-                'Released under the BSD-3-Clause License. <a href="https://github.com/sponsors/niekes">Sponsor d3-3d</a> on GitHub Sponsors.',
+                'Released under the BSD-3-Clause License. <a href="https://github.com/sponsors/niekes">Sponsor d3-3d</a> on GitHub Sponsors. Useful to you? <a href="https://github.com/niekes/d3-3d">Star it on GitHub</a>.',
             copyright: 'Copyright © 2017-present Stefan Nieke'
         }
     }
