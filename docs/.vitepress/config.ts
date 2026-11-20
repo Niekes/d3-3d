@@ -129,7 +129,7 @@ export default defineConfig({
         search: { provider: 'local' },
         footer: {
             message:
-                'Released under the BSD-3-Clause License. <a href="https://github.com/sponsors/niekes">Sponsor d3-3d</a> on GitHub Sponsors.',
+                'Released under the BSD-3-Clause License. <a href="https://github.com/sponsors/niekes">Sponsor d3-3d</a> on GitHub Sponsors. Useful to you? <a href="https://github.com/niekes/d3-3d">Star it on GitHub</a>.',
             copyright: 'Copyright © 2017-present Stefan Nieke'
         }
     }

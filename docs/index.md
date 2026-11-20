@@ -9,7 +9,7 @@ hero:
           text: Get Started
           link: /guide/getting-started
         - theme: alt
-          text: View on GitHub
+          text: Star on GitHub
           link: https://github.com/niekes/d3-3d
 features:
     - title: First-class TypeScript
