@@ -40,7 +40,7 @@ class Cubes3DRenderer<Datum = Point3D>
 {
     data<Shape extends Datum[]>(data: Shape[]): Cube<Datum, Shape>[] {
         return data.map((cube) => {
-            const transformedCube = this.transformShape(cube) as Cube<Datum, Shape>;
+            const transformedCube = this.transformShape(cube, 8) as Cube<Datum, Shape>;
 
             const front = createFace(
                 [transformedCube[0], transformedCube[1], transformedCube[2], transformedCube[3]],

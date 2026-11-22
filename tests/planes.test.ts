@@ -78,4 +78,11 @@ describe('planes3D', () => {
         expect(id).toBe('floor');
         expect(plane.ccw).toBeTypeOf('boolean');
     });
+
+    test('data() rejects a plane that does not have four points', () => {
+        const points = (n: number) => Array.from({ length: n }, (_, i) => ({ x: i, y: i % 2, z: 0 }));
+
+        expect(() => planes3D().data([points(3)])).toThrow(RangeError);
+        expect(() => planes3D().data([points(5)])).toThrow(RangeError);
+    });
 });

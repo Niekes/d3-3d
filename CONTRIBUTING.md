@@ -19,6 +19,7 @@ Node 22, 24 or newer is required.
 npm run lint     # the whole gate
 npm test         # the test suite
 npm run build    # typecheck + bundle
+npm run verify   # typecheck + tests with coverage + lint, in one go
 ```
 
 `npm run lint` runs two things:

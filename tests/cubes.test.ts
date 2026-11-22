@@ -131,4 +131,10 @@ describe('cubes3D', () => {
         expect(height).toBe(42);
         expect(cube.faces).toHaveLength(6);
     });
+
+    test('data() rejects a cube that does not have eight points', () => {
+        const corners = Array.from({ length: 7 }, (_, i) => ({ x: i, y: 0, z: 0 }));
+
+        expect(() => cubes3D().data([corners])).toThrow(RangeError);
+    });
 });

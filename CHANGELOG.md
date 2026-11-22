@@ -19,6 +19,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `perspective(0)` collapsed the scene onto the rotation center and a
   negative distance mirrored it, both silently. `perspective()` now throws
   a `RangeError` for a distance that is not positive.
+- `sort` left the shapes unsorted when one of them had a `NaN` centroid, as
+  an empty line, line strip or polygon has: `NaN` compared equal to every
+  depth. A `NaN` centroid now sorts to the back.
+- `cubes3D`, `planes3D` and `triangles3D` failed with a `TypeError` on a
+  missing point when a shape had too few points, and `planes3D` and
+  `triangles3D` drew only the first four or three points of a longer one.
+  `data()` now throws a `RangeError` when a cube does not have eight points,
+  a plane four or a triangle three.
 
 ## [2.4.2] - 2026-11-20
 

@@ -60,6 +60,7 @@
         "lint:template": "node scripts/check-template.mjs",
         "lint:fallow": "fallow dead-code --ci --format ${FALLOW_FORMAT:-human} && fallow health --ci --coverage-gaps --format ${FALLOW_FORMAT:-human} && fallow dupes --ci --format ${FALLOW_FORMAT:-human}",
         "lint": "npm run lint:template && npm run lint:fallow",
+        "verify": "npm run typecheck && npm run coverage && npm run lint",
         "hooks:install": "fallow hooks install --target git && fallow hooks install --target agent --agent claude && fallow hooks install --target agent --agent codex",
         "prepack": "npm run build",
         "postpublish": "zip -j build/d3-3d.zip -- LICENSE README.md build/d3-3d.js build/d3-3d.es.js build/d3-3d.cjs"

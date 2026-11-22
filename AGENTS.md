@@ -133,7 +133,9 @@ The rules that `scripts/check-template.mjs` enforces:
 state. Use it instead of assembling the transform options by hand - that is
 what keeps the shape modules from drifting apart. A shape whose input is a
 list of point arrays transforms each array with `this.transformShape()`,
-which also keeps the fields set on the array, such as a `color` (#44).
+which also keeps the fields set on the array, such as a `color` (#44). A
+shape with a fixed number of points passes it as the second argument -
+`this.transformShape(cube, 8)` - so that a wrong count throws a `RangeError`.
 
 ### The public API
 

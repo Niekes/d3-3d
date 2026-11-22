@@ -46,12 +46,13 @@ polyline per list.
 ### `triangles3D()` {#triangles3d}
 
 Triangles. `.data` takes a list of three point lists and returns one
-triangle per list, with `ccw` set when it faces the camera.
+triangle per list, with `ccw` set when it faces the camera. A list with
+another number of points throws a `RangeError`.
 
 ### `planes3D()` {#planes3d}
 
 Planes. `.data` takes a list of four point lists and returns one plane per
-list, with `ccw`.
+list, with `ccw`. A list with another number of points throws a `RangeError`.
 
 ### `polygons3D()` {#polygons3d}
 
@@ -67,8 +68,8 @@ returns one quad per grid cell, with `ccw`. All rows have the same length.
 
 Cubes. `.data` takes a list of eight point lists and returns one cube per
 list, with its six `faces`: `front`, `back`, `left`, `right`, `top` and
-`bottom`, each with `ccw`. The eight vertices go in this order, or let `box`
-build them:
+`bottom`, each with `ccw`. A list with another number of points throws a
+`RangeError`. The eight vertices go in this order, or let `box` build them:
 
 ![The order of the eight vertices of a cube](../../assets/cube.png)
 
@@ -369,6 +370,7 @@ The point on the screen, orthographic or in perspective, on every point.
 
 Sort shapes by depth (painter's algorithm): a comparator for anything with a
 `centroid`, back to front. In a perspective too, the rotated z is the depth.
+An empty shape, whose centroid is `NaN`, goes to the back.
 
 ```typescript
 svg

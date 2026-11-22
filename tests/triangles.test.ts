@@ -246,4 +246,10 @@ describe('triangles3D', () => {
 
         expect(triangle.centroid).toEqual({ x: 1, y: 1, z: 0 });
     });
+
+    test('data() rejects a triangle that does not have three points', () => {
+        const points = Array.from({ length: 4 }, (_, i) => ({ x: i, y: i % 2, z: 0 }));
+
+        expect(() => triangles3D().data([points])).toThrow(RangeError);
+    });
 });
