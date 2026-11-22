@@ -220,13 +220,13 @@ and `pointer-events: all` keeps the hollow quads hoverable:
 ## The whole source
 
 The figure lives in
-[docs/examples/surfacePlot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfacePlot.ts)
+[docs/examples/surfacePlot.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/surfacePlot.ts)
 in the repository, its styles in
-[docs/examples/surfacePlot.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfacePlot.css).
+[docs/examples/surfacePlot.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/surfacePlot.css).
 The grid of quads, the shading and the join live in
-[docs/examples/surfaceFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfaceFigure.ts),
+[docs/examples/surfaceFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/surfaceFigure.ts),
 and the SVG and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 Both files, ready to copy:
 
 The grid of quads, the shading and the join:

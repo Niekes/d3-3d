@@ -24,7 +24,7 @@ export default defineConfig({
             'meta',
             {
                 property: 'og:image',
-                content: 'https://raw.githubusercontent.com/niekes/d3-3d/master/assets/social-card.png'
+                content: 'https://raw.githubusercontent.com/niekes/d3-3d/main/assets/social-card.png'
             }
         ]
     ],

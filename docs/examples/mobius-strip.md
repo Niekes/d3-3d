@@ -160,15 +160,15 @@ one.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/mobiusStrip.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/mobiusStrip.ts)
+[docs/examples/mobiusStrip.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/mobiusStrip.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG, the drag and the play
 button live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the join of the triangles in
-[docs/examples/facets.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/facets.ts)
+[docs/examples/facets.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/facets.ts)
 and the arrow in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/mobiusStrip.ts

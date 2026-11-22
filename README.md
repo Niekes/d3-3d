@@ -5,11 +5,11 @@
 
 <p align="center">
   <a href="https://github.com/niekes/d3-3d/actions"><img src="https://github.com/niekes/d3-3d/workflows/main/badge.svg" alt="Build"></a>
-  <a href="https://github.com/niekes/d3-3d/actions"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/niekes/d3-3d/master/.github/badges/coverage.json" alt="Coverage"></a>
-  <a href="https://fallow.tools/docs/explanations/health/"><img src="https://raw.githubusercontent.com/niekes/d3-3d/master/.github/badges/health.svg" alt="fallow health"></a>
+  <a href="https://github.com/niekes/d3-3d/actions"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/niekes/d3-3d/main/.github/badges/coverage.json" alt="Coverage"></a>
+  <a href="https://fallow.tools/docs/explanations/health/"><img src="https://raw.githubusercontent.com/niekes/d3-3d/main/.github/badges/health.svg" alt="fallow health"></a>
   <a href="https://www.npmjs.com/package/d3-3d"><img src="https://img.shields.io/npm/dt/d3-3d" alt="npm downloads"></a>
   <a href="https://www.npmjs.com/package/d3-3d"><img src="https://img.shields.io/npm/dw/d3-3d" alt="npm weekly downloads"></a>
-  <a href="https://github.com/Niekes/d3-3d/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/d3-3d" alt="License"></a>
+  <a href="https://github.com/Niekes/d3-3d/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/d3-3d" alt="License"></a>
   <a href="https://www.npmjs.com/package/d3-3d"><img src="https://img.shields.io/npm/v/d3-3d" alt="npm version"></a>
   <img src="https://img.shields.io/badge/TypeScript-Ready-blue" alt="TypeScript">
   <a href="https://github.com/niekes/d3-3d"><img src="https://img.shields.io/github/stars/niekes/d3-3d" alt="GitHub stars"></a>

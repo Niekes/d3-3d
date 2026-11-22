@@ -171,7 +171,7 @@ origin, so the hinge lands in the middle of the figure.
 ## The whole source
 
 The figure lives in
-[docs/examples/projectionPlayground.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/projectionPlayground.ts)
+[docs/examples/projectionPlayground.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/projectionPlayground.ts)
 in the repository. The file carries its own styles and puts them into the
 element it mounts into, so it needs no stylesheet: copy it, change the
 import of `../../index` to `d3-3d` and call

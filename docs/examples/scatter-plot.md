@@ -207,11 +207,11 @@ projection alone does not tell.
 ## The whole source
 
 The figure lives in
-[docs/examples/scatterPlot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/scatterPlot.ts)
+[docs/examples/scatterPlot.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/scatterPlot.ts)
 in the repository, its styles in
-[docs/examples/scatterPlot.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/scatterPlot.css),
+[docs/examples/scatterPlot.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/scatterPlot.css),
 and the SVG and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/scatterPlot.ts

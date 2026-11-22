@@ -140,15 +140,15 @@ sort.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/cellularAutomaton.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cellularAutomaton.ts)
+[docs/examples/cellularAutomaton.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cellularAutomaton.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG, the drag and the play
 button live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the camera and the floor in
-[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts)
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorView.ts)
 and the cube join, the face join and the neighbor steps in
-[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts).
+[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cubeFaces.ts).
 The figure, ready to copy:
 
 <<< @/examples/cellularAutomaton.ts

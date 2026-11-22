@@ -168,15 +168,15 @@ about 93 comparisons and 38 swaps.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/sortingSculpture.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/sortingSculpture.ts)
+[docs/examples/sortingSculpture.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/sortingSculpture.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG, the drag and the play
 button live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the camera and the floor with its slot ticks in
-[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts)
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorView.ts)
 and the face join in
-[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts).
+[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cubeFaces.ts).
 The figure, ready to copy:
 
 <<< @/examples/sortingSculpture.ts

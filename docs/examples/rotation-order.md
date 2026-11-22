@@ -55,7 +55,7 @@ whose square is less than a hundredth.
 The renderer turns a point around z first, then around y, then around x,
 all around world axes through the rotation center. As a matrix, that is
 R = Rx · Ry · Rz, read from right to left: the turn next to the point comes
-first. [`rotationMatrix`](https://github.com/niekes/d3-3d/blob/master/src/rotation.ts#L14)
+first. [`rotationMatrix`](https://github.com/niekes/d3-3d/blob/main/src/rotation.ts#L14)
 builds it once for every `.data()` call.
 
 The right copy turns in any order, through three calls of `transform` with
@@ -120,11 +120,11 @@ rotation center and the perspective.
 ## The whole source
 
 The figure lives in
-[docs/examples/rotationOrder.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotationOrder.ts)
+[docs/examples/rotationOrder.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotationOrder.ts)
 in the repository, the face join in
-[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts)
+[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cubeFaces.ts)
 and the axis segments in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The file carries its own styles and puts them into the element it mounts
 into, so it needs no stylesheet: copy it with the two helpers, change the
 import of `../../index` to `d3-3d` and call `mountRotationOrder(element)`.

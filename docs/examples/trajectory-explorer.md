@@ -144,11 +144,11 @@ on a moment after the paths have split.
 ## The whole source
 
 The figure lives in
-[docs/examples/trajectoryExplorer.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/trajectoryExplorer.ts)
+[docs/examples/trajectoryExplorer.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/trajectoryExplorer.ts)
 in the repository, its styles in
-[docs/examples/trajectoryExplorer.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/trajectoryExplorer.css),
+[docs/examples/trajectoryExplorer.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/trajectoryExplorer.css),
 and the SVG, the drag and the play button in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/trajectoryExplorer.ts

@@ -125,10 +125,10 @@ are painted in the grid order above and not with `sort`.
 ## The whole source
 
 The figure lives in
-[docs/examples/barField.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/barField.ts)
+[docs/examples/barField.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/barField.ts)
 in the repository, the canvases, the controls and the loop it shares with
 the [point cloud](/examples/point-cloud) in
-[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/canvasFigure.ts).
+[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/canvasFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/barField.ts

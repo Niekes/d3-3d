@@ -128,11 +128,11 @@ the image of a plane in perspective is not.
 ## The whole source
 
 The figure lives in
-[docs/examples/perspectiveStreet.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/perspectiveStreet.ts)
+[docs/examples/perspectiveStreet.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/perspectiveStreet.ts)
 in the repository, its styles in
-[docs/examples/perspectiveStreet.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/perspectiveStreet.css),
+[docs/examples/perspectiveStreet.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/perspectiveStreet.css),
 and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/perspectiveStreet.ts

@@ -187,13 +187,13 @@ the nodes that are shown and follows the clicks.
 ## The whole source
 
 The figure lives in
-[docs/examples/networkExplorer.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/networkExplorer.ts)
+[docs/examples/networkExplorer.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/networkExplorer.ts)
 in the repository, styles included: it writes them into a `<style>`
 element in the host, so there is no stylesheet to copy. The SVG and the
 drag come from
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts)
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts)
 and the ends of the edges from
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/networkExplorer.ts

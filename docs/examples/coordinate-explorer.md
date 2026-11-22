@@ -161,12 +161,12 @@ perspective, for the eight corners of a cube.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/coordinateExplorer.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/coordinateExplorer.ts)
+[docs/examples/coordinateExplorer.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/coordinateExplorer.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG and the drag live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts)
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts)
 and the placing of the segments in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/coordinateExplorer.ts

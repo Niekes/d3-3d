@@ -85,7 +85,7 @@ jobs:
                   name: build
                   path: build/
             - name: Update the health and coverage badges
-              if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+              if: github.ref == 'refs/heads/main' && github.event_name == 'push'
               run: |
                   npm run coverage
                   npx fallow health --format badge --coverage coverage/coverage-final.json > .github/badges/health.svg
