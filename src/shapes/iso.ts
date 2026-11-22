@@ -78,8 +78,13 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
             z: this.z()(spec)
         };
 
-        const outline = isoBoxOutline(box);
+        const view = this.viewDirection();
+        const outline = isoBoxOutline(box, view);
         const top = box.z + box.h;
+        // The faces on the side of the camera; straight down counts as +x, +y, like the wall.
+        const sx = view.x >= 0 ? 1 : -1;
+        const sy = view.y >= 0 ? 1 : -1;
+        const near = { x: sx > 0 ? box.x + box.w : box.x, y: sy > 0 ? box.y + box.d : box.y };
 
         return {
             centroid: this.apply([centerOf(box)])[0].rotated,
@@ -90,14 +95,15 @@ class Iso3DRenderer extends ShapeRenderer<Point3D> implements Iso3DInstance {
                 u: { x: 1, y: 0, z: 0 },
                 v: { x: 0, y: 1, z: 0 }
             }),
+            // u = normal × up, so that the local x axis reads left to right.
             frontPlane: this.plane({
-                origin: { x: box.x, y: box.y + box.d, z: top },
-                u: { x: 1, y: 0, z: 0 },
+                origin: { x: sy > 0 ? box.x : box.x + box.w, y: near.y, z: top },
+                u: { x: sy, y: 0, z: 0 },
                 v: { x: 0, y: 0, z: -1 }
             }),
             sidePlane: this.plane({
-                origin: { x: box.x + box.w, y: box.y + box.d, z: top },
-                u: { x: 0, y: -1, z: 0 },
+                origin: { x: near.x, y: sx > 0 ? box.y + box.d : box.y, z: top },
+                u: { x: 0, y: -sx, z: 0 },
                 v: { x: 0, y: 0, z: -1 }
             })
         };

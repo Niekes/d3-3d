@@ -29,9 +29,9 @@ onBeforeUnmount(() => {
 An isometric picture reads as solid when every box has a bright top, a lit
 side and a side in the shade. `iso3D` draws the visible wall of a box as one
 path, but it also hands back the frame of every visible face: `frontPlane`
-for the face on the left of the screen and `sidePlane` for the one on the
-right. In its frame a face is a plain rectangle, `w` or `d` wide and `h`
-high, with y running down the wall:
+for the face across y, on the left of the screen in this view, and
+`sidePlane` for the face across x, on the right. In its frame a face is a
+plain rectangle, `w` or `d` wide and `h` high, with y running down the wall:
 
 ```ts
 face(box.frontPlane, spec.w, spec.h, 'left', windows) +

@@ -96,4 +96,47 @@ describe('transform', () => {
         expect(result[0].meta).toBe('test');
         expect(result[0].rotated).toEqual({ x: 10, y: 20, z: 30 });
     });
+    test('keeps an array datum an array, with its fields', () => {
+        type Row = [number, number, number] & { color?: string };
+        const row = Object.assign([1, 2, 3], { color: 'red' }) as Row;
+        const [result] = transform([row], {
+            ...defaultOptions,
+            x: (d: Row) => d[0],
+            y: (d: Row) => d[1],
+            z: (d: Row) => d[2]
+        });
+
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.map((v) => v * 2)).toEqual([2, 4, 6]);
+        expect(result.color).toBe('red');
+        expect(result.rotated).toEqual({ x: 1, y: 2, z: 3 });
+        expect(row).not.toBe(result);
+    });
+
+    test('keeps the methods of a class datum', () => {
+        class Vec {
+            constructor(
+                public x: number,
+                public y: number,
+                public z: number
+            ) {}
+            get length() {
+                return Math.hypot(this.x, this.y, this.z);
+            }
+            scaled(k: number) {
+                return new Vec(this.x * k, this.y * k, this.z * k);
+            }
+        }
+        const [result] = transform([new Vec(2, 3, 6)], {
+            ...defaultOptions,
+            x: (d: Vec) => d.x,
+            y: (d: Vec) => d.y,
+            z: (d: Vec) => d.z
+        });
+
+        expect(result).toBeInstanceOf(Vec);
+        expect(result.length).toBe(7);
+        expect(result.scaled(2).x).toBe(4);
+        expect(result.projected).toEqual({ x: 2, y: 3 });
+    });
 });

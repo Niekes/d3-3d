@@ -215,6 +215,91 @@ describe('iso3D', () => {
         expect(pathPoints(box.top).length).toBe(4);
     });
 
+    test('builds the wall of a sharp box from the sides that face the camera', () => {
+        // Turned half way round: the camera looks from the corner at (x, y).
+        const turned = iso().rotateZ(AZ + Math.PI);
+        const [box] = turned.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20 }]);
+        const expected = turned.project([
+            { x: 100, y: 0, z: 0 },
+            { x: 0, y: 0, z: 0 },
+            { x: 0, y: 80, z: 0 },
+            { x: 0, y: 80, z: 20 },
+            { x: 0, y: 0, z: 20 },
+            { x: 100, y: 0, z: 20 }
+        ]);
+
+        expectPointsClose(
+            pathPoints(box.wall).reverse(),
+            expected.map((p) => [p.x, p.y]),
+            PATH_TOLERANCE
+        );
+    });
+
+    test('builds the wall of a rounded box from the sides that face the camera', () => {
+        // A square box around the rotation center looks the same after a half turn.
+        const spec = { x: -50, y: -50, z: 0, w: 100, d: 100, h: 20, r: 10 };
+        const [front] = iso().data([spec]);
+        const [turned] = iso()
+            .rotateZ(AZ + Math.PI)
+            .data([spec]);
+
+        expectPointsClose(pathPoints(turned.wall), pathPoints(front.wall), PATH_TOLERANCE);
+    });
+
+    test('puts the face frames on the faces that face the camera', () => {
+        const turned = iso().rotateZ(AZ + Math.PI);
+        const [box] = turned.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20 }]);
+        // Seen from the corner at (x, y), the faces at y and at x, read left to right.
+        const front = turned.plane({
+            origin: { x: 100, y: 0, z: 20 },
+            u: { x: -1, y: 0, z: 0 },
+            v: { x: 0, y: 0, z: -1 }
+        });
+        const side = turned.plane({
+            origin: { x: 0, y: 0, z: 20 },
+            u: { x: 0, y: 1, z: 0 },
+            v: { x: 0, y: 0, z: -1 }
+        });
+
+        expectClose(numbers(box.frontPlane.matrix), numbers(front.matrix));
+        expectClose(numbers(box.sidePlane.matrix), numbers(side.matrix));
+        // Both run from left to right on the screen.
+        expect(numbers(box.frontPlane.matrix)[0]).toBeGreaterThan(0);
+        expect(numbers(box.sidePlane.matrix)[0]).toBeGreaterThan(0);
+    });
+
+    test('tells the x side from the y side when only one of them flips', () => {
+        // A quarter turn: the camera looks from the corner at (x + w, y).
+        const turned = iso().rotateZ(AZ + Math.PI / 2);
+        const [box] = turned.data([{ x: 0, y: 0, z: 0, w: 100, d: 80, h: 20 }]);
+        const wall = turned.project([
+            { x: 0, y: 0, z: 0 },
+            { x: 100, y: 0, z: 0 },
+            { x: 100, y: 80, z: 0 },
+            { x: 100, y: 80, z: 20 },
+            { x: 100, y: 0, z: 20 },
+            { x: 0, y: 0, z: 20 }
+        ]);
+        const front = turned.plane({
+            origin: { x: 100, y: 0, z: 20 },
+            u: { x: -1, y: 0, z: 0 },
+            v: { x: 0, y: 0, z: -1 }
+        });
+        const side = turned.plane({
+            origin: { x: 100, y: 80, z: 20 },
+            u: { x: 0, y: -1, z: 0 },
+            v: { x: 0, y: 0, z: -1 }
+        });
+
+        expectPointsClose(
+            pathPoints(box.wall).reverse(),
+            wall.map((p) => [p.x, p.y]),
+            PATH_TOLERANCE
+        );
+        expectClose(numbers(box.frontPlane.matrix), numbers(front.matrix));
+        expectClose(numbers(box.sidePlane.matrix), numbers(side.matrix));
+    });
+
     test('exposes the frames of the three visible faces', () => {
         const [box] = iso().data([{ x: 200, y: 0, z: 36, w: 180, d: 160, h: 6, r: 6 }]);
         expectClose(
