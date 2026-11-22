@@ -580,6 +580,13 @@ axes and the corner radius of its plan outline. The depth of a box is the
 `z` of its rotated centre, so the boxes can be sorted with the same
 `sort()` utility as every other shape.
 
+The wall, `frontPlane` and `sidePlane` are taken from the sides of the box
+that face the camera, so the box stays correct when the scene is turned
+around its vertical axis. `frontPlane` is the visible face across y, `w`
+wide, and `sidePlane` the visible face across x, `d` wide; the x axis of
+both frames runs from left to right on the screen. The camera has to look
+down on the boxes: seen from below, the top is drawn instead of the bottom.
+
 See the [office tower example](/examples/iso-tower) for a complete scene.
 
 ### `.data(boxes)` {#iso-data}
