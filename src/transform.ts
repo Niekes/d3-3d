@@ -1,4 +1,4 @@
-import { TransformedPoint, Point3D, TransformOptions } from './types';
+import { TransformedPoint, Point2D, Point3D, TransformOptions } from './types';
 import { rotate, rotationMatrix } from './rotation';
 import { perspective } from './projection-perspective';
 
@@ -29,25 +29,30 @@ export function transform<Datum = Point3D>(
             distance: options.perspective ?? Infinity
         });
 
-        return copy(point, { rotated, projected });
+        return copy(point, rotated, projected);
     });
 }
 
 /**
- * A copy of `point` with `extra` added. A plain object is spread, the fast
- * path; an array stays an array and a class instance keeps its prototype, so
- * the result has the methods its type promises.
+ * A copy of `point` with its rotated and projected position. A plain object
+ * is spread, the fast path; an array stays an array and a class instance
+ * keeps its prototype, so the result has the methods its type promises.
+ * The two fields are passed apart, not as one object, so that the fast path
+ * allocates nothing but the copy.
  *
  * shortcut: copies own enumerable fields only, so private `#fields` and the
  * internal state of built-ins such as typed arrays, `Date` or `Map` are lost;
  * handle them if a datum needs them.
  */
-function copy<Datum, Extra>(point: Datum, extra: Extra): Datum & Extra {
+function copy<Datum>(point: Datum, rotated: Point3D, projected: Point2D): TransformedPoint<Datum> {
     const proto = typeof point === 'object' && point !== null ? Object.getPrototypeOf(point) : null;
 
     if (proto === null || proto === Object.prototype) {
-        return { ...point, ...extra };
+        return { ...point, rotated, projected };
     }
 
-    return Object.assign(Array.isArray(point) ? [] : Object.create(proto), point, extra);
+    return Object.assign(Array.isArray(point) ? [] : Object.create(proto), point, {
+        rotated,
+        projected
+    });
 }
