@@ -66,20 +66,20 @@
     },
     "devDependencies": {
         "@types/d3": "^7.4.3",
-        "@types/node": "^26.6.5",
-        "@vitest/coverage-v8": "5.0.5",
-        "@vitest/ui": "5.0.5",
-        "d3": "^7.9.0",
-        "fallow": "3.34.1",
+        "@types/node": "^26.6.6",
+        "@vitest/coverage-v8": "5.1.0",
+        "@vitest/ui": "5.1.0",
+        "d3": "^7.9.2",
+        "fallow": "3.46.0",
         "typescript": "^7.0.2",
-        "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
-        "vite-plus": "1.3.0",
-        "vitepress": "^2.0.0-alpha.20",
-        "vitest": "5.0.5"
+        "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
+        "vite-plus": "1.7.0",
+        "vitepress": "^2.0.0-alpha.21",
+        "vitest": "5.1.0"
     },
     "overrides": {
-        "vite": "npm:@voidzero-dev/vite-plus-core@1.3.0",
-        "vitest": "5.0.5"
+        "vite": "npm:@voidzero-dev/vite-plus-core@8.3.8000",
+        "vitest": "5.1.0"
     },
     "devEngines": {
         "runtime": {
