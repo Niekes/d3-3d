@@ -1,7 +1,7 @@
 import { ShapeFields, TransformedPoint, Point3D } from '../types';
 import { ShapeInstance, ShapeRenderer } from './shape';
 import { centroid } from '../centroid';
-import { drawLineStrip } from '../draw/drawLineStrip';
+import { drawPolyline } from '../draw/drawPolyline';
 
 export type LineStrip<Datum, Shape extends Datum[] = Datum[]> = TransformedPoint<Datum>[] &
     ShapeFields<Shape> & {
@@ -33,7 +33,7 @@ class LineStrips3DRenderer<Datum = Point3D>
     }
 
     draw(lineStrip: TransformedPoint<Datum>[]): string {
-        return drawLineStrip(lineStrip);
+        return drawPolyline(lineStrip);
     }
 }
 
