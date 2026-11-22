@@ -32,6 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   example with `.rotateZ()` or a shared `.camera()`, the wall showed the
   back of the box and `frontPlane` and `sidePlane` lay on hidden faces. They
   now follow `viewDirection()`. At the standard view the output is the same.
+- `transform` and every shape's `data()` copied each point into a plain
+  object. An array datum such as `[x, y, z]` came back as an object without
+  `map` or `length`, and a class instance without its methods, though the
+  types promised both. An array now stays an array and a class instance
+  keeps its prototype; plain objects are copied as before.
 
 ## [2.4.2] - 2026-11-20
 
