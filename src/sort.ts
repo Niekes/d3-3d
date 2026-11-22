@@ -5,8 +5,9 @@ export interface HasCentroid {
 }
 
 export function sort<T extends HasCentroid>(a: T, b: T): number {
-    const pa = a.centroid.z;
-    const pb = b.centroid.z;
+    // An empty shape has a NaN centroid; NaN compares equal to everything and breaks the order.
+    const pa = Number.isNaN(a.centroid.z) ? -Infinity : a.centroid.z;
+    const pb = Number.isNaN(b.centroid.z) ? -Infinity : b.centroid.z;
 
     if (pa < pb) {
         return -1;

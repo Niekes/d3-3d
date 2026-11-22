@@ -205,11 +205,18 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     /**
      * Transforms the points of one shape and keeps the fields its array
      * carries besides them, such as a `color` (#44). The indices exist on
-     * the result already, so only those fields are copied.
+     * the result already, so only those fields are copied. A shape with a
+     * fixed number of points passes it as `size`, so that a wrong count
+     * throws a `RangeError` instead of failing later on a missing point.
      */
     protected transformShape<Shape extends Datum[]>(
-        shape: Shape
+        shape: Shape,
+        size?: number
     ): TransformedPoint<Datum>[] & ShapeFields<Shape> {
+        if (size !== undefined && shape.length !== size) {
+            throw new RangeError(`data() expects ${size} points per shape, got ${shape.length}`);
+        }
+
         const points = transform(shape, this.transformOptions());
 
         for (const key of Object.keys(shape)) {

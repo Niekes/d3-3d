@@ -21,7 +21,7 @@ class Planes3DRenderer<Datum = Point3D>
 {
     data<Shape extends Datum[]>(data: Shape[]): Plane<Datum, Shape>[] {
         return data.map((plane) => {
-            const transformedPlane = this.transformShape(plane) as Plane<Datum, Shape>;
+            const transformedPlane = this.transformShape(plane, 4) as Plane<Datum, Shape>;
 
             transformedPlane.ccw = ccw(transformedPlane);
             transformedPlane.centroid = centroid(transformedPlane);

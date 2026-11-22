@@ -21,7 +21,7 @@ class Triangles3DRenderer<Datum = Point3D>
 {
     data<Shape extends Datum[]>(data: Shape[]): Triangle<Datum, Shape>[] {
         return data.map((triangle) => {
-            const transformedTriangles = this.transformShape(triangle) as Triangle<Datum, Shape>;
+            const transformedTriangles = this.transformShape(triangle, 3) as Triangle<Datum, Shape>;
 
             transformedTriangles.ccw = ccw(transformedTriangles);
             transformedTriangles.centroid = centroid(transformedTriangles);
