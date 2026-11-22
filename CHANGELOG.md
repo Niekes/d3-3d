@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- `gridPlanes3D().data()` crashed in `ccw` with a `TypeError` when the
+  number of points was not a multiple of `rows()`. It now throws a
+  `RangeError` that says so.
+- `lineStrips3D().data([[]])` threw on an empty strip. An empty strip now
+  gets a `NaN` centroid, like `lines3D`. `draw()` of an empty line, line
+  strip or polygon returns an empty path instead of throwing (lines and
+  strips) or returning the invalid path `Z` (polygons).
+- `perspective(0)` collapsed the scene onto the rotation center and a
+  negative distance mirrored it, both silently. `perspective()` now throws
+  a `RangeError` for a distance that is not positive.
+
 ## [2.4.2] - 2026-11-20
 
 ### Changed

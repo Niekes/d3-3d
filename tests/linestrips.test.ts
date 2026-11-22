@@ -70,4 +70,18 @@ describe('lineStrips3D', () => {
         expect(label).toBe('route');
         expect(strip.centroid).toEqual({ x: 1, y: 2, z: 0 });
     });
+
+    test('gives an empty line strip a NaN centroid and an empty path', () => {
+        const lineStrip = lineStrips3D();
+        const [strip] = lineStrip.data([[]]);
+
+        expect(strip.centroid).toEqual({ x: NaN, y: NaN, z: NaN });
+        expect(lineStrip.draw(strip)).toBe('');
+    });
+
+    test('takes the only point of a one-point strip as its centroid', () => {
+        const [strip] = lineStrips3D().data([[{ x: 1, y: 2, z: 3 }]]);
+
+        expect(strip.centroid).toEqual({ x: 1, y: 2, z: 3 });
+    });
 });

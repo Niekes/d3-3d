@@ -19,15 +19,14 @@ class LineStrips3DRenderer<Datum = Point3D>
 {
     data<Shape extends Datum[]>(data: Shape[]): LineStrip<Datum, Shape>[] {
         return data.map((strip) => {
-            const midpoint = strip.length / 2;
-            const truncatedMidpoint = Math.trunc(midpoint);
-
+            const length = strip.length;
             const transformedLineStrip = this.transformShape(strip) as LineStrip<Datum, Shape>;
 
-            transformedLineStrip.centroid =
-                truncatedMidpoint === midpoint
-                    ? centroid([transformedLineStrip[midpoint - 1], transformedLineStrip[midpoint]])
-                    : transformedLineStrip[truncatedMidpoint].rotated;
+            // The middle point, or the middle two; none for an empty strip,
+            // whose centroid is then NaN, as in lines3D.
+            transformedLineStrip.centroid = centroid(
+                transformedLineStrip.slice(Math.ceil(length / 2) - 1, Math.floor(length / 2) + 1)
+            );
 
             return transformedLineStrip;
         });

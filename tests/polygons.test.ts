@@ -68,4 +68,10 @@ describe('polygons3D', () => {
         expect(sides).toBe(5);
         expect(polygon).toHaveLength(5);
     });
+
+    test('draws an empty polygon as an empty path', () => {
+        const polygon = polygons3D();
+
+        expect(polygon.draw(polygon.data([[]])[0])).toBe('');
+    });
 });

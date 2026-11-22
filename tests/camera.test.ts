@@ -102,6 +102,13 @@ describe('camera3D', () => {
         // @ts-expect-error a plain object has none of the settings
         expect(() => points3D().camera({})).toThrow(TypeError);
     });
+
+    test('perspective() rejects a distance that is not positive', () => {
+        expect(() => camera3D().perspective(0)).toThrow(RangeError);
+        expect(() => camera3D().perspective(-5)).toThrow(RangeError);
+        expect(() => camera3D().perspective(Number.NaN)).toThrow(RangeError);
+        expect(camera3D().perspective(Infinity).perspective()).toBe(Infinity);
+    });
 });
 
 describe('viewDirection', () => {
