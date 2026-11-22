@@ -370,7 +370,7 @@ The point on the screen, orthographic or in perspective, on every point.
 
 Sort shapes by depth (painter's algorithm): a comparator for anything with a
 `centroid`, back to front. In a perspective too, the rotated z is the depth.
-An empty line or line strip, whose centroid is `NaN`, goes to the back.
+An empty shape, whose centroid is `NaN`, goes to the back.
 
 ```typescript
 svg
