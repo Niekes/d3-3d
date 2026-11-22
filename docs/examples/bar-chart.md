@@ -134,9 +134,9 @@ turns the camera and both follow.
 ## The whole source
 
 The figure lives in
-[docs/examples/barChart.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/barChart.ts)
+[docs/examples/barChart.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/barChart.ts)
 in the repository, the drag it shares with the other rotating figures in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The complete file, ready to copy:
 
 <<< @/examples/barChart.ts

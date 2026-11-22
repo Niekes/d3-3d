@@ -153,10 +153,10 @@ exactly.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/depthOrdering.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/depthOrdering.ts)
+[docs/examples/depthOrdering.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/depthOrdering.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG and the drag live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/depthOrdering.ts

@@ -36,4 +36,4 @@ Sponsorship is not the only way to keep d3-3d alive, and it is not required to u
 - **Star the repo** — it is the cheapest signal that helps the project get found.
 - **Report bugs well.** A reproducible issue is worth more than a star.
 - **Answer a question** in [Discussions](https://github.com/Niekes/d3-3d/discussions) or in someone else's issue thread.
-- **Contribute code.** See [CONTRIBUTING.md](https://github.com/Niekes/d3-3d/blob/master/CONTRIBUTING.md).
+- **Contribute code.** See [CONTRIBUTING.md](https://github.com/Niekes/d3-3d/blob/main/CONTRIBUTING.md).

@@ -118,13 +118,13 @@ follow the height, from deep water through sand and grass to rock and snow.
 ## The whole source
 
 The figure lives in
-[docs/examples/terrainSculptor.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/terrainSculptor.ts)
+[docs/examples/terrainSculptor.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/terrainSculptor.ts)
 and its styles in
-[docs/examples/terrainSculptor.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/terrainSculptor.css).
+[docs/examples/terrainSculptor.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/terrainSculptor.css).
 The surface, its colors and the turning live in
-[docs/examples/surfaceFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/surfaceFigure.ts),
+[docs/examples/surfaceFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/surfaceFigure.ts),
 the drag and the glide in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/terrainSculptor.ts

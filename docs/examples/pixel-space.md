@@ -113,10 +113,10 @@ frames are projected with the matrix of the pixels and drawn after
 ## The whole source
 
 The figure lives in
-[docs/examples/pixelSpace.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/pixelSpace.ts)
+[docs/examples/pixelSpace.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/pixelSpace.ts)
 in the repository, the canvas, the controls and the loop it shares with the
 [point cloud](/examples/point-cloud) in
-[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/canvasFigure.ts).
+[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/canvasFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/pixelSpace.ts

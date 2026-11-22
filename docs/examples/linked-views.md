@@ -166,14 +166,14 @@ map, and brushing the map never turns the free view.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/linkedViews.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/linkedViews.ts)
+[docs/examples/linkedViews.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/linkedViews.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The drag and `turnCamera` live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the tilt limits and the floor in
-[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts)
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorView.ts)
 and the segments in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/linkedViews.ts

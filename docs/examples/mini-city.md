@@ -202,11 +202,11 @@ in the model too. They fall on the ground only, never on another building.
 ## The whole source
 
 The figure lives in
-[docs/examples/miniCity.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/miniCity.ts)
+[docs/examples/miniCity.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/miniCity.ts)
 in the repository, its styles in
-[docs/examples/miniCity.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/miniCity.css),
+[docs/examples/miniCity.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/miniCity.css),
 and the SVG and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/miniCity.ts

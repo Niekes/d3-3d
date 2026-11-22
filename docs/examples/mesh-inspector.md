@@ -136,11 +136,11 @@ The colors are `light-dark()` pairs set with `style`, as in the
 ## The whole source
 
 The figure lives in
-[docs/examples/meshInspector.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/meshInspector.ts)
+[docs/examples/meshInspector.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/meshInspector.ts)
 in the repository, the SVG and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts)
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts)
 and the ends of the normals in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/meshInspector.ts

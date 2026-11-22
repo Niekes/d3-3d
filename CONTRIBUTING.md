@@ -85,7 +85,7 @@ API, re-export it from `index.ts` and cover it with a test.
 
 A release is a pull request that bumps the version in `package.json` and
 updates `CHANGELOG.md` — for example the `release/2.2.0` branch. Merging it
-into `master` starts it: when `package.json` changed, the
+into `main` starts it: when `package.json` changed, the
 [Release workflow](.github/workflows/release.yml) stages the new version on
 npm through trusted publishing and creates the `vX.Y.Z` release on GitHub,
 with the version's section of `CHANGELOG.md` as its notes. A maintainer then
@@ -111,7 +111,7 @@ npm run docs:dev      # local dev server
 npm run docs:build    # production build
 ```
 
-Pages are deployed to GitHub Pages from `master`.
+Pages are deployed to GitHub Pages from `main`.
 
 ## Support
 

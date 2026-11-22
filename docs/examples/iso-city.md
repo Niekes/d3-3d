@@ -96,11 +96,11 @@ along a street, and CSS runs a dash along it:
 ## The whole source
 
 The figure lives in
-[docs/examples/isoCity.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCity.ts)
+[docs/examples/isoCity.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/isoCity.ts)
 in the repository, its styles in
-[docs/examples/isoCity.css](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCity.css),
+[docs/examples/isoCity.css](https://github.com/niekes/d3-3d/blob/main/docs/examples/isoCity.css),
 and the projection and the filters in
-[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCommon.ts).
+[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/isoCommon.ts).
 The figure, ready to copy:
 
 <<< @/examples/isoCity.ts

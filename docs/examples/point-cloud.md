@@ -115,10 +115,10 @@ the size in CSS pixels to `.matrix()`.
 ## The whole source
 
 The figure lives in
-[docs/examples/pointCloud.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/pointCloud.ts)
+[docs/examples/pointCloud.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/pointCloud.ts)
 in the repository, the canvases, the controls and the loop it shares with
 the [bar field](/examples/bar-field) in
-[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/canvasFigure.ts).
+[docs/examples/canvasFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/canvasFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/pointCloud.ts

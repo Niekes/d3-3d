@@ -36,7 +36,7 @@ For non-skill agents, treat the task map below as the local onboarding source: r
 
 A release is a pull request that bumps the version in `package.json` and
 updates `CHANGELOG.md` (for example the `release/2.2.0` branch). Merging it
-into `master` triggers `.github/workflows/release.yml`, which stages the new
+into `main` triggers `.github/workflows/release.yml`, which stages the new
 version on npm — but only when `package.json` changed and the version is not
 on npm yet — and creates the `vX.Y.Z` release on GitHub if it is missing. The version goes live once a
 maintainer approves it with 2FA. Never run `npm publish`, `npm stage approve`

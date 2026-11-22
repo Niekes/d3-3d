@@ -186,16 +186,16 @@ every edit with the volume and the overlap count.
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/packingPlayground.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/packingPlayground.ts)
+[docs/examples/packingPlayground.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/packingPlayground.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG and the drag live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the camera, the floor and the pointer over it in
-[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts),
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorView.ts),
 the cube join, the face join and the neighbor steps in
-[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts)
+[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cubeFaces.ts)
 and the lines in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/packingPlayground.ts

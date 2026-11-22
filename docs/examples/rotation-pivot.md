@@ -91,7 +91,7 @@ center on the cube, and its orbit preset puts it behind the cube.
 The figure never sets `rotateZ`, so its rotation is a tilt applied after a
 yaw. Write θ for the angle around y, the yaw, and α for the angle around x,
 which `turnCamera` sets from the tilt.
-[`rotationMatrix`](https://github.com/niekes/d3-3d/blob/master/src/rotation.ts)
+[`rotationMatrix`](https://github.com/niekes/d3-3d/blob/main/src/rotation.ts)
 builds `R = Rx(α) · Ry(θ) · Rz(0)`, so it turns a point around y first and
 around x after that.
 
@@ -202,19 +202,19 @@ this figure stays orthographic. The
 ## The whole source
 
 The figure and its styles live in
-[docs/examples/rotationPivot.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotationPivot.ts)
+[docs/examples/rotationPivot.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotationPivot.ts)
 in the repository: the figure adds the styles and its class to the element
 it mounts into, so it needs no stylesheet. The SVG, the drag, the button and
 `turnCamera` live in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts),
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts),
 the start, the tilt limits, the keys and the floor in
-[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorView.ts),
+[docs/examples/floorView.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorView.ts),
 the handles of the corners and the pivot in
-[docs/examples/handles.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/handles.ts),
+[docs/examples/handles.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/handles.ts),
 the faces of the box in
-[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/cubeFaces.ts)
+[docs/examples/cubeFaces.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/cubeFaces.ts)
 and the axis line in
-[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/segments.ts).
+[docs/examples/segments.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/segments.ts).
 The figure, ready to copy:
 
 <<< @/examples/rotationPivot.ts

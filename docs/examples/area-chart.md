@@ -152,11 +152,11 @@ ribbons morph, because it draws from the same `values`.
 ## The whole source
 
 The figure lives in
-[docs/examples/areaChart.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/areaChart.ts)
+[docs/examples/areaChart.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/areaChart.ts)
 in the repository. The chart box and its axes are drawn by the helpers in
-[docs/examples/axisEdges.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/axisEdges.ts),
+[docs/examples/axisEdges.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/axisEdges.ts),
 and the drag and the button come from
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The complete file, ready to copy:
 
 <<< @/examples/areaChart.ts

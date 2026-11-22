@@ -229,9 +229,9 @@ A page that sets no `color-scheme` gets the light colors.
 ## The whole source
 
 The figure lives in
-[docs/examples/floorPlan.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/floorPlan.ts)
+[docs/examples/floorPlan.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/floorPlan.ts)
 in the repository, and the SVG and the drag in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts).
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts).
 The figure, ready to copy:
 
 <<< @/examples/floorPlan.ts

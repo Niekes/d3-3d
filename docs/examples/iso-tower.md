@@ -64,9 +64,9 @@ const beacon = iso.project([{ x: 104, y: 72, z: 336 }])[0];
 ## The whole source
 
 The figure lives in
-[docs/examples/isoTower.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoTower.ts)
+[docs/examples/isoTower.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/isoTower.ts)
 in the repository. The projection, the face frames and the filters live in
-[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/isoCommon.ts).
+[docs/examples/isoCommon.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/isoCommon.ts).
 Both files, ready to copy:
 
 The shared parts:

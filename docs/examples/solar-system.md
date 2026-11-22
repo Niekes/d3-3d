@@ -101,12 +101,12 @@ With `prefers-reduced-motion` the figure starts paused.
 ## The whole source
 
 The figure lives in
-[docs/examples/solarSystem.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/solarSystem.ts)
+[docs/examples/solarSystem.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/solarSystem.ts)
 in the repository, the SVG, the drag and the play button it shares with the
 trajectory explorer in
-[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/rotatingFigure.ts)
+[docs/examples/rotatingFigure.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/rotatingFigure.ts)
 and the join of the triangles it shares with the Möbius strip in
-[docs/examples/facets.ts](https://github.com/niekes/d3-3d/blob/master/docs/examples/facets.ts).
+[docs/examples/facets.ts](https://github.com/niekes/d3-3d/blob/main/docs/examples/facets.ts).
 The complete file, ready to copy:
 
 <<< @/examples/solarSystem.ts
