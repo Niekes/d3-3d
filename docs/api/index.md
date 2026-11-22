@@ -296,7 +296,8 @@ orthographic. The plane through the rotation center keeps the `scale`; nearer
 things grow and farther ones shrink, by
 `distance / (distance − (rotated.z − rotationCenter.z))`. A small distance is
 a strong perspective. The scene has to lie in front of the eye: WebGL clips
-the rest, SVG and a 2D canvas cannot.
+the rest, SVG and a 2D canvas cannot. The distance must be positive; `0`, a
+negative value or `NaN` throws a `RangeError`.
 
 `sort` keeps working, since the rotated z is still the depth along the view
 axis. `ccw` winds on the screen, `.unproject()` casts its rays from the eye,
@@ -317,7 +318,8 @@ const camera = camera3D()
 Set the points per row (`gridPlanes3D` only). A grid comes as a flat list,
 so the shape needs the row length to build its quads. Default: `1`.
 The row length must be an integer of at least 1; any other value throws a
-`RangeError`.
+`RangeError`. `.data` throws a `RangeError` too when the points do not fill
+whole rows.
 
 ```typescript
 const grid = gridPlanes3D()

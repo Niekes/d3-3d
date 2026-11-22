@@ -77,4 +77,10 @@ describe('gridPlanes3D', () => {
         expect(() => gridPlanes3D().rows(2.5)).toThrow(RangeError);
         expect(() => gridPlanes3D().rows(Number.NaN)).toThrow(RangeError);
     });
+
+    test('data() rejects points that do not fill whole rows', () => {
+        const points = Array.from({ length: 7 }, (_, i) => ({ x: i, y: 0, z: 0 }));
+
+        expect(() => gridPlanes3D().rows(3).data(points)).toThrow(RangeError);
+    });
 });

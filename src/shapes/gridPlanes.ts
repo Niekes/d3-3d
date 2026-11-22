@@ -39,6 +39,12 @@ class GridPlanes3DRenderer<Datum = Point3D>
 
     data(data: Datum[]): GridPlane<Datum>[] {
         const numPts = this._rows;
+        // A short last row would index past the points and crash in ccw.
+        if (data.length % numPts !== 0) {
+            throw new RangeError(
+                `data() expects whole rows of ${numPts} points, got ${data.length} points`
+            );
+        }
         const transformedPoints = transform(data, this.transformOptions());
 
         const numRows = transformedPoints.length / numPts;

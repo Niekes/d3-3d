@@ -89,9 +89,13 @@ export class ShapeRenderer<Datum = Point3D> implements ShapeInstance<Datum> {
     perspective(): number;
     perspective(distance: number): this;
     perspective(distance?: number): this | number {
-        return distance === undefined
-            ? this.view.perspective
-            : ((this.view.perspective = distance), this);
+        if (distance === undefined) return this.view.perspective;
+        // 0 collapses the scene onto the center, a negative distance mirrors it.
+        if (!(distance > 0)) {
+            throw new RangeError(`perspective() expects a positive distance, got ${distance}`);
+        }
+        this.view.perspective = distance;
+        return this;
     }
 
     rotationCenter(): Point3D;

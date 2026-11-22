@@ -8,6 +8,10 @@ import { drawVertex } from './drawVertex';
  * Open shapes use it as is, closed shapes append the closing `Z`.
  */
 export function drawPolyline<T>(vertices: ReadonlyArray<TransformedPoint<T>>): string {
+    if (vertices.length === 0) {
+        return '';
+    }
+
     let path = `M${drawVertex(vertices[vertices.length - 1])}`;
 
     for (let i = vertices.length - 2; i >= 0; i -= 1) {
