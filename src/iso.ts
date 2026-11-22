@@ -3,7 +3,6 @@ import { rotateRzRyRx } from './rotation';
 
 const ARC_SEGMENTS = 10;
 const QUARTER = Math.PI / 2;
-const DIAGONAL = Math.PI / 4;
 const TAU = 2 * Math.PI;
 
 /**
@@ -154,8 +153,8 @@ function planOutline(spec: IsoBoxSpec, r: number): Point2D[] {
  * whose outward normal lies within a quarter turn of the view direction.
  */
 function visiblePlanOutline(spec: IsoBoxSpec, r: number, view: Point3D): Point2D[] {
-    // Seen straight down every side is in view; keep the near corner of the isometric view.
-    const phi = view.x === 0 && view.y === 0 ? DIAGONAL : Math.atan2(view.y, view.x);
+    // Seen straight down the wall has no area, so any half of the ring will do.
+    const phi = Math.atan2(view.y, view.x);
     // The first visible normal, within the first lap of the ring: [−1, 3) quarter turns.
     const start = (((phi % TAU) + TAU) % TAU) - QUARTER;
     const ring = corners(spec, r);
