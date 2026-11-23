@@ -477,8 +477,8 @@ d3-shape's `arc`: radians, 0 at the back (-z) and clockwise seen from above,
 so the angles of `pie()` go in as they are; its `padAngle` is not applied.
 `segments` equal steps run from `startAngle` to `endAngle`; the outer wall
 of each is its `front`, and every face points outwards. Below one step, for
-a count that is not finite, or where `endAngle` is not above `startAngle`,
-the list is empty. An `innerRadius` of 0 makes a wedge.
+an infinite count, or where `endAngle` is not above `startAngle`, the list
+is empty. An `innerRadius` of 0 makes a wedge.
 
 ```typescript
 const slices = pie()(data).flatMap((d) =>

@@ -11,9 +11,9 @@ import { Point3D } from './types';
  * not applied.
  *
  * `segments` equal steps run from `startAngle` to `endAngle`. Below one step,
- * for a count that is not finite, or where `endAngle` is not above
- * `startAngle`, the list is empty. An `innerRadius` of 0 is a wedge: the
- * inner wall of every step has no area.
+ * for an infinite count, or where `endAngle` is not above `startAngle`, the
+ * list is empty. An `innerRadius` of 0 is a wedge: the inner wall of every
+ * step has no area.
  */
 export function sector(
     spec: {
