@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `sector(spec, segments)`: the steps of a ring sector, each the eight
+  corners of a cube for `cubes3D`, with the angles of d3-shape's `arc` and
+  `pie()`. The sectors of a donut chart, radial bars and the rings of a
+  sunburst become cubes without any trigonometry in the chart (#68).
+
 ## [2.4.3] - 2026-11-23
 
 ### Fixed

@@ -22,6 +22,7 @@ export { ccw } from './src/counter-clockwise';
 export { centroid } from './src/centroid';
 export { normal } from './src/normal';
 export { box } from './src/box';
+export { sector } from './src/sector';
 export { lathe } from './src/lathe';
 export { sphere } from './src/sphere';
 export { strips } from './src/strips';
