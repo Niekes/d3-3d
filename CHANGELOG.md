@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.3] - 2026-11-23
+
 ### Fixed
 
 - `gridPlanes3D().data()` crashed in `ccw` with a `TypeError` when the
@@ -252,7 +254,8 @@ Initial releases. The first public version of d3-3d with points, lines, line
 strips, triangles, planes, polygons and cubes, plus grid planes, centroid and
 counter-clockwise detection and the `sort` utility.
 
-[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.4.2...HEAD
+[Unreleased]: https://github.com/Niekes/d3-3d/compare/v2.4.3...HEAD
+[2.4.3]: https://github.com/Niekes/d3-3d/compare/v2.4.2...v2.4.3
 [2.4.2]: https://github.com/Niekes/d3-3d/compare/v2.4.1...v2.4.2
 [2.4.1]: https://github.com/Niekes/d3-3d/compare/v2.4.0...v2.4.1
 [2.4.0]: https://github.com/Niekes/d3-3d/compare/v2.3.0...v2.4.0
