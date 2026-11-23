@@ -7,11 +7,13 @@ import { Point3D } from './types';
  * The sector stands on the point (x, y, z), its axis upright through it, and
  * rises `height` from y upwards, towards -y as on the screen. Its angles are
  * those of d3-shape's `arc`: radians, 0 at the back (-z) and clockwise seen
- * from above, so the angles of `pie()` go in as they are.
+ * from above, so the angles of `pie()` go in as they are; its `padAngle` is
+ * not applied.
  *
  * `segments` equal steps run from `startAngle` to `endAngle`. Below one step,
- * or where `endAngle` is not above `startAngle`, the list is empty. An
- * `innerRadius` of 0 is a wedge: the inner wall of every step has no area.
+ * for a count that is not finite, or where `endAngle` is not above
+ * `startAngle`, the list is empty. An `innerRadius` of 0 is a wedge: the
+ * inner wall of every step has no area.
  */
 export function sector(
     spec: {
@@ -29,7 +31,7 @@ export function sector(
     const { x, y, z, innerRadius, outerRadius, startAngle, endAngle } = spec;
     const steps = Math.floor(segments);
 
-    if (!(steps >= 1) || !(endAngle > startAngle)) return [];
+    if (!(steps >= 1 && steps < Infinity) || !(endAngle > startAngle)) return [];
 
     const top = y - spec.height;
     const span = (endAngle - startAngle) / steps;

@@ -1,5 +1,6 @@
 import { describe, test, expect } from 'vite-plus/test';
 import { cubes3D, normal, sector } from '../index';
+import type { Point3D } from '../index';
 
 const quarter = {
     x: 0,
@@ -12,7 +13,7 @@ const quarter = {
     height: 3
 };
 
-function expectCorners(actual: { x: number; y: number; z: number }[], expected: number[][]) {
+function expectCorners(actual: Point3D[], expected: number[][]) {
     expect(actual).toHaveLength(expected.length);
     expected.forEach(([x, y, z], i) => {
         expect(actual[i].x).toBeCloseTo(x, 12);
@@ -60,6 +61,7 @@ describe('sector', () => {
         expect(sector(quarter, 0.5)).toEqual([]);
         expect(sector(quarter, 0)).toEqual([]);
         expect(sector(quarter, NaN)).toEqual([]);
+        expect(sector(quarter, Infinity)).toEqual([]);
     });
 
     test('is empty where the end angle is not above the start angle', () => {
