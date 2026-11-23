@@ -51,7 +51,7 @@ The area chart recreates the
 
 ## On CodePen
 
-Live examples are available on [CodePen](https://codepen.io/Niekes/). A selection:
+Live examples are available in the [CodePen collection](https://codepen.io/collection/DpmByZ). A selection:
 
 - [Bar chart](https://codepen.io/Niekes/pen/poGMKXY)
 - [Cone](https://codepen.io/Niekes/pen/wvbzGMG)
