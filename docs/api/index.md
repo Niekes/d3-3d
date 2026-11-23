@@ -474,15 +474,16 @@ The steps of a ring sector, each the eight corners of a cube in the order
 `cubes3D` expects, standing on `{ x, y, z }` and rising `height` towards -y.
 `innerRadius`, `outerRadius`, `startAngle` and `endAngle` are those of
 d3-shape's `arc`: radians, 0 at the back (-z) and clockwise seen from above,
-so the angles of `pie()` go in as they are. `segments` equal steps run from
-`startAngle` to `endAngle`; the outer wall of each is its `front`, and every
-face points outwards. Below one step, or where `endAngle` is not above
-`startAngle`, the list is empty. An `innerRadius` of 0 makes a wedge.
+so the angles of `pie()` go in as they are; its `padAngle` is not applied.
+`segments` equal steps run from `startAngle` to `endAngle`; the outer wall
+of each is its `front`, and every face points outwards. Below one step, or
+where `endAngle` is not above `startAngle`, the list is empty. An
+`innerRadius` of 0 makes a wedge.
 
 ```typescript
 const slices = pie()(data).flatMap((d) =>
   sector(
-    { x: 0, y: 0, z: 0, innerRadius: 2, outerRadius: 4, height: d.data, ...d },
+    { x: 0, y: 0, z: 0, innerRadius: 2, outerRadius: 4, height: d.value, ...d },
     8,
   ),
 );
