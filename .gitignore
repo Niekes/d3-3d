@@ -11,4 +11,3 @@ npm-debug.log
 docs/.vitepress/dist/
 docs/.vitepress/cache/
 plans/
-pnpm-lock.yaml

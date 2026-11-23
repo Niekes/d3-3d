@@ -481,13 +481,13 @@ an infinite count, or where `endAngle` is not above `startAngle`, the list
 is empty. An `innerRadius` of 0 makes a wedge.
 
 ```typescript
-const slices = pie()(data).flatMap((d) =>
+const steps = pie()(data).flatMap(({ startAngle, endAngle, value }) =>
   sector(
-    { x: 0, y: 0, z: 0, innerRadius: 2, outerRadius: 4, height: d.value, ...d },
+    { x: 0, y: 0, z: 0, innerRadius: 2, outerRadius: 4, startAngle, endAngle, height: value },
     8,
   ),
 );
-cubes3D().data(slices);
+cubes3D().data(steps);
 ```
 
 ### `sphere(spec, segments)` {#sphere}

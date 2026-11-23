@@ -9,7 +9,7 @@ A solid with eight corners in the order `cubes3D` expects: front top left, front
 _Avoid_: Cuboid, block
 
 **Sector**:
-A slice of a ring between two angles, standing upright on a point and rising to a height, built from steps.
+The part of a ring between two angles, standing upright on a point and rising to a height, built from steps.
 _Avoid_: Arc, slice, pie piece
 
 **Step**:

@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vite-plus/test';
-import { cubes3D, normal, sector } from '../index';
+import { box, cubes3D, normal, sector } from '../index';
 import type { Point3D } from '../index';
 
 const quarter = {
@@ -78,5 +78,26 @@ describe('sector', () => {
             [3, 0, -1],
             [3, -3, -1]
         ]);
+    });
+
+    test('lets ccw cull a step as it culls a box', () => {
+        // A thin step at half a turn faces +z, as the front of a box does.
+        const step = sector({ ...quarter, startAngle: Math.PI - 0.01, endAngle: Math.PI + 0.01 }, 1);
+        const block = box({ x: 0, y: 0, z: 1.5, width: 0.03, height: 3, depth: 1 });
+        const shown = (cube: Point3D[], rx: number, ry: number) =>
+            cubes3D()
+                .rotateX(rx)
+                .rotateY(ry)
+                .data([cube])[0]
+                .faces.map((face) => [face.face, face.ccw]);
+
+        for (const [rx, ry] of [
+            [0, 0],
+            [0.6, 0.4],
+            [-0.5, 2.5],
+            [1.2, -2]
+        ]) {
+            expect(shown(step[0], rx, ry)).toEqual(shown(block, rx, ry));
+        }
     });
 });
