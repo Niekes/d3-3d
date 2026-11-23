@@ -21,6 +21,8 @@ You can also download the [latest release](https://github.com/Niekes/d3-3d/relea
 
 **TypeScript users:** type definitions are included, there is no `@types/d3-3d` to install.
 
+Using React with shadcn/ui? [charts-3d](https://github.com/Niekes/charts-3d) has ready-made 3D chart components built on d3-3d.
+
 ## Import
 
 ES6 / TypeScript:

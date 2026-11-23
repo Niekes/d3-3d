@@ -49,6 +49,8 @@ npm install d3-3d
 
 Everything else lives in the [documentation](https://niekes.github.io/d3-3d/): [getting started](https://niekes.github.io/d3-3d/guide/getting-started), the [API reference](https://niekes.github.io/d3-3d/api/), the [examples](https://niekes.github.io/d3-3d/examples/) and [migrating from v0.x](https://niekes.github.io/d3-3d/guide/migration).
 
+Using React with shadcn/ui? [charts-3d](https://github.com/Niekes/charts-3d) has ready-made 3D chart components built on d3-3d.
+
 If d3-3d is useful to you, [give it a star](https://github.com/niekes/d3-3d). It helps other people find it.
 
 ## Sponsor d3-3d
