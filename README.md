@@ -39,7 +39,7 @@
     </tr>
 </table>
 
-More in the [example gallery](https://niekes.github.io/d3-3d/examples/).
+More in the [example gallery](https://niekes.github.io/d3-3d/examples/) and the [CodePen collection](https://codepen.io/collection/DpmByZ).
 
 ## Using d3-3d
 
