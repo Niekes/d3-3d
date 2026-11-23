@@ -3,8 +3,10 @@
 
     // The documentation figures are a dev surface of the repository: the
     // shipped package never imports d3, so the docs examples may use it while
-    // it stays a devDependency.
-    "ignoreDependencies": ["d3"],
+    // it stays a devDependency. The examples import d3-transition on its own
+    // for its side effect, which d3 drops since it marked itself side-effect
+    // free in 7.9.2.
+    "ignoreDependencies": ["d3", "d3-transition"],
 
     // The public entry point of the package.
     "entry": ["index.ts", "docs/examples/**/*.ts"],
