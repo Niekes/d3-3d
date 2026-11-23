@@ -1,3 +1,6 @@
+// Adds .transition() and .interrupt() to selections: d3 marks itself free of side
+// effects since 7.9.2, so importing only from 'd3' leaves them out of the bundle.
+import 'd3-transition';
 import {
     easeCubicInOut,
     format,

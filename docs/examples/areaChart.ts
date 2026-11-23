@@ -1,3 +1,6 @@
+// Adds .transition() and .interrupt() to selections: d3 marks itself free of side
+// effects since 7.9.2, so importing only from 'd3' leaves them out of the bundle.
+import 'd3-transition';
 import { color, interpolate, randomUniform, range, scaleLinear, schemeTableau10, select } from 'd3';
 import type { Selection } from 'd3';
 import { axes3D, camera3D, iso3D, polygons3D, sort } from '../../index';
